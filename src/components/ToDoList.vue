@@ -243,6 +243,7 @@ const addTodo = (taskListId) => {
     createdAt: new Date().getTime(),
   });
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
+  input_content.value = "";
 };
 
 const saveChanges = () => {
