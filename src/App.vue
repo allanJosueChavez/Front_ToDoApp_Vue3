@@ -1,18 +1,7 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-import ToDoList from './components/ToDoList.vue'
-import {ref, onMounted, computed, watch} from 'vue'
-</script>
+
 
 <template>
-  <div style="text-align:center">
-  <br/>
-        <h4>
-          Welcome to your to-do list app, built with VUE!
-        </h4></div>
-  <div style="float: right">
+  <!-- <div style="float: right; position: fixed important!">
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
@@ -20,9 +9,30 @@ import {ref, onMounted, computed, watch} from 'vue'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <!-- <HelloWorld msg="Vite + Vue" /> -->
+   <HelloWorld msg="Vite + Vue" />  -->
   <ToDoList msg="Vite + Vue" />
 </template>
+
+<script setup>
+// This starter template is using Vue 3 <script setup> SFCs
+// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+// import HelloWorld from './components/HelloWorld.vue'
+import { defineComponent } from "vue";
+import ToDoList from "./components/ToDoList.vue";
+
+const HelloWorld = {
+  components: { ToDoList },
+};
+
+// export default HelloWorld;
+// import { ref, onMounted, computed, watch } from "vue";
+</script>
+
+<script>
+export default {
+  name: "HelloWorld",
+};
+</script>
 
 <style scoped>
 .logo {
