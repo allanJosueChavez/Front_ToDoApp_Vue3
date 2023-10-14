@@ -10,21 +10,24 @@
     <section
       class="tabs"
       style="
-        width: 130px;
         float: left;
         width: 20%;
         padding-left: 0%;
         position: fixed;
         top: -40px;
         padding: 0px;
+
+        height: 100%;
       "
     >
       <div
         class="sidebar"
-        style="text-align: center; width: 100%; border-radius: 0.5rem"
+        style="text-align: center; width: 100%; border-radius: 0.5rem; height: 102%; align-items: center;"
       >
-        <div>
-          <h5 style="color: beige; font-weight: 700; padding-top: 10%" class="">
+        <div id="sidebar-title" style="height:10%; background-color: #003b94;   display: flex; justify-content: center;
+        flex-wrap: wrap;
+        align-content: center;">
+          <h5 style="color: beige; font-weight: 700;">
             MY TO-DO LISTS
           </h5>
         </div>
@@ -42,15 +45,18 @@
         <div
           style="
             overflow-y: scroll;
-            max-height: 700px;
+            height: 80%;
             margin-top: 10px;
-            width: 96%;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            align-content: center;
           "
         >
           <div
             v-for="(taskList, index) in sortedTaskLists"
             :key="index"
-            style="margin-left: 3%"
+            style="margin: 0 3% 0 3%;"
           >
             <button
               @click="openTaskList(taskList.id)"
@@ -60,9 +66,10 @@
                 padding-right: 5%;
                 margin-top: 1%;
                 margin-bottom: 1%;
+               
               "
               v-bind:id="taskList.id"
-              :class="{ taskListActive: isActiveTaskList(taskList.id) }"
+              :class="isActiveTaskList(taskList.id) ?'taskListActive' :   'inactiveTodoList'"
             >
               {{ taskList.title }}
             </button>
@@ -73,7 +80,7 @@
     <div v-for="(taskList, index) in taskLists" :key="index">
       <div
         class="tasklist animate-right"
-        style="float: left; width: 80%; margin-left: 20%"
+        style="float: left; width: 80%; margin-left: 20%; "
         v-if="activeTaskList == taskList.id"
       >
         <div style="width: 100%; inline-block">
@@ -211,9 +218,12 @@ const sortedTaskLists = computed(() => {
 });
 
 function addNewList() {
+  console.log("Lengths")
+  console.log(taskLists.value.length )
+  console.log(sortedTaskLists.value.length)
   const newTaskList = {
     id: taskLists.value.length + 1,
-    title: "Untitled " + (taskLists.value.length + 1),
+    title: "Untitled (" + (taskLists.value.length + 1) + ")",
     todos: [],
   };
   taskLists.value.push(newTaskList);
@@ -285,6 +295,9 @@ watch(name, (newVal) => {
 const activeTaskList = ref(null);
 
 function openTaskList(taskListId) {
+  console.log("openTaskList")
+  console.log(taskListId)
+  console.log(sortedTaskLists.value)
   // document.getElementById(taskListId).classList += " taskListActive";
   activeTaskList.value = taskListId;
 }
@@ -292,7 +305,11 @@ function openTaskList(taskListId) {
 // computed property to check if a task list is active
 const isActiveTaskList = computed(() => {
   return (id) => {
+    // console.log(activeTaskList)
+    // console.log(id)
+    // console.log(activeTaskList.value === id)
     return activeTaskList.value === id;
+    return true
   };
 });
 
@@ -334,8 +351,8 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
 }
 .read-the-docs {
   color: #888;
@@ -351,6 +368,12 @@ onMounted(() => {
   background-color: rgb(0, 47, 87);
   border-radius: 0.5rem;
 }
+
+.inactiveTodoList {
+  background-color: #1953ac;
+  border-radius: 0.5rem;
+}
+
 .animate-right {
   position: relative;
   animation: animateright 0.4s;
@@ -362,11 +385,11 @@ onMounted(() => {
 }
 
 .tablink:hover {
-  background-color: rgb(0, 47, 87);
+  background-color: rgb(0, 77, 145);
   border-radius: 0.5rem;
 }
 .sidebar {
-  background-color: #2079ff;
+  background-color: #0e68ef;
 }
 
 #AddTaskInput:hover {
