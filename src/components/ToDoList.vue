@@ -1,5 +1,5 @@
 
-
+<!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
 <template>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <link
