@@ -10,7 +10,9 @@
     </a>
   </div>
    <HelloWorld msg="Vite + Vue" />  -->
-  <ToDoList msg="Vite + Vue" />
+  <!-- <ToDoList msg="Vite + Vue" />
+   -->
+   <router-view></router-view>
 </template>
 
 <script setup>
@@ -19,6 +21,7 @@
 // import HelloWorld from './components/HelloWorld.vue'
 import { defineComponent } from "vue";
 import ToDoList from "./components/ToDoList.vue";
+import router from "./router";
 
 const HelloWorld = {
   components: { ToDoList },

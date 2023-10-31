@@ -155,11 +155,11 @@
 <script setup>
 import "../style.css";
 import { ref, onMounted, computed, watch } from "vue";
-import { reactive, toRefs } from "vue";
+// import { reactive, toRefs } from "vue";
 
-defineProps({
-  msg: String,
-});
+// defineProps({
+//   // msg: String,
+// });
 
 // let taskList = ["Dietary Intake", "Exercise", "Acvity with your partner"];
 // const taskLists = ref(tasklist: {"Running", "Cycling", "Swimming"});
@@ -283,9 +283,6 @@ const removeTodo = (taskListId, todo) => {
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
 };
 
-watch(name, (newVal) => {
-  localStorage.setItem("name", newVal);
-});
 
 // const activeTasklist = ref(null);
 
@@ -332,7 +329,7 @@ const deleteToDoList = (taskListId) => {
 
 const changePlaceholder = () => {
   const input = document.getElementById("AddTaskInput");
-  input.placeholder = "e.g: study study concepts of ruby on rails";
+  input.placeholder = "e.g: study concepts of ruby on rails";
 };
 
 // watch((taskList) => {
