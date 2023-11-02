@@ -154,8 +154,10 @@
 
 <script setup>
 import "../style.css";
+import axiosInstance from "../services/nodeApi";
 import { ref, onMounted, computed, watch } from "vue";
 // import { reactive, toRefs } from "vue";
+const allLists = ref([]);
 
 // defineProps({
 //   // msg: String,
@@ -228,6 +230,14 @@ function addNewList() {
   };
   taskLists.value.push(newTaskList);
   console.log(taskLists);
+
+  const ToDolist = {
+    name: "Untitled", // Untitled and the number, length of the db table of lists.
+    userId: 1,
+  };
+
+  const createRes = axiosInstance.post("/api/lists/create", ToDolist);
+  console.log(createRes);
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
 }
 
@@ -335,8 +345,9 @@ const changePlaceholder = () => {
 // watch((taskList) => {
 //   this.taskList.push({ id: 1, name: "New Item" });
 // });
-onMounted(() => {
+onMounted(async () => {
   // name.value = localStorage.getItem("name") || "";
+  await getAllLists();
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
   const data = localStorage.getItem("taskLists");
 
@@ -344,6 +355,14 @@ onMounted(() => {
     taskLists.value = JSON.parse(data);
   }
 });
+
+async function getAllLists() {
+  const res = await axiosInstance.get("/api/lists");
+  console.log(res);
+  allLists.value = res.data;
+  console.log(allLists.value);
+}
+
 </script>
 
 <style scoped>
