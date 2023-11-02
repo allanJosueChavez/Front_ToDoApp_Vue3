@@ -154,8 +154,12 @@
 
 <script setup>
 import "../style.css";
-import axiosInstance from "../services/nodeApi";
+import axiosInstance from "../services/api/axiosInstance.js";
 import { ref, onMounted, computed, watch } from "vue";
+import listsService from "../services/listsService.js";
+
+const { getAllLists, createList } = listsService;
+
 // import { reactive, toRefs } from "vue";
 const allLists = ref([]);
 
@@ -219,7 +223,7 @@ const sortedTaskLists = computed(() => {
   return taskLists.value.slice().sort((a, b) => b.id - a.id);
 });
 
-function addNewList() {
+async function addNewList() {
   console.log("Lengths")
   console.log(taskLists.value.length )
   console.log(sortedTaskLists.value.length)
@@ -236,8 +240,8 @@ function addNewList() {
     userId: 1,
   };
 
-  const createRes = axiosInstance.post("/api/lists/create", ToDolist);
-  console.log(createRes);
+  const response = await createList(ToDolist);
+  console.log(response)
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
 }
 
@@ -347,7 +351,8 @@ const changePlaceholder = () => {
 // });
 onMounted(async () => {
   // name.value = localStorage.getItem("name") || "";
-  await getAllLists();
+  const userId = 1
+  await getAllLists(userId);
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
   const data = localStorage.getItem("taskLists");
 
@@ -356,12 +361,7 @@ onMounted(async () => {
   }
 });
 
-async function getAllLists() {
-  const res = await axiosInstance.get("/api/lists");
-  console.log(res);
-  allLists.value = res.data;
-  console.log(allLists.value);
-}
+
 
 </script>
 

@@ -51,6 +51,7 @@
                   </v-btn>
                 </button>
               </div>
+              <div class="py-4 grid gap-y-3">
               <div id="forgotPassBtn" class="text-center">
                 <span class="text-purple-800">
                   Forgot your password?
@@ -72,6 +73,9 @@
                 >
                   Sign up
                 </span>
+              </div>
+             
+
               </div>
             </div>
           </v-form>
