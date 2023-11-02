@@ -113,7 +113,7 @@
               @click="changePlaceholder()"
             />
 
-            <input type="submit" value="Add todo" />
+            <input type="submit" value="Add to-do" />
           </form>
         </section>
         <section class="todo-list">
