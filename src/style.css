@@ -44,13 +44,6 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
 
 h1 {
   font-size: 3.2em;
@@ -100,7 +93,12 @@ button:focus-visible {
   }
 } */
 
+
+  
 .html, body {
+	margin: 0;
+	padding: 0;
+	
 	height: 100%;
 	width: 100%;
 	font-family: 'Poppins', sans-serif;	
@@ -123,8 +121,8 @@ button:focus-visible {
 }
 
 * {
-	margin: 0;
-	padding: 0;
+	/* margin: 0;
+	padding: 0; */
 	box-sizing: border-box;
 	/* font-family: 'montserrat', sans-serif; */
 	
@@ -144,12 +142,12 @@ body {
 	color: var(--dark);
 }
 
-section {
-	margin-top: 2rem;
-	margin-bottom: 2rem;
+/* section {
+	padding-top: 2rem;
+	padding-bottom: 2rem;
 	padding-left: 1.5rem;
 	padding-right: 1.5em;
-}
+} */
 
 h3 {
 	color: var(--dark);
@@ -272,21 +270,25 @@ input:checked ~ .bubble::after {
 	margin-top: 1rem;
 }
 
-.create-todo input[type="submit"] {
+.create-todo button {
 	display: block;
 	width: 100%;
 	font-size: 1.125rem;
 	padding: 1rem 1.5rem;
 	color: #FFF;
-	background-color: var(--primary);
+	/* background-color: var(--primary); */
 	border-radius: 0.5rem;
-	box-shadow: var(--personal-glow);
+	/* box-shadow: var(--personal-glow); */
 	cursor: pointer;
 	transition: 0.2s ease-in-out;
 }
 
-.create-todo input[type="submit"]:hover {
+.create-todo button:hover {
 	opacity: 0.75;
+}
+
+.button-add:hover {
+	opacity: 0.90;
 }
 
 .todo-list .list {
@@ -294,6 +296,7 @@ input:checked ~ .bubble::after {
 } 
 
 .todo-list .todo-item {
+	
 	display: flex;
 	align-items: center;
 	background-color: #FFF;

@@ -21,20 +21,11 @@
 // import HelloWorld from './components/HelloWorld.vue'
 import { defineComponent } from "vue";
 import ToDoList from "./components/ToDoList.vue";
-import router from "./router";
-
-const HelloWorld = {
-  components: { ToDoList },
-};
-
-// export default HelloWorld;
-// import { ref, onMounted, computed, watch } from "vue";
+import { ref } from "vue";
 </script>
 
 <script>
-export default {
-  name: "HelloWorld",
-};
+
 </script>
 
 <style scoped>

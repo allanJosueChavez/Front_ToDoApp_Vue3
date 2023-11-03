@@ -6,34 +6,46 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
   />
-  <main class="app">
-    <section
-      class="tabs"
-      style="
-        float: left;
-        width: 20%;
-        padding-left: 0%;
-        position: fixed;
-        top: -40px;
-        padding: 0px;
 
-        height: 100%;
-      "
+  <div class="flex h-full w-full ">
+    <div 
+    class="top-0 h-screen w-1/5 p-0 "
     >
       <div
-        class="sidebar"
-        style="text-align: center; width: 100%; border-radius: 0.5rem; height: 102%; align-items: center;"
+        class="sidebar 
+        bg-blue-900
+        w-full h-full
+        "
+        style="text-align: center;  height: 100%; align-items: center;"
       >
-        <div id="sidebar-title" style="height:10%; background-color: #003b94;   display: flex; justify-content: center;
-        flex-wrap: wrap;
-        align-content: center;">
-          <h5 style="color: beige; font-weight: 700;">
-            MY TO-DO LISTS
-          </h5>
+        <div id="sidebar-title" 
+        class="w-full h-10
+        flex justify-center align-center h-10 py-6
+        "
+        style="height:10%; display: flex;  
+        flex-wrap: wrap;" 
+      >
+         
+             <div class="flex justify-center items-center">
+              <span style="color: beige; font-weight: 700;">
+             ToDoFlow
+
+      </span>
+      <img
+          src="https://i.ibb.co/QrjrV7B/image.webp"
+          alt=""
+          class="w-6 sm:w-10 sm:p-auto "
+        />
+      </div>
+          
         </div>
-        <div style="height: 50px">
-          <button class="button-add" @click="addNewList()">
-            <span> Add a new list + </span>
+        <div 
+        class="px-3 my-2"
+        style="height: 50px">
+          <button class="rounded-lg button-add bg-pink-600 " @click="addNewList()">
+            <span
+            class="text-white font-semibold"
+            > Add a new list + </span>
             <!-- <h2 style="display: inline">＋</h2> -->
           </button>
           <!-- <div v-for="(item, index) in taskLists" :key="index">
@@ -44,6 +56,7 @@
         </div>
         <div
           style="
+            scrollbar-width: thin;
             overflow-y: scroll;
             height: 80%;
             margin-top: 10px;
@@ -60,7 +73,7 @@
           >
             <button
               @click="openTaskList(taskList.id)"
-              class="tablink"
+              class="tablink hover:bg-sky-900"
               style="
                 padding-left: 5%;
                 padding-right: 5%;
@@ -69,22 +82,27 @@
                
               "
               v-bind:id="taskList.id"
-              :class="isActiveTaskList(taskList.id) ?'taskListActive' :   'inactiveTodoList'"
+              
+              :class="isActiveTaskList(taskList.id) ?'taskListActive bg-blue-950 ' :   'inactiveTodoList'"
             >
               {{ taskList.title }}
             </button>
           </div>
         </div>
       </div>
-    </section>
-    <div v-for="(taskList, index) in taskLists" :key="index">
+    </div>
+    <div
+    class="w-4/5  bg-gradient-to-b from-purple-100 to-yellow-100 py-8 px-10 h-screen"
+
+    >
+    <div v-for="(taskList, index) in taskLists" :key="index"
+    >
       <div
-        class="tasklist animate-right"
-        style="float: left; width: 80%; margin-left: 20%; "
+        class="tasklist animate-right h-100" 
         v-if="activeTaskList == taskList.id"
       >
-        <div style="width: 100%; inline-block">
-          <section class="greeting" style="width: 90%; float: left">
+        <div class="flex my-4 align-center " >
+          <section class="greeting w-4/5">
             <h2 class="title">
               <input
                 type="text"
@@ -94,17 +112,22 @@
               />
             </h2>
           </section>
-          <section style="width: 10%; float: left; margin-top: 40px">
+          <section class="cursor-pointer flex justify-end w-1/5">
+          <div class="cursor-pointer rounded-md p-2">
             <i
               class="fa fa-trash-o"
               style="font-size: 40px; color: red"
               title="Delete To-Do List!"
               @click="deleteToDoList(taskList.id)"
             ></i>
+          </div>
+
+
           </section>
         </div>
-        <section class="create-todo">
-          <form @submit.prevent="addTodo(taskList.id)">
+        <section class="create-todo ">
+          <form @submit.prevent="addTodo(taskList.id)"
+          >
             <input
               type="text"
               placeholder="Add a new task +"
@@ -113,12 +136,25 @@
               @click="changePlaceholder()"
             />
 
-            <input type="submit" value="Add to-do" />
+            <button
+            class="bg-yellow-400"
+            type="submit" value="Add to-do" >
+              <span class="text-purple-900 flex align-items justify-center">
+                <span 
+            @click="$router.push('/login')"
+            class=" material-icons text-purple-900 cursor-pointer">
+            add
+          </span>   
+                Add to-do
+              </span>
+            </button>
+
+
           </form>
         </section>
         <section class="todo-list">
-          <h3>Your tasks:</h3>
-          <div class="list">
+          <!-- <h3>Your tasks:</h3> -->
+          <div class="my-12 list h-96 overflow-y-scroll">
             <div
               v-for="(todo, index) in taskList.todos"
               :class="`todo-item ${todo.done && 'done'}`"
@@ -149,7 +185,9 @@
         </section>
       </div>
     </div>
-  </main>
+    </div>
+
+  </div>
 </template>
 
 <script setup>
@@ -325,9 +363,9 @@ const isActiveTaskList = computed(() => {
 });
 
 const deleteToDoList = (taskListId) => {
-  taskLists.value = taskLists.value.filter(
-    (taskList) => taskList.id !== taskListId
-  );
+  // taskLists.value = taskLists.value.filter(
+  //   (taskList) => taskList.id !== taskListId
+  // );
 };
 // const activeTaskListId = ref(null);
 
@@ -374,20 +412,20 @@ onMounted(async () => {
   color: #888;
 }
 .button-add {
-  background-color: #1b62cd;
+  /* background-color: #1b62cd; */
   color: white;
-  font-weight: 700;
+  /* font-weight: 700; */
   height: 100%;
 }
 
 .taskListActive {
-  background-color: rgb(0, 47, 87);
   border-radius: 0.5rem;
 }
 
 .inactiveTodoList {
-  background-color: #1953ac;
-  border-radius: 0.5rem;
+  /* background-color: #1953ac; */
+  /* border-bottom: 1px solid #d4d4d4; */
+  /* border-radius: 0.5rem; */
 }
 
 .animate-right {
@@ -401,11 +439,15 @@ onMounted(async () => {
 }
 
 .tablink:hover {
-  background-color: rgb(0, 77, 145);
+  /* background-color: rgb(0, 77, 145); */
   border-radius: 0.5rem;
 }
 .sidebar {
-  background-color: #0e68ef;
+  /* background-color: #0e68ef; */
+  /* scrollbar-width: thin;
+            
+
+            overflow-y: scroll; */
 }
 
 #AddTaskInput:hover {
@@ -417,13 +459,10 @@ onMounted(async () => {
   color: #6e6e6e;
 }
 .sidebar::-webkit-scrollbar {
-  width: 0; /* Safari and Chrome */
-  background: transparent;
+   /* Thin and gray like Mac OS X */
+
 }
-::-webkit-scrollbar {
-  width: 0; /* Remove scrollbar space */
-  background: transparent; /* Optional: just make scrollbar invisible */
-}
+
 @keyframes animateright {
   from {
     right: -300px;
