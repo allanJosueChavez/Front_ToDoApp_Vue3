@@ -1,13 +1,13 @@
 <template>
   <div class="h-screen sm:flex">
     <loginSideView />
-    <div class="sm:w-4/6 sm:h-full bg-gray-200 flex justify-center items-center">
+    <div
+      class="sm:w-4/6 sm:h-full bg-gray-200 flex justify-center items-center"
+    >
       <div class="sm:px-44 w-full h-4/6">
         <div class="bg-white shadow-md rounded-2xl">
           <v-form fast-fail @submit.prevent="login">
-            
             <div class="px-16 py-8 grid gap-y-6">
-
               <div id="title-page" class="my-10">
                 <h1 class="text-4xl text-center font-bold text-purple-900">
                   LOGIN
@@ -19,7 +19,6 @@
                   label="Email"
                   v-model="user.email"
                   clearable
-                  
                 ></v-text-field>
               </div>
               <div>
@@ -39,30 +38,26 @@
                 </button>
               </div>
               <div class="py-4 grid gap-y-3">
-              <div id="forgotPassBtn" class="text-center">
-                <span class="text-purple-800">
-                  Forgot your password?
-                </span>
-                <span
-                  @click="$router.push('/reset-password')"
-                  class="text-purple-800 font-bold cursor-pointer"
-                >
+                <div id="forgotPassBtn" class="text-center">
+                  <span class="text-purple-800"> Forgot your password? </span>
+                  <span
+                    @click="$router.push('/reset-password')"
+                    class="text-purple-800 font-bold cursor-pointer"
+                  >
                     Reset
-                </span>
-              </div>
-              <div id="signupBtn" class="text-center">
-                <span class="text-purple-800 text-center">
-                  Don't have an account?
-                </span>
-                <span
-                  @click="$router.push('/signup')"
-                  class="text-purple-800 text-center font-bold cursor-pointer"
-                >
-                  Sign up
-                </span>
-              </div>
-             
-
+                  </span>
+                </div>
+                <div id="signupBtn" class="text-center">
+                  <span class="text-purple-800 text-center">
+                    Don't have an account?
+                  </span>
+                  <span
+                    @click="$router.push('/signup')"
+                    class="text-purple-800 text-center font-bold cursor-pointer"
+                  >
+                    Sign up
+                  </span>
+                </div>
               </div>
             </div>
           </v-form>
