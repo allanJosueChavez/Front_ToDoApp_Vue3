@@ -1,26 +1,13 @@
 <template>
-  <div class="h-screen flex">
-    <div
-      id="lateral-image"
-      class="w-2/6 bg-gradient-to-b from-blue-700 to-purple-600 flex justify-center items-center"
-    >
-      <!-- Content for the first column -->
-      <div class="text-center shadow-2xl p-4 pt-16 rounded-2xl">
-        <span class="text-6xl text-white text-center font-bold">
-          ToDoFLow
-        </span>
-        <img
-          src="https://i.ibb.co/QrjrV7B/image.webp"
-          alt=""
-          class="w-80"
-        />
-      </div>
-    </div>
-    <div class="w-4/6 h-full bg-gray-200 flex justify-center items-center">
-      <div class="px-44 w-full h-4/6">
+  <div class="h-screen sm:flex">
+    <loginSideView />
+    <div class="sm:w-4/6 sm:h-full bg-gray-200 flex justify-center items-center">
+      <div class="sm:px-44 w-full h-4/6">
         <div class="bg-white shadow-md rounded-2xl">
           <v-form fast-fail @submit.prevent="login">
+            
             <div class="px-16 py-8 grid gap-y-6">
+
               <div id="title-page" class="my-10">
                 <h1 class="text-4xl text-center font-bold text-purple-900">
                   LOGIN
@@ -30,7 +17,7 @@
                 <v-text-field
                   class="text-purple-900"
                   label="Email"
-                  v-model="user.username"
+                  v-model="user.email"
                   clearable
                   
                 ></v-text-field>
@@ -106,10 +93,11 @@ export default {
 
 <script setup>
 // This is a snipeet in vue 3 using <script setup> SFCs, the same that is above in here would be:
+import loginSideView from "../components/app/loginSideView.vue";
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 const user = ref({
-  username: "",
+  email: "",
   password: "",
 });
 
