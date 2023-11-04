@@ -1,4 +1,3 @@
-
 <!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
 <template>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
@@ -7,45 +6,32 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
   />
 
-  <div class="flex h-full w-full ">
-    <div 
-    class="top-0 h-screen w-1/5 p-0 "
-    >
+  <div class="sm:flex h-full w-full">
+    <div class="top-0 h-screen sm:w-1/5 p-0">
       <div
-        class="sidebar 
-        bg-blue-900
-        w-full h-full
-        "
-        style="text-align: center;  height: 100%; align-items: center;"
+        class="sidebar sm:bg-blue-900 bg-gray-700 w-full h-full"
+        style="text-align: center; height: 100%; align-items: center"
       >
-        <div id="sidebar-title" 
-        class="w-full h-10
-        flex justify-center align-center h-10 py-6
-        "
-        style="height:10%; display: flex;  
-        flex-wrap: wrap;" 
-      >
-         
-             <div class="flex justify-center items-center">
-              <span style="color: beige; font-weight: 700;">
-             ToDoFlow
-
-      </span>
-      <img
-          src="https://i.ibb.co/QrjrV7B/image.webp"
-          alt=""
-          class="w-6 sm:w-10 sm:p-auto "
-        />
-      </div>
-          
+        <div
+          id="sidebar-title"
+          class="w-full h-10 flex justify-center align-center h-10 py-6"
+          style="height: 10%; display: flex; flex-wrap: wrap"
+        >
+          <div class="flex justify-center items-center">
+            <span style="color: beige; font-weight: 700"> ToDoFlow </span>
+            <img
+              src="https://i.ibb.co/QrjrV7B/image.webp"
+              alt=""
+              class="w-6 sm:w-10 sm:p-auto"
+            />
+          </div>
         </div>
-        <div 
-        class="px-3 my-2"
-        style="height: 50px">
-          <button class="rounded-lg button-add bg-pink-600 " @click="addNewList()">
-            <span
-            class="text-white font-semibold"
-            > Add a new list + </span>
+        <div class="px-3 my-2" style="height: 50px">
+          <button
+            class="rounded-lg button-add bg-pink-600"
+            @click="addNewList()"
+          >
+            <span class="text-white font-semibold"> Add a new list + </span>
             <!-- <h2 style="display: inline">＋</h2> -->
           </button>
           <!-- <div v-for="(item, index) in taskLists" :key="index">
@@ -69,7 +55,7 @@
           <div
             v-for="(taskList, index) in sortedTaskLists"
             :key="index"
-            style="margin: 0 3% 0 3%;"
+            style="margin: 0 3% 0 3%"
           >
             <button
               @click="openTaskList(taskList.id)"
@@ -79,11 +65,13 @@
                 padding-right: 5%;
                 margin-top: 1%;
                 margin-bottom: 1%;
-               
               "
               v-bind:id="taskList.id"
-              
-              :class="isActiveTaskList(taskList.id) ?'taskListActive bg-blue-950 ' :   'inactiveTodoList'"
+              :class="
+                isActiveTaskList(taskList.id)
+                  ? 'taskListActive bg-blue-950 '
+                  : 'inactiveTodoList'
+              "
             >
               {{ taskList.title }}
             </button>
@@ -92,72 +80,74 @@
       </div>
     </div>
     <div
-    class="w-4/5  bg-gradient-to-b from-purple-100 to-yellow-100 py-8 px-10 h-screen"
-
-    >
-    <div v-for="(taskList, index) in taskLists" :key="index"
+      id="to-do-list"
+      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 py-8 px-10 h-screen"
     >
       <div
-        class="tasklist animate-right h-100" 
-        v-if="activeTaskList == taskList.id"
+      class="h-full  animate-right"
+      v-for="(taskList, index) in taskLists" :key="index"
+      :class="
+                activeTaskList === taskList.id
+                  ? ' block '
+                  : ' hidden '
+              "
       >
-        <div class="flex my-4 align-center " >
-          <section class="greeting w-4/5">
-            <h2 class="title">
+
+          <section class="my-4 align-center flex">
+            <div class="greeting w-4/5">
+              <h2 class="title">
+                <input
+                  type="text"
+                  placeholder="Type your list's name here..."
+                  v-model="taskList.title"
+                  @change="saveChanges()"
+                />
+              </h2>
+            </div>
+            <div class="cursor-pointer flex justify-end w-1/5">
+              <div class="cursor-pointer rounded-md p-2">
+                <i
+                  class="fa fa-trash-o"
+                  style="font-size: 40px; color: red"
+                  title="Delete To-Do List!"
+                  @click="deleteToDoList(taskList.id)"
+                ></i>
+              </div>
+            </div>
+          </section>
+          <section class="create-todo">
+            <form @submit.prevent="addTodo(taskList.id)">
               <input
                 type="text"
-                placeholder="Type your list's name here..."
-                v-model="taskList.title"
-                @change="saveChanges()"
+                placeholder="Add a new task +"
+                v-model="input_content"
+                id="AddTaskInput"
+                @click="changePlaceholder()"
               />
-            </h2>
+
+              <button class="bg-yellow-400" type="submit" value="Add to-do">
+                <span class="text-purple-900 flex align-items justify-center">
+                  <span
+                    @click="$router.push('/login')"
+                    class="material-icons text-purple-900 cursor-pointer"
+                  >
+                    add
+                  </span>
+                  Add to-do
+                </span>
+              </button>
+            </form>
           </section>
-          <section class="cursor-pointer flex justify-end w-1/5">
-          <div class="cursor-pointer rounded-md p-2">
-            <i
-              class="fa fa-trash-o"
-              style="font-size: 40px; color: red"
-              title="Delete To-Do List!"
-              @click="deleteToDoList(taskList.id)"
-            ></i>
-          </div>
-
-
-          </section>
-        </div>
-        <section class="create-todo ">
-          <form @submit.prevent="addTodo(taskList.id)"
-          >
-            <input
-              type="text"
-              placeholder="Add a new task +"
-              v-model="input_content"
-              id="AddTaskInput"
-              @click="changePlaceholder()"
-            />
-
-            <button
-            class="bg-yellow-400"
-            type="submit" value="Add to-do" >
-              <span class="text-purple-900 flex align-items justify-center">
-                <span 
-            @click="$router.push('/login')"
-            class=" material-icons text-purple-900 cursor-pointer">
-            add
-          </span>   
-                Add to-do
-              </span>
-            </button>
-
-
-          </form>
-        </section>
-        <section class="todo-list">
-          <!-- <h3>Your tasks:</h3> -->
-          <div class="my-12 list h-96 overflow-y-scroll">
+          <section
+          id="to-dos-list"
+          class="todo-list my-8 h-4/6  overflow-y-auto">
+            <!-- <h3>Your tasks:</h3> -->
             <div
               v-for="(todo, index) in taskList.todos"
-              :class="`todo-item ${todo.done && 'done'}`"
+              :class="`todo-item ${todo.done && 'done'}
+               
+              
+              `"
               :key="index"
             >
               <label>
@@ -181,12 +171,9 @@
                 </button>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
       </div>
     </div>
-    </div>
-
   </div>
 </template>
 
@@ -262,9 +249,9 @@ const sortedTaskLists = computed(() => {
 });
 
 async function addNewList() {
-  console.log("Lengths")
-  console.log(taskLists.value.length )
-  console.log(sortedTaskLists.value.length)
+  console.log("Lengths");
+  console.log(taskLists.value.length);
+  console.log(sortedTaskLists.value.length);
   const newTaskList = {
     id: taskLists.value.length + 1,
     title: "Untitled (" + (taskLists.value.length + 1) + ")",
@@ -279,7 +266,7 @@ async function addNewList() {
   };
 
   const response = await createList(ToDolist);
-  console.log(response)
+  console.log(response);
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
 }
 
@@ -335,7 +322,6 @@ const removeTodo = (taskListId, todo) => {
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
 };
 
-
 // const activeTasklist = ref(null);
 
 // Watch for changes to activeTasklist
@@ -344,9 +330,9 @@ const removeTodo = (taskListId, todo) => {
 const activeTaskList = ref(null);
 
 function openTaskList(taskListId) {
-  console.log("openTaskList")
-  console.log(taskListId)
-  console.log(sortedTaskLists.value)
+  console.log("openTaskList");
+  console.log(taskListId);
+  console.log(sortedTaskLists.value);
   // document.getElementById(taskListId).classList += " taskListActive";
   activeTaskList.value = taskListId;
 }
@@ -358,7 +344,7 @@ const isActiveTaskList = computed(() => {
     // console.log(id)
     // console.log(activeTaskList.value === id)
     return activeTaskList.value === id;
-    return true
+    return true;
   };
 });
 
@@ -389,7 +375,7 @@ const changePlaceholder = () => {
 // });
 onMounted(async () => {
   // name.value = localStorage.getItem("name") || "";
-  const userId = 1
+  const userId = 1;
   await getAllLists(userId);
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
   const data = localStorage.getItem("taskLists");
@@ -398,9 +384,6 @@ onMounted(async () => {
     taskLists.value = JSON.parse(data);
   }
 });
-
-
-
 </script>
 
 <style scoped>
@@ -459,8 +442,7 @@ onMounted(async () => {
   color: #6e6e6e;
 }
 .sidebar::-webkit-scrollbar {
-   /* Thin and gray like Mac OS X */
-
+  /* Thin and gray like Mac OS X */
 }
 
 @keyframes animateright {
