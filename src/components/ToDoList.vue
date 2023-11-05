@@ -197,6 +197,8 @@
 import "../style.css";
 import "../styles/scrollbar.css";
 import axiosInstance from "../services/api/axiosInstance.js";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 import { ref, onMounted, computed, watch } from "vue";
 import listsService from "../services/listsService.js";
 
@@ -331,12 +333,22 @@ const saveChanges = () => {
 //   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
 // };
 
-const removeTodo = (taskListId, todo) => {
+const removeTodo = async (taskListId, todo)  => {
   const result = Object.values(taskLists.value).find(
     (item) => item.id === taskListId
   );
-  result.todos = result.todos.filter((t) => t !== todo);
+  result.todos = await result.todos.filter((t) => t !== todo);
   localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
+  toast.success('Item deleted!', {
+    autoClose: 1500,
+    hideProgressBar:   false,
+    position: "top-right",
+    pauseOnHover: true,
+    showCloseButtonOnHover:  false,
+    // To change the bg color :
+    
+  }
+  );
 };
 
 // const activeTasklist = ref(null);
