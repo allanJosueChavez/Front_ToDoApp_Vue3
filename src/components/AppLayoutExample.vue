@@ -12,59 +12,7 @@
         class="sidebar sm:bg-blue-900 bg-gray-700 w-full h-full"
         style="text-align: center; height: 100%; align-items: center"
       >
-        <div
-          id="sidebar-title"
-          class="w-full h-10 flex justify-center align-center h-10 py-6"
-          style="height: 10%; display: flex; flex-wrap: wrap"
-        >
-          <div class="flex justify-center items-center">
-            <span style="color: beige; font-weight: 700"> ToDoFlow </span>
-            <img
-              src="https://i.ibb.co/QrjrV7B/image.webp"
-              alt=""
-              class="w-6 sm:w-10 sm:p-auto"
-            />
-          </div>
-        </div>
-        <div class="px-3 my-2" style="height: 50px">
-          <button
-            class="rounded-lg button-add bg-pink-600"
-            @click="addNewList()"
-          >
-            <span class="text-white font-semibold"> Add a new list + </span>
-            <!-- <h2 style="display: inline">＋</h2> -->
-          </button>
-        </div>
-        <div
-          style="
-            scrollbar-width: thin;
-            overflow-y: scroll;
-            height: 80%;
-            margin-top: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            align-content: center;
-          "
-        >
-          <div
-            class="bg-violet-900"
-            style="margin: 0 3% 0 3%"
-          >
-            <button
-              @click="openTaskList(lists.id)"
-              class="tablink hover:bg-sky-900"
-              style="
-                padding-left: 5%;
-                padding-right: 5%;
-                margin-top: 1%;
-                margin-bottom: 1%;
-              "
-            >
-              {{ lists.title }}
-            </button>
-          </div>
-        </div>
+        
       </div>
     </div>
     <div
@@ -72,19 +20,12 @@
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 py-8 px-10 h-screen"
     >
       <div
-      class="h-full  animate-right"
-
+      class="h-full animate-right"
       >
-
           <section class="my-4 align-center flex">
             <div class="greeting w-4/5">
               <h2 class="title">
-                <input
-                  type="text"
-                  placeholder="Type your list's name here..."
-                  v-model="todoExample.title"
-                  @change="saveChanges()"
-                />
+                Title of the To-Do List
               </h2>
             </div>
             <div class="cursor-pointer flex justify-end w-1/5">

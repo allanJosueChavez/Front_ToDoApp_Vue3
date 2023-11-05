@@ -1,0 +1,23 @@
+/* Define the scrollbar track */
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: #929292;
+    border-radius: 4px;
+  }
+  
+  /* Define the scrollbar thumb (the part you can drag) */
+  ::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+  }
+  
+  /* Define the scrollbar track on hover */
+  ::-webkit-scrollbar:hover {
+    background-color: #777;
+  }
+  
+  /* Define the scrollbar thumb on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #333;
+  }
+  

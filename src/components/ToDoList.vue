@@ -119,7 +119,7 @@
             <form @submit.prevent="addTodo(taskList.id)">
               <input
                 type="text"
-                placeholder="Add a new task +"
+                :placeholder="defaultPlaceholder"
                 v-model="input_content"
                 id="AddTaskInput"
                 @click="changePlaceholder()"
@@ -179,6 +179,7 @@
 
 <script setup>
 import "../style.css";
+import "../styles/scrollbar.css";
 import axiosInstance from "../services/api/axiosInstance.js";
 import { ref, onMounted, computed, watch } from "vue";
 import listsService from "../services/listsService.js";
@@ -187,7 +188,7 @@ const { getAllLists, createList } = listsService;
 
 // import { reactive, toRefs } from "vue";
 const allLists = ref([]);
-
+const defaultPlaceholder = ref("Add a new item...");
 // defineProps({
 //   // msg: String,
 // });
@@ -366,8 +367,8 @@ const deleteToDoList = (taskListId) => {
 // }
 
 const changePlaceholder = () => {
-  const input = document.getElementById("AddTaskInput");
-  input.placeholder = "e.g: study concepts of ruby on rails";
+  defaultPlaceholder.value = "e.g. Buy milk";
+
 };
 
 // watch((taskList) => {
@@ -376,7 +377,7 @@ const changePlaceholder = () => {
 onMounted(async () => {
   // name.value = localStorage.getItem("name") || "";
   const userId = 1;
-  await getAllLists(userId);
+  // await getAllLists(userId);
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
   const data = localStorage.getItem("taskLists");
 
@@ -387,6 +388,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+
+
 .container {
   width: 100%;
   height: 100%;
@@ -425,13 +429,6 @@ onMounted(async () => {
   /* background-color: rgb(0, 77, 145); */
   border-radius: 0.5rem;
 }
-.sidebar {
-  /* background-color: #0e68ef; */
-  /* scrollbar-width: thin;
-            
-
-            overflow-y: scroll; */
-}
 
 #AddTaskInput:hover {
   background-color: #d4d4d4;
@@ -440,10 +437,11 @@ onMounted(async () => {
 #AddTaskInput:hover::-webkit-input-placeholder {
   font-weight: 900;
   color: #6e6e6e;
+
+
 }
-.sidebar::-webkit-scrollbar {
-  /* Thin and gray like Mac OS X */
-}
+
+
 
 @keyframes animateright {
   from {
