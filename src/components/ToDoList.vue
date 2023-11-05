@@ -7,15 +7,15 @@
   />
 
   <div class="sm:flex h-full w-full">
-    <div class="top-0 h-screen sm:w-1/5 p-0">
+    <div class="top-0 h-screen sm:w-1/5 p-0 ">
       <div
-        class="sidebar sm:bg-blue-900 bg-gray-700 w-full h-full"
+        class="sidebar sm:bg-blue-900 bg-gray-700 w-full h-full "
         style="text-align: center; height: 100%; align-items: center"
       >
         <div
           id="sidebar-title"
-          class="w-full h-10 flex justify-center align-center h-10 py-6"
-          style="height: 10%; display: flex; flex-wrap: wrap"
+          class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
+          style="  display: flex; flex-wrap: wrap"
         >
           <div class="flex justify-center items-center">
             <span style="color: beige; font-weight: 700"> ToDoFlow </span>
@@ -26,7 +26,26 @@
             />
           </div>
         </div>
-        <div class="px-3 my-2" style="height: 50px">
+        <div id="search-bar-container" class="w-full h-15 mb-6" 
+        >
+          <v-text-field
+            v-model="search"
+            label="Search"
+            placeholder="Find a list..."
+            hide-details
+            class="bg-blue-900 rounded-md mx-3 text-white"
+            style="border:  2px solid white; "
+            :loading="listsLoading"
+          >
+          <span class="material-icons absolute top-5 right-0 text-white mr-1">
+       
+          search
+          </span>
+        </v-text-field>
+        </div>
+        <div class="px-3 my-2 h-14" 
+        id="add-new-list-button"
+        >
           <button
             class="rounded-lg button-add bg-pink-600"
             @click="addNewList()"
@@ -44,7 +63,7 @@
           style="
             scrollbar-width: thin;
             overflow-y: scroll;
-            height: 80%;
+            height: 70%;
             margin-top: 10px;
             justify-content: center;
             align-items: center;
@@ -59,7 +78,7 @@
           >
             <button
               @click="openTaskList(taskList.id)"
-              class="tablink hover:bg-sky-900"
+              class="tablink hover:bg-sky-900 border rounded-lg"
               style="
                 padding-left: 5%;
                 padding-right: 5%;
@@ -95,9 +114,9 @@
 
           <section class="my-4 align-center flex">
             <div class="greeting w-4/5">
-              <h2 class="title">
+              <h2 class="title pl-5">
                 <input
-                  type="text"
+                  type="text text-2xl font-bold"
                   placeholder="Type your list's name here..."
                   v-model="taskList.title"
                   @change="saveChanges()"
@@ -127,14 +146,11 @@
 
               <button class="bg-yellow-400" type="submit" value="Add to-do">
                 <span class="text-purple-900 flex align-items justify-center">
-                  <span
-                    @click="$router.push('/login')"
-                    class="material-icons text-purple-900 cursor-pointer"
-                  >
+                  <span class="material-icons text-purple-900 cursor-pointer">
                     add
                   </span>
                   Add to-do
-                </span>
+                 </span>
               </button>
             </form>
           </section>
@@ -189,7 +205,7 @@ const { getAllLists, createList } = listsService;
 // import { reactive, toRefs } from "vue";
 const allLists = ref([]);
 const defaultPlaceholder = ref("Add a new item...");
-// defineProps({
+const search = ref("");
 //   // msg: String,
 // });
 
