@@ -5,7 +5,8 @@
   >
     <!-- Content for the first column -->
     <div
-      class="flex align-center sm:flex-col h-100 text-center shadow-2xl p-4 sm:pt-16 rounded-2xl"
+     id="card"
+      class="flex align-center sm:flex-col text-center shadow-2xl p-4 sm:pt-16 rounded-2xl"
     >
       <span class="text-4xl sm:text-6xl text-white text-center font-bold">
         ToDoFLow
