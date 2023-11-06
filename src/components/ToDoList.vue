@@ -1,8 +1,6 @@
 <!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
 <template>
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-
-
+  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
   <div class="sm:flex h-full w-full">
     <div class="top-0 h-screen sm:w-1/5 p-0 ">
       <div
@@ -15,7 +13,9 @@
           style="  display: flex; flex-wrap: wrap"
         >
           <div class="flex justify-center items-center">
-            <span style="color: beige; font-weight: 700"> ToDoFlow </span>
+            <span 
+            class="font-bold text-2xl sm:text-2xl"
+            style="color: beige; "> ToDoFlow </span>
             <img
               src="https://i.ibb.co/QrjrV7B/image.webp"
               alt=""
@@ -86,8 +86,7 @@
               :class="
                 isActiveTaskList(taskList.id)
                   ? 'taskListActive bg-blue-950 '
-                  : 'inactiveTodoList'
-              "
+                  : 'inactiveTodoList' + ' ' + 'font-semibold'              "
             >
               {{ taskList.title }}
             </button>
@@ -109,13 +108,14 @@
               "
       >
 
-          <section class="my-4 align-center flex">
+          <section class="my-4 align-center flex ">
             <div 
             id="greeting"
-            class="greeting w-4/5">
-              <h2 class="title pl-5">
+            class="greeting w-4/5 font-extrabold p-2">
+              <h2 class="title pl-2 text-3xl">
                 <input
-                  type="text text-2xl font-bold"
+                  type="text"
+                  class=""
                   placeholder="Type your list's name here..."
                   v-model="taskList.title"
                   @change="saveChanges()"
@@ -158,7 +158,7 @@
                 @click="changePlaceholder()"
               />
 
-              <button class="bg-yellow-400" type="submit" value="Add to-do">
+              <button class="bg-yellow-400 font-bold" type="submit" value="Add to-do">
                 <span class="text-purple-900 flex align-items justify-center">
                   <span class="material-icons text-purple-900 cursor-pointer">
                     add
