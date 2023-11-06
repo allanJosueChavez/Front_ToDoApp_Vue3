@@ -1,60 +1,27 @@
 <!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
 <template>
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-  />
 
-  <div class="sm:flex h-full w-full">
-    <div class="top-0 h-screen sm:w-1/5 p-0">
+  <div class="sm:flex h-screen w-full">
+    <div class="top-0 sm:w-1/5 p-0">
       <div
-        class="sidebar sm:bg-blue-900 bg-gray-700 w-full h-full"
+        class="sidebar sm:bg-blue-900 bg-gray-700 w-full "
         style="text-align: center; height: 100%; align-items: center"
       ></div>
     </div>
     <div
       id="to-do-list"
-      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 py-8 px-10 h-screen"
+      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-14 pt-2  px-10  "
     >
       <div class="h-full animate-right">
-        <section class="my-4 align-center flex">
-          <div class="greeting w-4/5">
-            <h2 class="title">Title of the To-Do List</h2>
-          </div>
-          <div class="cursor-pointer flex justify-end w-1/5">
-            <div class="cursor-pointer rounded-md p-2">
-              <i
-                class="fa fa-trash-o"
-                style="font-size: 40px; color: red"
-                title="Delete To-Do List!"
-                @click="deleteToDoList(todoExample.id)"
-              ></i>
-            </div>
-          </div>
+        <section class="my-4 align-center flex bg-red h-20">
+          <span class="text-white ">
+            Title of the list and button to delete the list
+          </span>
         </section>
-        <section class="create-todo">
-          <form @submit.prevent="addTodo(todoExample.id)">
-            <input
-              type="text"
-              placeholder="Add a new task +"
-              v-model="input_content"
-              id="AddTaskInput"
-              @click="changePlaceholder()"
-            />
-
-            <button class="bg-yellow-400" type="submit" value="Add to-do">
-              <span class="text-purple-900 flex align-items justify-center">
-                <span
-                  @click="$router.push('/login')"
-                  class="material-icons text-purple-900 cursor-pointer"
-                >
-                  add
-                </span>
-                Add to-do
-              </span>
-            </button>
-          </form>
+        <section class="create-todo bg-purple-900 h-36">
+            <span class="text-white ">
+              Input and button to create a new To-Do
+            </span>
         </section>
         <section id="to-dos-list" class="bg-sky-400 todo-list my-8 h-4/6 overflow-y-auto">
         </section>

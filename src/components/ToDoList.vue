@@ -1,10 +1,10 @@
 <!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
 <template>
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
-  <div class="sm:flex h-full w-full">
-    <div class="top-0 h-screen sm:w-1/5 p-0 ">
+  <div class="sm:flex h-screen w-full">
+    <div class="top-0  sm:w-1/5 p-0 h-full">
       <div
-        class="sidebar sm:bg-blue-900 bg-gray-700 w-full h-full "
+        class="sidebar sm:bg-blue-900 bg-gray-700 w-full"
         style="text-align: center; height: 100%; align-items: center"
       >
         <div
@@ -96,7 +96,7 @@
     </div>
     <div
       id="to-do-list"
-      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 h-screen"
+      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
     >
       <div
       class="h-full  animate-right"
@@ -108,7 +108,9 @@
               "
       >
 
-          <section class="my-4 align-center flex ">
+          <section 
+          id="greeting-section"
+          class="my-4 align-center flex h-18">
             <div 
             id="greeting"
             class="greeting w-4/5 font-extrabold p-2">
@@ -148,7 +150,9 @@
               </span> -->
             </div>
           </section>
-          <section class="create-todo">
+          <section 
+          id="create-todo-section"
+          class="create-todo h-36">
             <form @submit.prevent="addTodo(taskList.id)">
               <input
                 type="text"
