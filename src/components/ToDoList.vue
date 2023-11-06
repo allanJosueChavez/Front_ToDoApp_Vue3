@@ -1,10 +1,7 @@
 <!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
 <template>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-  />
+
 
   <div class="sm:flex h-full w-full">
     <div class="top-0 h-screen sm:w-1/5 p-0 ">
@@ -100,7 +97,7 @@
     </div>
     <div
       id="to-do-list"
-      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 py-8 px-10 h-screen"
+      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 h-screen"
     >
       <div
       class="h-full  animate-right"
@@ -113,7 +110,9 @@
       >
 
           <section class="my-4 align-center flex">
-            <div class="greeting w-4/5">
+            <div 
+            id="greeting"
+            class="greeting w-4/5">
               <h2 class="title pl-5">
                 <input
                   type="text text-2xl font-bold"
@@ -123,15 +122,30 @@
                 />
               </h2>
             </div>
-            <div class="cursor-pointer flex justify-end w-1/5">
-              <div class="cursor-pointer rounded-md p-2">
-                <i
-                  class="fa fa-trash-o"
-                  style="font-size: 40px; color: red"
+            <div 
+            id="delete-list-button"
+            class="flex justify-end w-1/5 p-2">
+            
+              <v-tooltip>
+                <template v-slot:activator="{ props }">
+                  <span
+                  v-bind="props"
+                    class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
+                    @click="deleteToDoList(taskList.id)"
+                  > 
+                    delete
+                  </span>
+                </template>
+                <span> Delete List! </span>
+              </v-tooltip>
+
+                <!-- <span
+                  class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
                   title="Delete To-Do List!"
                   @click="deleteToDoList(taskList.id)"
-                ></i>
-              </div>
+                > 
+                  delete
+              </span> -->
             </div>
           </section>
           <section class="create-todo">
@@ -208,6 +222,8 @@ const { getAllLists, createList } = listsService;
 const allLists = ref([]);
 const defaultPlaceholder = ref("Add a new item...");
 const search = ref("");
+const listsLoading = ref(false);
+
 //   // msg: String,
 // });
 
