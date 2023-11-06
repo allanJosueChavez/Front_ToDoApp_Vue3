@@ -128,7 +128,7 @@ button:focus-visible {
 	
 }
 
-input:not([type="radio"]):not([type="checkbox"]), button {
+input:not([type="radio"]):not([type="checkbox"]) {
 	appearance: none;
 	border: none;
 	outline: none;
@@ -141,13 +141,7 @@ body {
 	background: var(--light);
 	color: var(--dark);
 }
-
-/* section {
-	padding-top: 2rem;
-	padding-bottom: 2rem;
-	padding-left: 1.5rem;
-	padding-right: 1.5em;
-} */
+ 
 
 h3 {
 	color: var(--dark);
@@ -162,12 +156,7 @@ h4 {
 	font-weight: 700;
 	margin-bottom: 0.5rem;
 }
-
-.greeting{
-	/* margin-left: 2%; */
-	/* margin-right: 2%; */
-	/* margin-left: 10px; */
-}
+ 
 .greeting .title {
 	display: flex;
 	padding: 0px 0px 10px 0px;
@@ -352,3 +341,25 @@ input:checked ~ .bubble::after {
 	text-decoration: line-through;
 	color: var(--grey);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
