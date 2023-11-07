@@ -2,8 +2,13 @@
 import loginSideView from "../../components/app/loginSideView.vue";
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
-
-
+import CryptoJS from "crypto-js";
+import usersService from "../../services/usersService.js";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+const router = useRouter();
+const loading = ref(false);
+const { create } = usersService;
 const form = ref(null);
 const user = ref({
   name: "",
@@ -17,16 +22,44 @@ const signup = async () => {
   console.log(isValid.valid);
   if (!isValid.valid) {
     return;
-  } else {
-    router.push("/login");
+  } 
+  try{
+    loading.value = true;
+    const PASSPHRASE = "12345678901234567890123456789012";
+    const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE).toString()
+    // If you wanna avoid the problem of updating the v-model with the encrypted pass, just create a new object with the encrypted pass and send it to the backend
+    const userInfo = {
+      name: user.value.name,
+      email: user.value.email,
+      password: hashedPassword,
+    };
+    const response = await create(userInfo);
+    if(response.status === 200){
+      toast.success("You just signed up successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    }
+    else{
+      toast.error("Something went wrong!", {
+        position: "top-right",
+        duration: 2000,
+      });
+    }
+    loading.value = false;
+  }catch(err){
+      console.log(err);
   }
 };
 
-const router = useRouter();
 
 const usernameRules = [
   (v) => !!v || "Name is required",
-  (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
+  (v) => (v && v.length <= 15) || "Name must be less than 15 characters",
+  (v) => (v && v.length >= 3) || "Name must be larger than 3 characters",
 ];
 
 const emailRules = [
@@ -109,7 +142,7 @@ const passwordConfirmationRules = [
               </div>
               <div class="w-100 flex items-center justify-center mb-6">
                 <button>
-                  <v-btn class="text-purple-800" color="primary" type="submit">
+                  <v-btn :loading="loading" class="text-purple-800" color="primary" type="submit">
                     <span class="text-md"> Sign up </span>
                   </v-btn>
                 </button>
