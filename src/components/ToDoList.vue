@@ -268,7 +268,7 @@ onMounted(async () => {
         id="add-new-list-button"
         >
           <button
-            class="rounded-lg button-add bg-pink-600"
+            class="rounded-lg button-add bg-pink-600 w-full h-full"
             @click="addNewList()"
           >
             <span class="text-white font-semibold"> Add a new list + </span>
@@ -299,7 +299,7 @@ onMounted(async () => {
           >
             <button
               @click="openTaskList(taskList.id)"
-              class="tablink hover:bg-sky-900 border rounded-lg"
+              class="tablink hover:bg-sky-900 border rounded-lg w-full"
               style="
                 padding-left: 5%;
                 padding-right: 5%;
