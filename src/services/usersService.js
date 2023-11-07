@@ -1,6 +1,6 @@
 import axiosInstance from "./api/axiosInstance";
 
-async function signup(user){
+async function create(user){
     const response = await axiosInstance.post("/api/users/", user);
     return response;
 }
@@ -12,6 +12,6 @@ async function login(user){
 }
 
 export default {
-    signup,
+    create,
     login
 }
