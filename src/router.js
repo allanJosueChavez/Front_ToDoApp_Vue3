@@ -1,5 +1,5 @@
 import Login from "./views/Login.vue";
-import Signup from "./views/Signup.vue";
+import Signup from "./views/Signup/Signup.vue";
 import ToDoList from "./components/ToDoList.vue";
 import AppLayoutExample from "./components/AppLayoutExample.vue";
 import { createRouter, createWebHistory } from "vue-router";
