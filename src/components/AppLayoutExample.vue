@@ -13,7 +13,7 @@
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-14 pt-2  px-10  "
     >
       <div class="h-full animate-right">
-        <section class="my-4 align-center flex bg-red h-20">
+        <section class="my-6 align-center flex bg-red h-20">
           <span class="text-white ">
             Title of the list and button to delete the list
           </span>
@@ -23,7 +23,7 @@
               Input and button to create a new To-Do
             </span>
         </section>
-        <section id="to-dos-list" class="bg-sky-400 todo-list my-8 h-4/6 overflow-y-auto">
+        <section id="to-dos-list" class="my-6 bg-sky-400 todo-list  h-4/6 overflow-y-auto">
         </section>
       </div>
     </div>
