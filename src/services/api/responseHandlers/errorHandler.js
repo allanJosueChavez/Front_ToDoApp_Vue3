@@ -7,8 +7,8 @@ async function evaluateResponse(error){
     console.log(error.response);
     if(error.response.status === 200){
         toast.success('Success');
-    }else if(error.response.status === 400){
-        toast.error('Oops! Something went wrong', 
+    }else if(error.response.status === 400 || error.response.status === 500){
+        toast.error('Oops! Something went wrong, please try again.',
         {
           autoClose: 1500,
           hideProgressBar:  false,
