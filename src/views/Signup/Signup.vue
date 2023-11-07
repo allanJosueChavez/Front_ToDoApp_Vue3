@@ -142,7 +142,7 @@ const passwordConfirmationRules = [
               </div>
               <div class="w-100 flex items-center justify-center mb-6">
                 <button>
-                  <v-btn :loading="loading" class="text-purple-800" color="primary" type="submit">
+                  <v-btn :disabled="loading" :loading="loading" class="text-purple-800" color="primary" type="submit">
                     <span class="text-md"> Sign up </span>
                   </v-btn>
                 </button>
