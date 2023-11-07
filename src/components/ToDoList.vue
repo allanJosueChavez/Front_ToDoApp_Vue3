@@ -1,216 +1,3 @@
-<!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
-<template>
-  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
-  <div class="sm:flex h-screen w-full">
-    <div class="top-0  sm:w-1/5 p-0 h-full">
-      <div
-        class="sidebar sm:bg-blue-900 bg-gray-700 w-full"
-        style="text-align: center; height: 100%; align-items: center"
-      >
-        <div
-          id="sidebar-title"
-          class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
-          style="  display: flex; flex-wrap: wrap"
-        >
-          <div class="flex justify-center items-center">
-            <span 
-            class="font-bold text-2xl sm:text-2xl"
-            style="color: beige; "> ToDoFlow </span>
-            <img
-              src="https://i.ibb.co/QrjrV7B/image.webp"
-              alt=""
-              class="w-6 sm:w-10 sm:p-auto"
-            />
-          </div>
-        </div>
-        <div id="search-bar-container" class="w-full h-15 mb-6" 
-        >
-          <v-text-field
-            v-model="search"
-            label="Search"
-            placeholder="Find a list..."
-            hide-details
-            class="bg-blue-900 rounded-md mx-3 text-white"
-            style="border:  2px solid white; "
-            :loading="listsLoading"
-          >
-          <span class="material-icons absolute top-5 right-0 text-white mr-1">
-       
-          search
-          </span>
-        </v-text-field>
-        </div>
-        <div class="px-3 my-2 h-14" 
-        id="add-new-list-button"
-        >
-          <button
-            class="rounded-lg button-add bg-pink-600"
-            @click="addNewList()"
-          >
-            <span class="text-white font-semibold"> Add a new list + </span>
-            <!-- <h2 style="display: inline">＋</h2> -->
-          </button>
-          <!-- <div v-for="(item, index) in taskLists" :key="index">
-            <ul>
-              <li>{{ item }}</li>
-            </ul>
-          </div> -->
-        </div>
-        <div
-          style="
-            scrollbar-width: thin;
-            overflow-y: scroll;
-            height: 70%;
-            margin-top: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            align-content: center;
-          "
-        >
-          <div
-            v-for="(taskList, index) in sortedTaskLists"
-            :key="index"
-            style="margin: 0 3% 0 3%"
-          >
-            <button
-              @click="openTaskList(taskList.id)"
-              class="tablink hover:bg-sky-900 border rounded-lg"
-              style="
-                padding-left: 5%;
-                padding-right: 5%;
-                margin-top: 1%;
-                margin-bottom: 1%;
-              "
-              v-bind:id="taskList.id"
-              :class="
-                isActiveTaskList(taskList.id)
-                  ? 'taskListActive bg-blue-950 '
-                  : 'inactiveTodoList' + ' ' + 'font-semibold'              "
-            >
-              {{ taskList.title }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      id="to-do-list"
-      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
-    >
-      <div
-      class="h-full  animate-right"
-      v-for="(taskList, index) in taskLists" :key="index"
-      :class="
-                activeTaskList === taskList.id
-                  ? ' block '
-                  : ' hidden '
-              "
-      >
-
-          <section 
-          id="greeting-section"
-          class="my-4 align-center flex h-18">
-            <div 
-            id="greeting"
-            class="greeting w-4/5 font-extrabold p-2">
-              <h2 class="title pl-2 text-3xl">
-                <input
-                  type="text"
-                  class=""
-                  placeholder="Type your list's name here..."
-                  v-model="taskList.title"
-                  @change="saveChanges()"
-                />
-              </h2>
-            </div>
-            <div 
-            id="delete-list-button"
-            class="flex justify-end w-1/5 p-2">
-            
-              <v-tooltip>
-                <template v-slot:activator="{ props }">
-                  <span
-                  v-bind="props"
-                    class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
-                    @click="deleteToDoList(taskList.id)"
-                  > 
-                    delete
-                  </span>
-                </template>
-                <span> Delete List! </span>
-              </v-tooltip>
-
-                <!-- <span
-                  class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
-                  title="Delete To-Do List!"
-                  @click="deleteToDoList(taskList.id)"
-                > 
-                  delete
-              </span> -->
-            </div>
-          </section>
-          <section 
-          id="create-todo-section"
-          class="create-todo h-36">
-            <form @submit.prevent="addTodo(taskList.id)">
-              <input
-                type="text"
-                :placeholder="defaultPlaceholder"
-                v-model="input_content"
-                id="AddTaskInput"
-                @click="changePlaceholder()"
-              />
-
-              <button class="bg-yellow-400 font-bold" type="submit" value="Add to-do">
-                <span class="text-purple-900 flex align-items justify-center">
-                  <span class="material-icons text-purple-900 cursor-pointer">
-                    add
-                  </span>
-                  Add to-do
-                 </span>
-              </button>
-            </form>
-          </section>
-          <section
-          id="to-dos-list"
-          class="todo-list my-8 h-4/6  overflow-y-auto">
-            <!-- <h3>Your tasks:</h3> -->
-            <div
-              v-for="(todo, index) in taskList.todos"
-              :class="`todo-item ${todo.done && 'done'}
-               
-              
-              `"
-              :key="index"
-            >
-              <label>
-                <input
-                  type="checkbox"
-                  v-model="todo.done"
-                  @change="saveChanges()"
-                />
-                <span :class="`bubble ${todo.category}`"> </span>
-              </label>
-              <div class="todo-content">
-                <input
-                  type="text"
-                  v-model="todo.content"
-                  @change="saveChanges()"
-                />
-              </div>
-              <div class="actions">
-                <button class="delete" @click="removeTodo(taskList.id, todo)">
-                  Delete
-                </button>
-              </div>
-            </div>
-          </section>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import "../style.css";
 import "../styles/scrollbar.css";
@@ -425,7 +212,7 @@ const changePlaceholder = () => {
 onMounted(async () => {
   // name.value = localStorage.getItem("name") || "";
   const userId = 1;
-  // await getAllLists(userId);
+  await getAllLists(userId);
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
   const data = localStorage.getItem("taskLists");
 
@@ -434,6 +221,221 @@ onMounted(async () => {
   }
 });
 </script>
+
+<!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
+<template>
+  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
+  <div class="sm:flex h-screen w-full">
+    <div class="top-0  sm:w-1/5 p-0 h-full">
+      <div
+        class="sidebar sm:bg-blue-900 bg-gray-700 w-full"
+        style="text-align: center; height: 100%; align-items: center"
+      >
+        <div
+          id="sidebar-title"
+          class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
+          style="  display: flex; flex-wrap: wrap"
+        >
+          <div class="flex justify-center items-center">
+            <span 
+            class="font-bold text-2xl sm:text-2xl"
+            style="color: beige; "> ToDoFlow </span>
+            <img
+              src="https://i.ibb.co/QrjrV7B/image.webp"
+              alt=""
+              class="w-6 sm:w-10 sm:p-auto"
+            />
+          </div>
+        </div>
+        <div id="search-bar-container" class="w-full h-15 mb-6" 
+        >
+          <v-text-field
+            v-model="search"
+            label="Search"
+            placeholder="Find a list..."
+            hide-details
+            class="bg-blue-900 rounded-md mx-3 text-white"
+            style="border:  2px solid white; "
+            :loading="listsLoading"
+          >
+          <span class="material-icons absolute top-5 right-0 text-white mr-1">
+       
+          search
+          </span>
+        </v-text-field>
+        </div>
+        <div class="px-3 my-2 h-14" 
+        id="add-new-list-button"
+        >
+          <button
+            class="rounded-lg button-add bg-pink-600"
+            @click="addNewList()"
+          >
+            <span class="text-white font-semibold"> Add a new list + </span>
+            <!-- <h2 style="display: inline">＋</h2> -->
+          </button>
+          <!-- <div v-for="(item, index) in taskLists" :key="index">
+            <ul>
+              <li>{{ item }}</li>
+            </ul>
+          </div> -->
+        </div>
+        <div
+          style="
+            scrollbar-width: thin;
+            overflow-y: scroll;
+            height: 70%;
+            margin-top: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            align-content: center;
+          "
+        >
+          <div
+            v-for="(taskList, index) in sortedTaskLists"
+            :key="index"
+            style="margin: 0 3% 0 3%"
+          >
+            <button
+              @click="openTaskList(taskList.id)"
+              class="tablink hover:bg-sky-900 border rounded-lg"
+              style="
+                padding-left: 5%;
+                padding-right: 5%;
+                margin-top: 1%;
+                margin-bottom: 1%;
+              "
+              v-bind:id="taskList.id"
+              :class="
+                isActiveTaskList(taskList.id)
+                  ? 'taskListActive bg-blue-950 '
+                  : 'inactiveTodoList' + ' ' + 'font-semibold'              "
+            >
+              {{ taskList.title }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="to-do-list"
+      class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
+    >
+      <div
+      class="h-full  animate-right"
+      v-for="(taskList, index) in taskLists" :key="index"
+      :class="
+                activeTaskList === taskList.id
+                  ? ' block '
+                  : ' hidden '
+              "
+      >
+
+          <section 
+          id="greeting-section"
+          class="my-4 align-center flex h-18">
+            <div 
+            id="greeting"
+            class="greeting w-4/5 font-extrabold p-2">
+              <h2 class="title pl-2 text-3xl">
+                <input
+                  type="text"
+                  class=""
+                  placeholder="Type your list's name here..."
+                  v-model="taskList.title"
+                  @change="saveChanges()"
+                />
+              </h2>
+            </div>
+            <div 
+            id="delete-list-button"
+            class="flex justify-end w-1/5 p-2">
+            
+              <v-tooltip>
+                <template v-slot:activator="{ props }">
+                  <span
+                  v-bind="props"
+                    class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
+                    @click="deleteToDoList(taskList.id)"
+                  > 
+                    delete
+                  </span>
+                </template>
+                <span> Delete List! </span>
+              </v-tooltip>
+
+                <!-- <span
+                  class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
+                  title="Delete To-Do List!"
+                  @click="deleteToDoList(taskList.id)"
+                > 
+                  delete
+              </span> -->
+            </div>
+          </section>
+          <section 
+          id="create-todo-section"
+          class="create-todo h-36">
+            <form @submit.prevent="addTodo(taskList.id)">
+              <input
+                type="text"
+                :placeholder="defaultPlaceholder"
+                v-model="input_content"
+                id="AddTaskInput"
+                @click="changePlaceholder()"
+              />
+
+              <button class="bg-yellow-400 font-bold" type="submit" value="Add to-do">
+                <span class="text-purple-900 flex align-items justify-center">
+                  <span class="material-icons text-purple-900 cursor-pointer">
+                    add
+                  </span>
+                  Add to-do
+                 </span>
+              </button>
+            </form>
+          </section>
+          <section
+          id="to-dos-list"
+          class="todo-list my-8 h-4/6  overflow-y-auto">
+            <!-- <h3>Your tasks:</h3> -->
+            <div
+              v-for="(todo, index) in taskList.todos"
+              :class="`todo-item ${todo.done && 'done'}
+               
+              
+              `"
+              :key="index"
+            >
+              <label>
+                <input
+                  type="checkbox"
+                  v-model="todo.done"
+                  @change="saveChanges()"
+                />
+                <span :class="`bubble ${todo.category}`"> </span>
+              </label>
+              <div class="todo-content">
+                <input
+                  type="text"
+                  v-model="todo.content"
+                  @change="saveChanges()"
+                />
+              </div>
+              <div class="actions">
+                <button class="delete" @click="removeTodo(taskList.id, todo)">
+                  Delete
+                </button>
+              </div>
+            </div>
+          </section>
+      </div>
+    </div>
+  </div>
+</template>
+
+
 
 <style scoped>
 
