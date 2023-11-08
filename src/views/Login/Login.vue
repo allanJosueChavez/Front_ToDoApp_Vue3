@@ -15,6 +15,7 @@ const router = useRouter();
 
 const loading = ref(false);
 const loginForm = ref(null);
+const showPassword = ref(false);
 
 const user = ref({
   email: "",
@@ -24,6 +25,7 @@ const user = ref({
 const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
 
 const authentication = async () => {
+  loading.value = true;
   const isValid = await validateForm();
   if (!isValid) return;
   try{
@@ -41,6 +43,9 @@ const authentication = async () => {
         position: "top-right",
         autoClose: 2000,
       });
+  }finally
+  {
+    loading.value = false;
   }
 };
 
@@ -89,6 +94,7 @@ const passwordRules = [
   (v) => (v && v.length >= 8) || "Password must be larger than 8 characters",
 ];
 
+// The mdi-close of the clearable option of the v-text-field is not working. 
 </script>
 
 
@@ -115,19 +121,24 @@ const passwordRules = [
                   label="Email"
                   :rules="emailRules"
                   v-model="user.email"
-                  clearable
                 ></v-text-field>
               </div>
               <div>
                 <v-text-field
+                   ref="passwordInput"
                   class="text-purple-900"
                   label="Password"
+                  :type="showPassword ? 'text' : 'password'"
                   :rules="passwordRules"
                   v-model="user.password"
-                  clearable
-                ></v-text-field>
+                >
+                <span class="material-icons-outlined absolute right-3 top-5 cursor-pointer text-purple-800 
+                "  @click="showPassword = !showPassword">
+                {{ showPassword ? 'visibility' : 'visibility_off' }}
+                </span>
+              
+              </v-text-field>
               </div>
-
               <div class="w-100 flex items-center justify-center mb-6">
                 <button>
                   <v-btn class="text-purple-800" color="primary" type="submit">

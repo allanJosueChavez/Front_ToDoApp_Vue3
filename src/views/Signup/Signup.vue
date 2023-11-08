@@ -17,6 +17,7 @@ const user = ref({
   passwordConfirmation: "",
 });
 
+
 const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
 
 const signup = async () => {
@@ -89,6 +90,7 @@ const passwordConfirmationRules = [
   (v) =>
     v === user.value.password || "Password Confirmation must match Password",
 ];
+
 </script>
 
 <template>

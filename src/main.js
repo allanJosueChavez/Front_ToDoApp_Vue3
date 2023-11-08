@@ -10,6 +10,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import 'material-icons/iconfont/material-icons.css';
 
+
 const vuetify = createVuetify({
     components
     , directives
