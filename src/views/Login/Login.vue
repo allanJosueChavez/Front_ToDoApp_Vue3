@@ -27,7 +27,7 @@ const authentication = async () => {
   try{
     const PASSPHRASE = import.meta.env.PASSPHRASE;
     console.log("PASSPHRASE: ", PASSPHRASE);
-    // const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE).toString()
+    const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE).toString()
     // const userCredentials = {
     //   email: user.value.email,
     //   password: hashedPassword,
