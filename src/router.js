@@ -1,4 +1,4 @@
-import Login from "./views/Login.vue";
+import Login from "./views/Login/Login.vue";
 import Signup from "./views/Signup/Signup.vue";
 import ToDoList from "./components/ToDoList.vue";
 import AppLayoutExample from "./components/AppLayoutExample.vue";
@@ -9,7 +9,7 @@ const routes = [
   { path: "/to-do-list", component: ToDoList },
   { path: "/signup", component: Signup },
   { path: "/hola", component: AppLayoutExample },
-  { path: "/", component: Login },
+  { path: "/home", component: ToDoList },
 ];
 
 const router = createRouter({
