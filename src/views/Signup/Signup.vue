@@ -17,14 +17,14 @@ const user = ref({
   passwordConfirmation: "",
 });
 
+const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
+
 const signup = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
   try{
     loading.value = true;
-    // const PASSPHRASE = "12345678901234567890123456789012"; // This gotta be in the .env file
-    const PASSPHRASE = import.meta.env.PASSPHRASE;
-    const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE).toString()
+    const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE.value).toString()
     // If you wanna avoid the problem of updating the v-model with the encrypted pass, just create a new object with the encrypted pass and send it to the backend
     const userInfo = {
       name: user.value.name,

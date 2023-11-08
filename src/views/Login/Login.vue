@@ -21,22 +21,20 @@ const user = ref({
   password: "",
 });
 
+const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
+
 const authentication = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
   try{
-    const PASSPHRASE = import.meta.env.PASSPHRASE;
-    console.log("PASSPHRASE: ", PASSPHRASE);
-    const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE).toString()
-    // const userCredentials = {
-    //   email: user.value.email,
-    //   password: hashedPassword,
-    // };
-
-    const response = await login(user.value);
+    // I have a env variable using vite. it's called PASSPHRASE. The syntax to get it from the code is import.meta.env.PASSPHRASE
+    const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE.value).toString()
+    const userCredentials = {
+      email: user.value.email,
+      password: hashedPassword,
+    };
+    const response = await login(userCredentials);
     await handleLoginResponse(response);
-
-
   }catch(err){
       console.log(err);
       toast.error("An error just occurred!", {
