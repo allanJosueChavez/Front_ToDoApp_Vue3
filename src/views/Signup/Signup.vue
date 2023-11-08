@@ -1,6 +1,6 @@
 <script setup  >
 import loginSideView from "../../components/app/loginSideView.vue";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, handleError } from "vue";
 import { useRouter } from "vue-router";
 import CryptoJS from "crypto-js";
 import usersService from "../../services/usersService.js";
@@ -9,7 +9,7 @@ import 'vue3-toastify/dist/index.css';
 const router = useRouter();
 const loading = ref(false);
 const { create } = usersService;
-const form = ref(null);
+const signUpform = ref(null);
 const user = ref({
   name: "",
   email: "",
@@ -18,14 +18,12 @@ const user = ref({
 });
 
 const signup = async () => {
-  const isValid = await form.value.validate();
-  console.log(isValid.valid);
-  if (!isValid.valid) {
-    return;
-  } 
+  const isValid = await validateForm();
+  if (!isValid) return;
   try{
     loading.value = true;
-    const PASSPHRASE = "12345678901234567890123456789012";
+    // const PASSPHRASE = "12345678901234567890123456789012"; // This gotta be in the .env file
+    const PASSPHRASE = import.meta.env.PASSPHRASE;
     const hashedPassword =  CryptoJS.AES.encrypt(user.value.password, PASSPHRASE).toString()
     // If you wanna avoid the problem of updating the v-model with the encrypted pass, just create a new object with the encrypted pass and send it to the backend
     const userInfo = {
@@ -34,28 +32,39 @@ const signup = async () => {
       password: hashedPassword,
     };
     const response = await create(userInfo);
-    if(response.status === 200){
-      toast.success("You just signed up successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
-    }
-    else{
-      toast.error("Something went wrong!", {
-        position: "top-right",
-        duration: 2000,
-      });
-    }
-    loading.value = false;
+    await handleSignupResponse(response);
   }catch(err){
       console.log(err);
   }
 };
 
+const validateForm = async () => {
+  const isValid = await signUpform.value.validate();
+  return isValid.valid;
+};  
 
+const handleSignupResponse = async (response) => {
+  if(response.status === 200){
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+      toast.success("You just signed up successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+    else{
+      toast.error("Sorry, something went wrong registering your user.", {
+        position: "top-right",
+        duration: 2000,
+      });
+    }
+    loading.value = false;
+};
+
+
+
+// Login form validation rules
 const usernameRules = [
   (v) => !!v || "Name is required",
   (v) => (v && v.length <= 15) || "Name must be less than 15 characters",
@@ -91,7 +100,7 @@ const passwordConfirmationRules = [
     >
       <div class="sm:px-44 w-full">
         <div class="bg-white shadow-md rounded-2xl">
-          <v-form fast-fail @submit.prevent="signup" ref="form">
+          <v-form fast-fail @submit.prevent="signup" ref="signUpform">
             <span
               @click="$router.push('/login')"
               class="m-10 absolute material-icons text-purple-900 cursor-pointer"
