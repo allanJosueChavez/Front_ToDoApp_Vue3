@@ -5,9 +5,8 @@ async function create(user){
     return response;
 }
 
-
-async function login(user){
-    const response = await axiosInstance.post("/api/users/login", user);
+async function login(credentials){
+    const response = await axiosInstance.post("/api/auth/login", credentials);
     return response;
 }
 
