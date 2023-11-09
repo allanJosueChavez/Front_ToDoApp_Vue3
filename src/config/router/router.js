@@ -1,10 +1,9 @@
-import Login from  "../../views/Login/Login.vue";
-import Signup from "../../views/Signup/Signup.vue";
-import ToDoList from "../../components/ToDoList.vue";
+import Login from  "./../../views/Login/Login.vue";
+import Signup from "./../../views/Signup/Signup.vue";
+import ToDoList from "./../../components/ToDoList.vue";
 import AppLayoutExample from "../../components/AppLayoutExample.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import Cookies from 'js-cookie';
-
+import authGuard from '../guards/authGuard.js';
 
 const routes = [
   { path: "/login", component: Login
@@ -23,10 +22,10 @@ const routes = [
   { path: "/", 
     redirect:"/to-do-list",
   },
-  // {
-  //   path: "/:catchAll(.*)",
-  //   redirect: "/to-do-list",
-  // }
+  {
+    path:  '/:pathMatch(.*)*',
+    redirect: "/to-do-list",
+  }
 ];
 
 const router = createRouter({
@@ -35,21 +34,5 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from, next) => {
-  // Cookies.remove('user_jwt');
-  const userToken = Cookies.get('user_jwt');
-  if (to.meta.requiresAuth && !userToken) {
-    console.log('Not logged in. Going to the login page.');
-    next('/login');
-  }else if(!to.meta.requiresAuth && userToken) {
-    console.log('Already logged in. Going to the to-do-list.');
-    next('/to-do-list')
-  }else {
-    console.log('Coming in');
-    next()
-  }
-});
-
-
-
+router.beforeEach(authGuard); 
 export default router;
