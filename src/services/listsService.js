@@ -1,7 +1,8 @@
 import axiosInstance from "./api/axiosInstance";
 
-async function getAllLists(userId) {
-    const res = await axiosInstance.get(`/api/lists/${userId}`);
+async function getAllLists() {
+    const res = await axiosInstance.get(`/api/lists`);
+    return res;
 }
 
 async function createList(ToDoList){
