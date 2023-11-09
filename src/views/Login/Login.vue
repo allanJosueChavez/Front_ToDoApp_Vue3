@@ -8,7 +8,9 @@ import usersService from "../../services/usersService.js";
 import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import errorHandler from "../../services/api/responseHandlers/errorHandler";
 
+const {evaluateResponse} = errorHandler;
 const { login } = usersService;
 const router = useRouter();
 
@@ -40,11 +42,18 @@ const authentication = async () => {
     const response = await login(userCredentials);
     await handleLoginResponse(response);
   } catch (err) {
-    console.log(err);
-    toast.error("An error just occurred logging in!", {
-      position: "top-right",
-      autoClose: 2000,
-    });
+    if( err.code === 'ERR_NETWORK') return
+    console.log("err: ", err);
+   if(err.response && err.response.data && err.response.data.error){
+    toast.warning(err.response.data.error,{
+        position: "top-right",
+        autoClose: 2000,
+      });
+
+
+    return
+   }
+    evaluateResponse(err);
   } finally {
     loading.value = false;
   }
@@ -71,13 +80,7 @@ const handleLoginResponse = async (response) => {
       position: "top-right",
       autoClose: 2000,
     });
-  } else {
-    // A validation if the credentials are wrong.
-    toast.error("Something went wrong logging in!", {
-      position: "top-right",
-      duration: 2000,
-    });
-  }
+  } 
   loading.value = false;
 };
 
