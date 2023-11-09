@@ -41,7 +41,7 @@ const authentication = async () => {
     await handleLoginResponse(response);
   } catch (err) {
     console.log(err);
-    toast.error("An error just occurred!", {
+    toast.error("An error just occurred logging in!", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -59,14 +59,13 @@ const validateForm = async () => {
 const handleLoginResponse = async (response) => {
   if (response.status === 200) {
     console.log("response.data: ", response.data);
-    Cookies.set("token", response.data.token);
-    Cookies.set("user", response.data.username);
+    Cookies.set("user_jwt", response.data.token);
+    Cookies.set("user_name", response.data.username);
 
-    const jwt = Cookies.get("token");
+    const jwt = Cookies.get("user_jwt");
     console.log("jwt: ", jwt);
-
     setTimeout(() => {
-      router.push("/home");
+      router.push("/to-do-list");
     }, 2000);
     toast.success("Log in successful!", {
       position: "top-right",
@@ -137,14 +136,14 @@ const passwordRules = [
                   </span>
                 </v-text-field>
               </div>
-              <div class="w-100 flex items-center justify-center mb-6">
+              <div class="w-100 flex items-center justify-center mb-4">
                 <button>
                   <v-btn class="text-purple-800" color="primary" type="submit">
                     <span class="text-md"> Login </span>
                   </v-btn>
                 </button>
               </div>
-              <div class="py-4 grid gap-y-3">
+              <div class="pb-3 grid gap-y-3">
                 <div id="forgotPassBtn" class="text-center">
                   <span class="text-purple-800"> Forgot your password? </span>
                   <span
@@ -154,7 +153,7 @@ const passwordRules = [
                     Reset
                   </span>
                 </div>
-                <div id="signupBtn" claaster ss="text-center">
+                <div id="signupBtn" class="text-center">
                   <span class="text-purple-800 text-center">
                     Don't have an account?
                   </span>
