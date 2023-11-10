@@ -1,24 +1,16 @@
 <script setup>
 import "../style.css";
 import "../styles/scrollbar.css";
-import axiosInstance from "../services/api/axiosInstance.js";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
-import listsService from "../services/listsService.js";
 
-import Sidebar from "./../components/ToDoList/Sidebar/Sidebar.vue";
+import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
 
-import Cookies from "js-cookie";
-import { useRouter } from "vue-router";
-const { getAllLists } = listsService;
-
-const router = useRouter();
-// import { reactive, toRefs } from "vue";
 const allLists = ref([]);
 const defaultPlaceholder = ref("Add a new item...");
 
-const listsLoading = ref(false);
+
 
 //   // msg: String,
 // });
@@ -131,15 +123,7 @@ function openTaskList(taskListId) {
 }
 
 // computed property to check if a task list is active
-const isActiveTaskList = computed(() => {
-  return (id) => {
-    // console.log(activeTaskList)
-    // console.log(id)
-    // console.log(activeTaskList.value === id)
-    return activeTaskList.value === id;
-    return true;
-  };
-});
+
 
 const deleteToDoList = (taskListId) => {
   // taskLists.value = taskLists.value.filter(
@@ -166,21 +150,7 @@ const changePlaceholder = () => {
 // watch((taskList) => {
 //   this.taskList.push({ id: 1, name: "New Item" });
 // });
-onBeforeMount(async () => {
-  // name.value = localStorage.getItem("name") || "";
-  await getAllLists().then((response) => {
-    allLists.value = response.data;
-    // taskLists.value = response.data;
-  });
 
-  todos.value = JSON.parse(localStorage.getItem("todos")) || [];
-  const data = localStorage.getItem("taskLists");
-
-  if (data) {
-    // taskLists.value = JSON.parse(data);
-    // taskLists.value = JSON.parse(data);
-  }
-});
 
 
 //trash
@@ -191,7 +161,7 @@ onBeforeMount(async () => {
 <template>
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
   <div class="sm:flex h-screen w-full">
-  <Sidebar v-if="allLists.length > 0" :allLists="allLists" />
+  <Sidebar :allLists="allLists" />
  
     <div
       id="to-do-list"
@@ -206,7 +176,6 @@ onBeforeMount(async () => {
                   : ' hidden '
               "
       >
-
           <section 
           id="greeting-section"
           class="my-4 align-center flex h-18">

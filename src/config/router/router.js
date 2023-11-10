@@ -1,6 +1,6 @@
 import Login from  "./../../views/Login/Login.vue";
 import Signup from "./../../views/Signup/Signup.vue";
-import ToDoList from "./../../components/ToDoList.vue";
+import ToDoList from "./../../components/ToDoListView.vue";
 import AppLayoutExample from "../../components/AppLayoutExample.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import authGuard from '../guards/authGuard.js';
