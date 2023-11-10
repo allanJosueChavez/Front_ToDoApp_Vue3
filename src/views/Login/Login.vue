@@ -61,7 +61,6 @@ const authentication = async () => {
 
 const validateForm = async () => {
   const isValid = await loginForm.value.validate();
-  console.log("The form is valid: ", isValid.valid);
   return isValid.valid;
 };
 
@@ -127,6 +126,7 @@ const passwordRules = [
                   ref="passwordInput"
                   class="text-purple-900"
                   label="Password"
+                  autocomplete="off"
                   :type="showPassword ? 'text' : 'password'"
                   :rules="passwordRules"
                   v-model="user.password"

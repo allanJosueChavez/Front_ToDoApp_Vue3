@@ -7,8 +7,11 @@ import 'vue3-toastify/dist/index.css';
 import { ref, onMounted, computed, watch } from "vue";
 import listsService from "../services/listsService.js";
 
+import Cookies from "js-cookie";
+import { useRouter } from "vue-router";
 const { getAllLists, createList } = listsService;
 
+const router = useRouter();
 // import { reactive, toRefs } from "vue";
 const allLists = ref([]);
 const defaultPlaceholder = ref("Add a new item...");
@@ -88,7 +91,6 @@ async function addNewList() {
 
   const ToDolist = {
     name: "Untitled", // Untitled and the number, length of the db table of lists.
-    userId: 1,
   };
 
   const response = await createList(ToDolist);
@@ -220,6 +222,14 @@ onMounted(async () => {
     taskLists.value = JSON.parse(data);
   }
 });
+
+const logout = async () =>{
+  Cookies.remove('user_jwt');
+  Cookies.remove('user_name');
+  router.push("/login");
+}
+
+
 </script>
 
 <!--  Add a search bar, default lists and counter of tasks per list. A drag an drop to order -->
@@ -236,7 +246,9 @@ onMounted(async () => {
           class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
           style="  display: flex; flex-wrap: wrap"
         >
-          <div class="flex justify-center items-center">
+          <div class="flex justify-center items-center"
+          @click="logout()"
+          >
             <span 
             class="font-bold text-2xl sm:text-2xl"
             style="color: beige; "> ToDoFlow </span>
