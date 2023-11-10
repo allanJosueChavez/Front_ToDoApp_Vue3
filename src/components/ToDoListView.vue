@@ -4,7 +4,7 @@ import "../styles/scrollbar.css";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
-
+import ToDoList from "../components/ToDoList/ToDoList.vue";
 import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
 
 const allLists = ref([]);
@@ -147,9 +147,10 @@ const changePlaceholder = () => {
 
 };
 
-// watch((taskList) => {
-//   this.taskList.push({ id: 1, name: "New Item" });
-// });
+watch((activeTaskList) => {
+  // this.taskList.push({ id: 1, name: "New Item" });
+  console.log("The active list is: "+activeTaskList)
+});
 
 
 
@@ -161,9 +162,14 @@ const changePlaceholder = () => {
 <template>
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
   <div class="sm:flex h-screen w-full">
-  <Sidebar :allLists="allLists" />
- 
-    <div
+  <Sidebar :allLists="allLists" 
+    :listSelected="activeTaskList"
+  />
+  <ToDoList 
+    
+  />
+
+    <!-- <div
       id="to-do-list"
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
     >
@@ -236,7 +242,6 @@ const changePlaceholder = () => {
           <section
           id="to-dos-list"
           class="todo-list my-8 h-4/6  overflow-y-auto">
-            <!-- <h3>Your tasks:</h3> -->
             <div
               v-for="(todo, index) in taskList.todos"
               :class="`todo-item ${todo.done && 'done'}`"
@@ -265,7 +270,7 @@ const changePlaceholder = () => {
             </div>
           </section>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

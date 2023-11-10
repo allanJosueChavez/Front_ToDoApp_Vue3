@@ -16,6 +16,10 @@ const logout = async () => {
   router.push("/login");
 };
 
+
+const props = defineProps(["listSelected"]);
+// defineEmits(["openToDoList"]);
+
 async function addNewList() {
   const ToDolist = {
     name: "Untitled", // Untitled and the number, length of the db table of lists.
@@ -30,7 +34,10 @@ async function addNewList() {
 }
 
 async function openTaskList(taskListId) {
-  console.log("Opening task list with id: " + taskListId);
+//   console.log("Opening task list with id: " + taskListId);
+//   props.listSelected = taskListId
+//   console.log(props.listSelected)
+  //nested
   //   router.push("/to-do-list/" + taskListId);
 }
 
@@ -45,6 +52,11 @@ watch(lists, (newValue) => {
   console.log(newValue);
 });
 
+watch(props.listSelected, (newValue) => {
+  console.log("list selected ");
+  console.log(newValue);
+});
+
 
 
 
@@ -52,6 +64,13 @@ onBeforeMount(async () => {
 
 
 });
+
+const openToDoList = (listId) => {
+  console.log("Sidebar knows id of the list is: " + listId);
+//   props.listSelected = listId
+//   console.log(props.listSelected)
+}
+
 </script>
 
 <template>
@@ -100,6 +119,8 @@ onBeforeMount(async () => {
         </button>
       </div>
       <Lists 
+      :listSelected="props.listSelected"
+      @openToDoList="openToDoList"
       :lists="lists"
       />
     </div>

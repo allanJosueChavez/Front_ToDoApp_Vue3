@@ -5,12 +5,15 @@ import { ref, onMounted, watch, computed } from "vue";
 // const props = defineProps({
 //     allLists: Array,
 // });
-const props = defineProps(["lists"]);
+const props = defineProps(["lists","listSelected"]);
 // const lists = ref([props.allLists]); 
 
+const emit = defineEmits(['openToDoList'])
 
 async function openTaskList(taskListId) {
   console.log("Opening task list with id: " + taskListId);
+  props.listSelected = taskListId
+  emit("openToDoList", taskListId);
   //   router.push("/to-do-list/" + taskListId);
 }
 
