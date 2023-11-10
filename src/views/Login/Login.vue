@@ -57,12 +57,10 @@ const validateForm = async () => {
 
 const handleLoginResponse = async (response) => {
   if (response.status === 200) {
-    console.log("response.data: ", response.data);
     Cookies.set("user_jwt", response.data.token);
     Cookies.set("user_name", response.data.username);
 
     const jwt = Cookies.get("user_jwt");
-    console.log("jwt: ", jwt);
     setTimeout(() => {
       router.push("/to-do-list");
     }, 2000);

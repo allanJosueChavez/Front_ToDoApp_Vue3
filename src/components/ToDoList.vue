@@ -4,18 +4,20 @@ import "../styles/scrollbar.css";
 import axiosInstance from "../services/api/axiosInstance.js";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
 import listsService from "../services/listsService.js";
+
+import Sidebar from "./../components/ToDoList/Sidebar/Sidebar.vue";
 
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
-const { getAllLists, createList } = listsService;
+const { getAllLists } = listsService;
 
 const router = useRouter();
 // import { reactive, toRefs } from "vue";
 const allLists = ref([]);
 const defaultPlaceholder = ref("Add a new item...");
-const search = ref("");
+
 const listsLoading = ref(false);
 
 //   // msg: String,
@@ -44,59 +46,13 @@ const todos_asc = computed(() =>
   })
 );
 
-// const taskLists = ref([
-//   {
-//     id: 1,
-//     title: "My Tasks",
-//     todos: [
-//       { id: 1, content: "Learn Vue", done: false },
-//       { id: 2, content: "Build a project", done: false },
-//     ],
-//   },
-// ]);
-// let newTaskList = {
-//   id: 0,
-//   title: "Untitled",
-//   todos: [],
-// };
-
-// const addNewList = () => {
-//   // if (newTaskList.value.trim()) {
-//   //   taskLists.value.push(newTaskList.value.trim());
-//   //   newTaskList.value.trim();
-//   // }
-//   // console.log(newTaskList);
-//   newTaskList.id = taskLists.value.length + 1;
-//   taskLists.value.push(newTaskList);
-//   console.log(taskLists);
-// };
-// const taskLists = JSON.parse(localStorage.getItem("taskLists")) || [];
 const taskLists = ref([]);
 
 const sortedTaskLists = computed(() => {
   return taskLists.value.slice().sort((a, b) => b.id - a.id);
 });
 
-async function addNewList() {
-  console.log("Lengths");
-  console.log(taskLists.value.length);
-  console.log(sortedTaskLists.value.length);
-  const newTaskList = {
-    id: taskLists.value.length + 1,
-    title: "Untitled (" + (taskLists.value.length + 1) + ")",
-    todos: [],
-  };
-  taskLists.value.push(newTaskList);
-  console.log(taskLists);
 
-  const ToDolist = {
-    name: "Untitled", // Untitled and the number, length of the db table of lists.
-  };
-
-  const response = await createList(ToDolist);
-  console.log(response);
-  localStorage.setItem("taskLists", JSON.stringify(taskLists.value));
-}
 
 watch(taskLists, (newValue) => {
   // localStorage.setItem("taskLists", JSON.stringify(newValue.value));
@@ -171,7 +127,6 @@ function openTaskList(taskListId) {
   console.log("openTaskList");
   console.log(taskListId);
   console.log(sortedTaskLists.value);
-  // document.getElementById(taskListId).classList += " taskListActive";
   activeTaskList.value = taskListId;
 }
 
@@ -211,24 +166,24 @@ const changePlaceholder = () => {
 // watch((taskList) => {
 //   this.taskList.push({ id: 1, name: "New Item" });
 // });
-onMounted(async () => {
+onBeforeMount(async () => {
   // name.value = localStorage.getItem("name") || "";
-  const userId = 1;
-  await getAllLists(userId);
+  await getAllLists().then((response) => {
+    allLists.value = response.data;
+    // taskLists.value = response.data;
+  });
+
   todos.value = JSON.parse(localStorage.getItem("todos")) || [];
   const data = localStorage.getItem("taskLists");
 
   if (data) {
-    taskLists.value = JSON.parse(data);
+    // taskLists.value = JSON.parse(data);
+    // taskLists.value = JSON.parse(data);
   }
 });
 
-const logout = async () =>{
-  Cookies.remove('user_jwt');
-  Cookies.remove('user_name');
-  router.push("/login");
-}
 
+//trash
 
 </script>
 
@@ -236,106 +191,14 @@ const logout = async () =>{
 <template>
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
   <div class="sm:flex h-screen w-full">
-    <div class="top-0  sm:w-1/5 p-0 h-full">
-      <div
-        class="sidebar sm:bg-blue-900 bg-gray-700 w-full"
-        style="text-align: center; height: 100%; align-items: center"
-      >
-        <div
-          id="sidebar-title"
-          class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
-          style="  display: flex; flex-wrap: wrap"
-        >
-          <div class="flex justify-center items-center"
-          @click="logout()"
-          >
-            <span 
-            class="font-bold text-2xl sm:text-2xl"
-            style="color: beige; "> ToDoFlow </span>
-            <img
-              src="https://i.ibb.co/QrjrV7B/image.webp"
-              alt=""
-              class="w-6 sm:w-10 sm:p-auto"
-            />
-          </div>
-        </div>
-        <div id="search-bar-container" class="w-full h-15 mb-6" 
-        >
-          <v-text-field
-            v-model="search"
-            label="Search"
-            placeholder="Find a list..."
-            hide-details
-            class="bg-blue-900 rounded-md mx-3 text-white"
-            style="border:  2px solid white; "
-            :loading="listsLoading"
-          >
-          <span class="material-icons absolute top-5 right-0 text-white mr-1">
-       
-          search
-          </span>
-        </v-text-field>
-        </div>
-        <div class="px-3 my-2 h-14" 
-        id="add-new-list-button"
-        >
-          <button
-            class="rounded-lg button-add bg-pink-600 w-full h-full"
-            @click="addNewList()"
-          >
-            <span class="text-white font-semibold"> Add a new list + </span>
-            <!-- <h2 style="display: inline">＋</h2> -->
-          </button>
-          <!-- <div v-for="(item, index) in taskLists" :key="index">
-            <ul>
-              <li>{{ item }}</li>
-            </ul>
-          </div> -->
-        </div>
-        <div
-          style="
-            scrollbar-width: thin;
-            overflow-y: scroll;
-            height: 70%;
-            margin-top: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            align-content: center;
-          "
-        >
-          <div
-            v-for="(taskList, index) in sortedTaskLists"
-            :key="index"
-            style="margin: 0 3% 0 3%"
-          >
-            <button
-              @click="openTaskList(taskList.id)"
-              class="tablink hover:bg-sky-900 border rounded-lg w-full"
-              style="
-                padding-left: 5%;
-                padding-right: 5%;
-                margin-top: 1%;
-                margin-bottom: 1%;
-              "
-              v-bind:id="taskList.id"
-              :class="
-                isActiveTaskList(taskList.id)
-                  ? 'taskListActive bg-blue-950 '
-                  : 'inactiveTodoList' + ' ' + 'font-semibold'              "
-            >
-              {{ taskList.title }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <Sidebar v-if="allLists.length > 0" :allLists="allLists" />
+ 
     <div
       id="to-do-list"
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
     >
       <div
-      class="h-full  animate-right"
+      class="h-full animate-right "
       v-for="(taskList, index) in taskLists" :key="index"
       :class="
                 activeTaskList === taskList.id
@@ -376,14 +239,7 @@ const logout = async () =>{
                 </template>
                 <span> Delete List! </span>
               </v-tooltip>
-
-                <!-- <span
-                  class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
-                  title="Delete To-Do List!"
-                  @click="deleteToDoList(taskList.id)"
-                > 
-                  delete
-              </span> -->
+ 
             </div>
           </section>
           <section 
@@ -414,10 +270,7 @@ const logout = async () =>{
             <!-- <h3>Your tasks:</h3> -->
             <div
               v-for="(todo, index) in taskList.todos"
-              :class="`todo-item ${todo.done && 'done'}
-               
-              
-              `"
+              :class="`todo-item ${todo.done && 'done'}`"
               :key="index"
             >
               <label>
@@ -460,12 +313,6 @@ const logout = async () =>{
 .read-the-docs {
   color: #888;
 }
-.button-add {
-  /* background-color: #1b62cd; */
-  color: white;
-  /* font-weight: 700; */
-  height: 100%;
-}
 
 .taskListActive {
   border-radius: 0.5rem;
@@ -482,15 +329,6 @@ const logout = async () =>{
   animation: animateright 0.4s;
 }
 
-.tablink {
-  color: aliceblue;
-  padding: 5% 0px 5% 0px;
-}
-
-.tablink:hover {
-  /* background-color: rgb(0, 77, 145); */
-  border-radius: 0.5rem;
-}
 
 #AddTaskInput:hover {
   background-color: #d4d4d4;
