@@ -142,10 +142,7 @@ const deleteToDoList = (taskListId) => {
 //   activeTaskListId.value = taskListId;
 // }
 
-const changePlaceholder = () => {
-  defaultPlaceholder.value = "e.g. Buy milk";
 
-};
 
 watch((activeTaskList) => {
   // this.taskList.push({ id: 1, name: "New Item" });
