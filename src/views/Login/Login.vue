@@ -66,10 +66,9 @@ const validateForm = async () => {
 
 const handleLoginResponse = async (response) => {
   if (response.status === 200) {
-    Cookies.set("user_jwt", response.data.token);
-    Cookies.set("user_name", response.data.username);
+    await Cookies.set("user_jwt", response.data.token);
+    await Cookies.set("user_name", response.data.username);
 
-    const jwt = Cookies.get("user_jwt");
     setTimeout(() => {
       router.push("/to-do-list");
     }, 2000);
