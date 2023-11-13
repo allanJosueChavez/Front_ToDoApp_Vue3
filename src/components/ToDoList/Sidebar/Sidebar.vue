@@ -119,10 +119,30 @@ const openToDoList = (listId) => {
         </button>
       </div>
       <Lists 
+      style="height: 62%"
       :listSelected="props.listSelected"
       @openToDoList="openToDoList"
       :lists="lists"
       />
+      <div id="profile" class=" h-19"> 
+        <div id="logout" class="flex justify-center items-center h-100">
+        <button
+          class="rounded-lg  w-full h-full flex justify-center items-center"
+          @click="logout()"
+        >
+
+        <span class="text-white font-semibold"> Profile 
+
+
+        </span>
+        <span class="material-icons right-0 text-white mx-1 
+       
+        ">
+            account_circle
+            </span>
+        </button>
+    </div>
+      </div>
     </div>
   </div>
 </template>

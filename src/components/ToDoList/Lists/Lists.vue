@@ -33,7 +33,6 @@ const isActiveTaskList = computed(() => {
     style="
       scrollbar-width: thin;
       overflow-y: scroll;
-      height: 70%;
       margin-top: 10px;
       justify-content: center;
       align-items: center;

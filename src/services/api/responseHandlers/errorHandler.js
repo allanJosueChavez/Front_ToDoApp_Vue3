@@ -10,7 +10,7 @@ async function evaluateResponse(error) {
   console.log(error);
   if(!error.response){
     if(error.code === 'ERR_NETWORK'){
-        toast.error("Network error.", {
+        toast.error("Network error. No response from the server", {
           autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
