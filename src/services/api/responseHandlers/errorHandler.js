@@ -1,5 +1,9 @@
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import Cookies from "js-cookie";
+import { useRouter } from "vue-router";
+
+
 
 async function evaluateResponse(error) {
   console.log("evaluateResponse");
@@ -36,7 +40,24 @@ async function evaluateResponse(error) {
         position: "bottom-right",
       });
     }
-  }
+  }else if(error.response.status === 401){
+    toast.error("Unauthorized", {
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        position: "bottom-right",
+      });
+      }
+    await logout();
+}
+
+
+async function logout(){
+    const router = useRouter();
+    Cookies.remove("user_jwt");
+    Cookies.remove("user_name");
+    router.push("/login");
 }
 
 export default {
