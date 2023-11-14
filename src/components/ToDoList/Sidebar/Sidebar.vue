@@ -71,6 +71,10 @@ const openToDoList = (listId) => {
 //   console.log(props.listSelected)
 }
 
+const openProfileMenu = () => {
+  console.log("Opening profile menu");
+}
+
 </script>
 
 <template>
@@ -124,11 +128,11 @@ const openToDoList = (listId) => {
       @openToDoList="openToDoList"
       :lists="lists"
       />
-      <div id="profile" class=" h-19"> 
+      <div id="profile" class="bg-blue-950 mt-4 h-20"> 
         <div id="logout" class="flex justify-center items-center h-100">
         <button
           class="rounded-lg  w-full h-full flex justify-center items-center"
-          @click="logout()"
+          @click="openProfileMenu()"
         >
 
         <span class="text-white font-semibold"> Profile 
