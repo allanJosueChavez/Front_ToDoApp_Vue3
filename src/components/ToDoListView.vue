@@ -150,6 +150,12 @@ watch((activeTaskList) => {
 });
 
 
+const openToDoList = (taskListId) => {
+  console.log("openToDoList");
+  console.log(taskListId);
+  console.log(sortedTaskLists.value);
+  activeTaskList.value = taskListId;
+}
 
 //trash
 
@@ -161,9 +167,10 @@ watch((activeTaskList) => {
   <div class="sm:flex h-screen w-full">
   <Sidebar :allLists="allLists" 
     :listSelected="activeTaskList"
+    @openToDoList="openToDoList"
   />
   <ToDoList 
-    
+    listSelected="activeTaskList"
   />
 
     <!-- <div
