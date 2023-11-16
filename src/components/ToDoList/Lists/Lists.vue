@@ -28,7 +28,7 @@ const isActiveTaskList = computed(() => {
 </script>
 <template>
     <div
-    v-if="lists.length > 0"
+    
     
     style="
       scrollbar-width: thin;
@@ -41,6 +41,7 @@ const isActiveTaskList = computed(() => {
     "
   >
     <div
+    v-if="lists.length > 0"
       v-for="(list, index) in lists"
       :key="index"
       style="margin: 0 3% 0 3%"
