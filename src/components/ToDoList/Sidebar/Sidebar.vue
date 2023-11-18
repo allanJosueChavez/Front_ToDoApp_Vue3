@@ -59,7 +59,11 @@ watch(props.listSelected, (newValue) => {
 
 
 
+const emit = defineEmits(['openToDoList'])
 
+ 
+  
+ 
 onBeforeMount(async () => {
 
 
@@ -67,6 +71,7 @@ onBeforeMount(async () => {
 
 const openToDoList = (listId) => {
   console.log("Sidebar knows id of the list is: " + listId);
+  emit("openToDoList", listId);
   //   props.listSelected = listId
   //   console.log(props.listSelected)
 }

@@ -151,10 +151,9 @@ watch((activeTaskList) => {
 
 
 const openToDoList = (taskListId) => {
-  console.log("openToDoList");
-  console.log(taskListId);
-  console.log(sortedTaskLists.value);
-  activeTaskList.value = taskListId;
+  console.log("In the parent component", taskListId);
+    // console.log(sortedTaskLists.value);
+    activeTaskList.value = taskListId;
 }
 
 //trash
@@ -170,7 +169,7 @@ const openToDoList = (taskListId) => {
     @openToDoList="openToDoList"
   />
   <ToDoList 
-    listSelected="activeTaskList"
+    :listSelected="activeTaskList"
   />
 
     <!-- <div

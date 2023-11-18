@@ -1,7 +1,7 @@
 <template>
     <div
       id="to-do-list"
-      v-if="taskList"
+      v-if="toDoListSelected"
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
     >
       <div
@@ -106,6 +106,8 @@ import { useRoute } from "vue-router";
 
 const props = defineProps(["listSelected"]);
 
-
+const toDoListSelected = computed(() => {
+  return props.listSelected;
+});
 
 </script>
