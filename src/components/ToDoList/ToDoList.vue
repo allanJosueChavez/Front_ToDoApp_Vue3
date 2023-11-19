@@ -18,7 +18,7 @@
                   type="text"
                   class=""
                   placeholder="Type your list's name here..."
-                  v-model="taskList.title"
+                  v-model="toDoListSelected.name"
                   @change="saveChanges()"
                 />
               </h2>
@@ -32,7 +32,7 @@
                   <span
                   v-bind="props"
                     class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
-                    @click="deleteToDoList(taskList.id)"
+                    @click="deleteToDoList(toDoListSelected.id)"
                   > 
                     delete
                   </span>
@@ -45,7 +45,7 @@
           <section 
           id="create-todo-section"
           class="create-todo h-36">
-            <form @submit.prevent="addTodo(taskList.id)">
+            <form @submit.prevent="addTodo(toDoListSelected.id)">
               <input
                 type="text"
                 :placeholder="defaultPlaceholder"
@@ -69,7 +69,7 @@
           class="todo-list my-8 h-4/6  overflow-y-auto">
             <!-- <h3>Your tasks:</h3> -->
             <div
-              v-for="(todo, index) in taskList.todos"
+              v-for="(todo, index) in toDoListSelected.todos"
               :class="`todo-item ${todo.done && 'done'}`"
               :key="index"
             >
@@ -89,7 +89,7 @@
                 />
               </div>
               <div class="actions">
-                <button class="delete" @click="removeTodo(taskList.id, todo)">
+                <button class="delete" @click="removeTodo(toDoListSelected.id, todo)">
                   Delete
                 </button>
               </div>
@@ -110,4 +110,6 @@ const toDoListSelected = computed(() => {
   return props.listSelected;
 });
 
+const defaultPlaceholder = ref("Add a new item...");
+const input_content = ref("");
 </script>
