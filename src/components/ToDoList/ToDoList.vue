@@ -1,11 +1,12 @@
 <template>
     <div
       id="to-do-list"
-      v-if="toDoListSelected"
+      
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
     >
       <div
       class="h-full animate-right "
+      v-if="toDoListSelected"
       >
           <section 
           id="greeting-section"
