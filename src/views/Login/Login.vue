@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import errorHandler from "../../services/api/responseHandlers/errorHandler";
-
 const {evaluateResponse} = errorHandler;
 const { login } = usersService;
 const router = useRouter();
