@@ -1,3 +1,51 @@
+<script setup>
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
+
+
+
+const props = defineProps(["listSelected"]);
+
+const toDoListSelected = computed(() => {
+  return props.listSelected;
+});
+
+const defaultPlaceholder = ref("Add a new item...");
+const input_content = ref("");
+
+
+const changePlaceholder = () => {
+  defaultPlaceholder.value = "Type your to-do here...";
+};
+
+const addTodo = async (id) => {
+  if (input_content.value) {
+    console.log("Adding a new to-do to the list with id: " + id);
+    console.log("The content of the to-do is: " + input_content.value);
+    const newTodo = {
+      content: input_content.value,
+      done: false,
+      category: "work",
+    };
+    // const response = await axiosInstance.post(`/to-do-list/${id}/todos`, newTodo);
+    // toDoListSelected.value.todos.push(response.data);
+    // input_content.value = "";
+    // toast of success
+  }else{
+    // Something nicer than this can be that the input gets red and a message appears saying that it can't be empty
+    toast.warning("Please write something!",{
+        position: "top-right",
+        autoClose: 1000,
+      });
+
+  }
+};
+
+</script>
+
+
+
 <template>
     <div
       id="to-do-list"
@@ -101,16 +149,3 @@
 
 </template>
 
-<script setup>
-import { ref, onMounted, computed, watch } from "vue";
-import { useRoute } from "vue-router";
-
-const props = defineProps(["listSelected"]);
-
-const toDoListSelected = computed(() => {
-  return props.listSelected;
-});
-
-const defaultPlaceholder = ref("Add a new item...");
-const input_content = ref("");
-</script>
