@@ -8,7 +8,7 @@ import ToDoList from "../components/ToDoList/ToDoList.vue";
 import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
 
 const allLists = ref([]);
-const defaultPlaceholder = ref("Add a new item...");
+// const defaultPlaceholder = ref("Add a new item...");
 
 
 
@@ -144,12 +144,13 @@ const deleteToDoList = (taskListId) => {
 
 
 
-watch((activeTaskList) => {
-  // this.taskList.push({ id: 1, name: "New Item" });
-  console.log("The active list is: "+activeTaskList)
-});
 
-
+const openToDoList = (taskList ) => {
+  console.log("In the parent component");
+  console.log(taskList.name);
+    // console.log(sortedTaskLists.value);
+    activeTaskList.value = taskList;
+}
 
 //trash
 
@@ -161,9 +162,10 @@ watch((activeTaskList) => {
   <div class="sm:flex h-screen w-full">
   <Sidebar :allLists="allLists" 
     :listSelected="activeTaskList"
+    @openToDoList="openToDoList"
   />
   <ToDoList 
-    
+    :listSelected="activeTaskList"
   />
 
     <!-- <div

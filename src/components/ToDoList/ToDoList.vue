@@ -1,11 +1,60 @@
+<script setup>
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
+
+
+
+const props = defineProps(["listSelected"]);
+
+const toDoListSelected = computed(() => {
+  return props.listSelected;
+});
+
+const defaultPlaceholder = ref("Add a new item...");
+const input_content = ref("");
+
+
+const changePlaceholder = () => {
+  defaultPlaceholder.value = "Type your to-do here...";
+};
+
+const addTodo = async (id) => {
+  if (input_content.value) {
+    console.log("Adding a new to-do to the list with id: " + id);
+    console.log("The content of the to-do is: " + input_content.value);
+    const newTodo = {
+      content: input_content.value,
+      done: false,
+      category: "work",
+    };
+    // const response = await axiosInstance.post(`/to-do-list/${id}/todos`, newTodo);
+    // toDoListSelected.value.todos.push(response.data);
+    // input_content.value = "";
+    // toast of success
+  }else{
+    // Something nicer than this can be that the input gets red and a message appears saying that it can't be empty
+    toast.warning("Please write something!",{
+        position: "top-right",
+        autoClose: 1000,
+      });
+
+  }
+};
+
+</script>
+
+
+
 <template>
     <div
       id="to-do-list"
-      v-if="taskList"
+      
       class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2  px-10 "
     >
       <div
       class="h-full animate-right "
+      v-if="toDoListSelected"
       >
           <section 
           id="greeting-section"
@@ -18,7 +67,7 @@
                   type="text"
                   class=""
                   placeholder="Type your list's name here..."
-                  v-model="taskList.title"
+                  v-model="toDoListSelected.name"
                   @change="saveChanges()"
                 />
               </h2>
@@ -32,7 +81,7 @@
                   <span
                   v-bind="props"
                     class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer "
-                    @click="deleteToDoList(taskList.id)"
+                    @click="deleteToDoList(toDoListSelected.id)"
                   > 
                     delete
                   </span>
@@ -45,7 +94,7 @@
           <section 
           id="create-todo-section"
           class="create-todo h-36">
-            <form @submit.prevent="addTodo(taskList.id)">
+            <form @submit.prevent="addTodo(toDoListSelected.id)">
               <input
                 type="text"
                 :placeholder="defaultPlaceholder"
@@ -69,7 +118,7 @@
           class="todo-list my-8 h-4/6  overflow-y-auto">
             <!-- <h3>Your tasks:</h3> -->
             <div
-              v-for="(todo, index) in taskList.todos"
+              v-for="(todo, index) in toDoListSelected.todos"
               :class="`todo-item ${todo.done && 'done'}`"
               :key="index"
             >
@@ -89,7 +138,7 @@
                 />
               </div>
               <div class="actions">
-                <button class="delete" @click="removeTodo(taskList.id, todo)">
+                <button class="delete" @click="removeTodo(toDoListSelected.id, todo)">
                   Delete
                 </button>
               </div>
@@ -100,12 +149,3 @@
 
 </template>
 
-<script setup>
-import { ref, onMounted, computed, watch } from "vue";
-import { useRoute } from "vue-router";
-
-const props = defineProps(["listSelected"]);
-
-
-
-</script>

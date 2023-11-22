@@ -10,11 +10,11 @@ const props = defineProps(["lists","listSelected"]);
 
 const emit = defineEmits(['openToDoList'])
 
-async function openTaskList(taskListId) {
-  console.log("Opening task list with id: " + taskListId);
-  props.listSelected = taskListId
-  emit("openToDoList", taskListId);
-  //   router.push("/to-do-list/" + taskListId);
+async function openTaskList(taskList) {
+  console.log("Opening task list with id: " +taskList);
+  // props.listSelected = taskList // Can't be done, it's a prop. it's read only
+  emit("openToDoList",taskList);
+  //   router.push("/to-do-list/" + taskList);
 }
 
 const activeTaskList = ref(null);
@@ -47,7 +47,7 @@ const isActiveTaskList = computed(() => {
       style="margin: 0 3% 0 3%"
     >
       <button
-        @click="openTaskList(list.id)"
+        @click="openTaskList(list)"
         class="tablink hover:bg-sky-900 border rounded-lg w-full"
         style="
           padding-left: 5%;
