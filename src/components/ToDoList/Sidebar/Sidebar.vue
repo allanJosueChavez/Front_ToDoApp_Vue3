@@ -116,14 +116,16 @@ const items = [
           </span>
         </v-text-field>
       </div>
-      <div class="px-3 my-2 h-14" id="add-new-list-button">
+      <div class="px-3 my-2 h-14 w-full" id="add-new-list-button">
         <button class="rounded-lg button-add bg-pink-600 w-full h-full" @click="addNewList()">
           <span class="text-white font-semibold"> Add a new list + </span>
         </button>
       </div>
-      <Lists style="height: 62%" :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists" />
-      <div id="profile" class="bg-blue-950 mt-1 h-16">
-        <div id="logout" class="flex justify-center items-center h-100">
+      <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists" />
+      <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" 
+      style="width: 20%;"
+      >
+        <div id="logout" class="flex justify-center items-center h-100 ">
           <v-menu>
             <template v-slot:activator="{ props }">
               <button v-bind="props" class="rounded-lg  w-full h-full flex justify-center items-center">

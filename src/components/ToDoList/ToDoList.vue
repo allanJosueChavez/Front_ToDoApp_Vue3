@@ -4,12 +4,34 @@ import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
 const props = defineProps(["listSelected"]);
-const { createTask } = listsService;
+const { createTask,getAllTasks } = listsService;
+
 
 
 const toDoListSelected = computed(() => {
   return props.listSelected;
 });
+
+onMounted(async () => {
+
+});
+
+watch(toDoListSelected, (newValue) => {
+  console.log("list selected ");
+  console.log(newValue.id);
+  console.log(toDoListSelected.value.id)
+  if(!toDoListSelected.value) {
+    console.log("No list selected")
+    return
+  }
+  getAllTasks(toDoListSelected.value.id).then((response) => {
+      console.log("all the tasks are: ");
+      console.log(response.data);
+      toDoListSelected.value.todos = response.data.tasks;
+    });
+ 
+});
+
 
 const defaultPlaceholder = ref("Add a new item...");
 const input_content = ref("");
@@ -34,7 +56,13 @@ const addTodo = async (id) => {
       listId : id
     };
 
-    const response = await createTask(  newTodo);
+    const response = await createTask(newTodo);
+    if (response.status === 200) {
+      const todoCreated = response.data.todo
+      toDoListSelected.value.todos.push(todoCreated);
+    }
+
+
     // const response = await axiosInstance.post(`/to-do-list/${id}/todos`, newTodo);
     // toDoListSelected.value.todos.push(response.data);
     // input_content.value = "";
@@ -109,13 +137,13 @@ const addTodo = async (id) => {
           <label>
             <input
               type="checkbox"
-              v-model="todo.done"
+              v-model="todo.status"
               @change="saveChanges()"
             />
             <span :class="`bubble ${todo.category}`"> </span>
           </label>
           <div class="todo-content">
-            <input type="text" v-model="todo.content" @change="saveChanges()" />
+            <input type="text" v-model="todo.name" @change="saveChanges()" />
           </div>
           <div class="actions">
             <button
