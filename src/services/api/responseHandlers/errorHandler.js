@@ -3,8 +3,6 @@ import "vue3-toastify/dist/index.css";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
 
-
-
 async function evaluateResponse(error) {
   console.log("evaluateResponse");
   console.log(error);

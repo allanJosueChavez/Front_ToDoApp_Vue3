@@ -11,8 +11,14 @@ async function createList(ToDoList){
     return response;
 }
 
+async function createTask(task){
+    const response =  await axiosInstance.post("/api/tasks", task);
+    return response;
+}
+
 
 export default {
     getAllLists,
-    createList
+    createList,
+    createTask
 }
