@@ -41,7 +41,7 @@ const logout = async () => {
 
 async function createNewList() {
   const ToDolist = {
-    name: "Untitled", 
+    name: "Untitled",
   };
 
   const response = await createList(ToDolist);
@@ -67,7 +67,6 @@ const items = [
     , itemFunction: logout
   },
 ]
-
 
 </script>
 
@@ -98,9 +97,7 @@ const items = [
         </button>
       </div>
       <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists" />
-      <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" 
-      style="width: 20%;"
-      >
+      <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" style="width: 20%;">
         <div id="logout" class="flex justify-center items-center h-100 ">
           <v-menu>
             <template v-slot:activator="{ props }">
