@@ -1,83 +1,59 @@
 <script setup>
+// Imports 
 import Lists from "./../Lists/Lists.vue";
 import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
 
+// Constants
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
 const router = useRouter();
+
+
+const openProfileMenu = () => {
+  console.log("Opening profile menu");
+}
+
+
+// States
 const lists = ref([]);
-const logout = async () => {
-  Cookies.remove("user_jwt");
-  Cookies.remove("user_name");
-  router.push("/login");
-};
 
-
+// Props and emits
 const props = defineProps(["listSelected"]);
-// defineEmits(["openToDoList"]);
+const emit = defineEmits(['openToDoList'])
 
-async function addNewList() {
-  const ToDolist = {
-    name: "Untitled", // Untitled and the number, length of the db table of lists.
-  };
-
-  const response = await createList(ToDolist);
-  console.log(response);
-  if (response.status === 200) {
-    const listCreated = response.data.list
-    lists.value.push(listCreated);
-  }
-}
-
-async function openTaskList(taskListId) {
-  //   console.log("Opening task list with id: " + taskListId);
-  //   props.listSelected = taskListId
-  //   console.log(props.listSelected)
-  //nested
-  //   router.push("/to-do-list/" + taskListId);
-}
-
+// Vue hooks
 onMounted(async () => {
   await getAllLists().then((response) => {
     lists.value = response.data;
   });
 });
 
-watch(lists, (newValue) => {
-  console.log("all the lists are: ");
-  console.log(newValue);
-});
+// Methods
+const logout = async () => {
+  Cookies.remove("user_jwt");
+  Cookies.remove("user_name");
+  router.push("/login");
+};
 
-// watch(props.listSelected, (newValue) => {
-//   console.log("list selected ");
-//   console.log(newValue);
-// });
+async function createNewList() {
+  const ToDolist = {
+    name: "Untitled", 
+  };
 
-
-
-const emit = defineEmits(['openToDoList'])
-
- 
-  
- 
-onBeforeMount(async () => {
-
-
-});
-
-const openToDoList = (toDoList) => {
-  console.log("Sidebar knows id of the list is: " + toDoList);
-  emit("openToDoList", toDoList);
-  //   props.listSelected = listId
-  //   console.log(props.listSelected)
+  const response = await createList(ToDolist);
+  if (response.status === 200) {
+    const listCreated = response.data.list
+    lists.value.push(listCreated);
+  }
 }
 
-const openProfileMenu = () => {
-  console.log("Opening profile menu");
+const openToDoList = (toDoList) => { // This is triggered by the event emitted by the Lists component 
+  emit("openToDoList", toDoList);
+  // Future implementation send the id as a route params:  router.push("/to-do-list/" + taskListId); benefits?
 }
 
 const items = [
@@ -90,8 +66,8 @@ const items = [
     title: 'Logout'
     , itemFunction: logout
   },
-
 ]
+
 
 </script>
 
@@ -117,7 +93,7 @@ const items = [
         </v-text-field>
       </div>
       <div class="px-3 my-2 h-14 w-full" id="add-new-list-button">
-        <button class="rounded-lg button-add bg-pink-600 w-full h-full" @click="addNewList()">
+        <button class="rounded-lg button-add bg-pink-600 w-full h-full" @click="createNewList()">
           <span class="text-white font-semibold"> Add a new list + </span>
         </button>
       </div>
@@ -149,9 +125,7 @@ const items = [
 
 <style scoped>
 .button-add {
-  /* background-color: #1b62cd; */
   color: white;
-  /* font-weight: 700; */
   height: 100%;
 }
 </style>
