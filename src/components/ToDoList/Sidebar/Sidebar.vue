@@ -28,9 +28,11 @@ const emit = defineEmits(['openToDoList'])
 
 // Vue hooks
 onMounted(async () => {
+  listsLoading.value = true;
   await getAllLists().then((response) => {
     lists.value = response.data;
     allLists.value = response.data;
+    listsLoading.value = true
   });
 });
 
@@ -112,7 +114,9 @@ const searchInLists = () => {
           <span class="text-white font-semibold"> Add a new list + </span>
         </button>
       </div>
-      <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists" />
+      <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists"
+      :listsLoading="listsLoading"
+      />
       <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" style="width: 20%;">
         <div id="logout" class="flex justify-center items-center h-100 ">
           <v-menu>
