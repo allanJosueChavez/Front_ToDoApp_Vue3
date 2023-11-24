@@ -21,7 +21,7 @@ const openProfileMenu = () => {
 
 // States
 const lists = ref([]);
-
+const allLists = ref([]);
 // Props and emits
 const props = defineProps(["listSelected"]);
 const emit = defineEmits(['openToDoList'])
@@ -30,6 +30,7 @@ const emit = defineEmits(['openToDoList'])
 onMounted(async () => {
   await getAllLists().then((response) => {
     lists.value = response.data;
+    allLists.value = response.data;
   });
 });
 
@@ -70,13 +71,15 @@ const items = [
 ]
 
 
-const jazz = () => {
-  toast.info('This is a beta version, please report any bug you find!', {
-            position: 'top-right',
-            autoClose: 10000,
-          });
+const searchInLists = () => {
+  console.log("Searching in lists");
+  console.log(search.value);
+  if (search.value === "") {
+    lists.value = allLists.value;
+    return
+  }
+  lists.value = lists.value.filter((list) => list.name.toLowerCase().includes(search.value.toLowerCase()));
 }
-
 </script>
 
 <template>
@@ -95,7 +98,9 @@ const jazz = () => {
         </div>
       </div>
       <div id="search-bar-container" class="w-full h-15 mb-6">
-        <v-text-field v-model="search" label="Search" placeholder="Find a list..." hide-details
+        <v-text-field v-model="search" label="Search"
+        @input="searchInLists()"
+        placeholder="Find a list..." hide-details
           class="bg-blue-900 rounded-md mx-3 text-white" style="border: 2px solid white" :loading="listsLoading">
           <span class="material-icons absolute top-5 right-0 text-white mr-1">
             search

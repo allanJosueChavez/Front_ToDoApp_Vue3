@@ -4,8 +4,7 @@ import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
 
-const { createTask, getAllTasks } = listsService;
-
+const { createTask, getAllTasks, updateListName } = listsService;
 
 const props = defineProps(["listSelected"]);
 const listAnimation = ref(false);
@@ -18,6 +17,9 @@ onMounted(async () => {
 
 });
 
+const modifiedList = ref({
+  name: ""
+});
 
 watch(toDoListSelected, (newValue) => {
   listAnimation.value = true
@@ -28,6 +30,7 @@ watch(toDoListSelected, (newValue) => {
     console.log("No list selected")
     return
   }
+
   getAllTasks(toDoListSelected.value.id).then((response) => {
     console.log("all the tasks are: ");
     console.log(response.data);
@@ -37,6 +40,7 @@ watch(toDoListSelected, (newValue) => {
   setTimeout(() => {
     listAnimation.value = false
   }, 400); // Why 400? Because the animation lasts 0.4s
+
 });
 
 const defaultPlaceholder = ref("Add a new item...");
@@ -70,6 +74,39 @@ const addTodo = async (id) => {
     toDoListSelected.value.todos.push(todoCreated);
   }
 };
+
+
+const saveListName = async () => {
+  console.log("Saving list name...");
+  try {
+    console.log(toDoListSelected.value)
+    
+    if(modifiedList.value.name.trim() === "") {
+      modifiedList.value.name = toDoListSelected.value.name;
+      return
+    }
+    const listId = toDoListSelected.value.id;
+    const data = {
+      name: toDoListSelected.value.name
+    }
+    const response = await updateListName(listId, data);
+    if(response.status === 200) {
+      toast.success("List name updated!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
+      toDoListSelected.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const yourfamilytree = ref(false);
+
+
+
 </script>
 
 <template>
@@ -79,8 +116,9 @@ const addTodo = async (id) => {
         <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
-            <input type="text" class="" placeholder="Type your list's name here..." v-model="toDoListSelected.name"
-              @change="saveChanges()" />
+            <input type="text" class="" placeholder="Type your list's name here..." v-model="modifiedList.name"
+            @blur="saveListName()" 
+            />
           </h2>
         </div>
         <div id="delete-list-button" class="flex justify-end w-1/5 p-2">
