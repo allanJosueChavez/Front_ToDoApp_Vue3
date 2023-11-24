@@ -70,7 +70,7 @@ const addTodo = async (id) => {
   <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
     <div class="h-full" v-if="toDoListSelected">
       <div
-      :class="` ${listAnimation.value && 'animate-right'}`"
+      :class="` ${listAnimation && 'animate-right'}`"
       >
         <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
