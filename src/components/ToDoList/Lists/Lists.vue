@@ -2,20 +2,25 @@
 
 import { ref, onMounted, watch, computed } from "vue";
 
+
+//Difference between accessing a prop and creating a ref from a prop. The difference relies on the fact that the prop is reactive and the ref is not. 
+// The best way to use a prop is to create a computed property from it.
+
 // const props = defineProps({
 //     allLists: Array,
 // });
-const props = defineProps(["lists","listSelected"]);
 // const lists = ref([props.allLists]); 
+const computedLists = computed(() => {
+     return props.allLists;
+ })
+
+const props = defineProps(["lists", "listSelected"]);
+
 
 const emit = defineEmits(['openToDoList'])
 
-
-async function openToDoList(taskList) {
-  console.log("Opening task list with id: " +taskList);
-  // props.listSelected = taskList // Can't be done, it's a prop. it's read only
-  emit("openToDoList",taskList);
-  //   router.push("/to-do-list/" + taskList);
+async function openToDoList(todolist) {
+  emit("openToDoList",todolist);
 }
 
 const activeTaskList = ref(null);

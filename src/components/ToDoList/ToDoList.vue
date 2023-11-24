@@ -6,6 +6,8 @@ import listsService from "../../services/listsService.js";
 const props = defineProps(["listSelected"]);
 const { createTask, getAllTasks } = listsService;
 
+const listAnimation = ref(false);
+
 const toDoListSelected = computed(() => {
   return props.listSelected;
 });
@@ -15,6 +17,7 @@ onMounted(async () => {
 });
 
 watch(toDoListSelected, (newValue) => {
+  listAnimation.value = !listAnimation.value;
   console.log("list selected ");
   console.log(newValue.id);
   console.log(toDoListSelected.value.id)
@@ -65,8 +68,11 @@ const addTodo = async (id) => {
 
 <template>
   <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
-    <div class="h-full animate-right" v-if="toDoListSelected">
-      <section id="greeting-section" class="my-4 align-center flex h-18">
+    <div class="h-full" v-if="toDoListSelected">
+      <div
+      :class="` ${listAnimation.value && 'animate-right'}`"
+      >
+        <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
             <input type="text" class="" placeholder="Type your list's name here..." v-model="toDoListSelected.name"
@@ -116,6 +122,32 @@ const addTodo = async (id) => {
           </div>
         </div>
       </section>
+      </div>
+
     </div>
   </div>
 </template>
+
+
+<style scoped>
+.animate-right {
+  position: relative;
+  animation: animateright 0.4s;
+ 
+}
+
+
+
+
+
+@keyframes animateright {
+  from {
+    right: -300px;
+    opacity: 0;
+  }
+  to {
+    right: 0;
+    opacity: 1;
+  }
+} 
+</style>

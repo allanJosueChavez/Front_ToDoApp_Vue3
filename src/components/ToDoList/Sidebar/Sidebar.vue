@@ -5,6 +5,7 @@ import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
+import { toast } from "vue3-toastify";
 
 // Constants
 const listsLoading = ref(false);
@@ -68,6 +69,14 @@ const items = [
   },
 ]
 
+
+const jazz = () => {
+  toast.info('This is a beta version, please report any bug you find!', {
+            position: 'top-right',
+            autoClose: 10000,
+          });
+}
+
 </script>
 
 <template>
@@ -77,7 +86,9 @@ const items = [
         class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
         style="display: flex; flex-wrap: wrap">
         <div class="flex justify-center items-center">
-          <span class="font-bold text-2xl sm:text-2xl" style="color: beige">
+          <span class="font-bold text-2xl sm:text-2xl" style="color: beige"
+          @click="jazz">
+           
             ToDoFlow
           </span>
           <img src="https://i.ibb.co/QrjrV7B/image.webp" alt="" class="w-6 sm:w-10 sm:p-auto" />
