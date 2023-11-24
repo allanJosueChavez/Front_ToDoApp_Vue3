@@ -3,9 +3,11 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
-const props = defineProps(["listSelected"]);
+
 const { createTask, getAllTasks } = listsService;
 
+
+const props = defineProps(["listSelected"]);
 const listAnimation = ref(false);
 
 const toDoListSelected = computed(() => {
@@ -16,8 +18,9 @@ onMounted(async () => {
 
 });
 
+
 watch(toDoListSelected, (newValue) => {
-  listAnimation.value = !listAnimation.value;
+  listAnimation.value = true
   console.log("list selected ");
   console.log(newValue.id);
   console.log(toDoListSelected.value.id)
@@ -30,7 +33,10 @@ watch(toDoListSelected, (newValue) => {
     console.log(response.data);
     toDoListSelected.value.todos = response.data.tasks;
   });
-
+  
+  setTimeout(() => {
+    listAnimation.value = false
+  }, 400); // Why 400? Because the animation lasts 0.4s
 });
 
 const defaultPlaceholder = ref("Add a new item...");
@@ -68,10 +74,8 @@ const addTodo = async (id) => {
 
 <template>
   <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
-    <div class="h-full" v-if="toDoListSelected">
-      <div
-      :class="` ${listAnimation.value && 'animate-right'}`"
-      >
+    <div   :class="`h-full ${listAnimation && 'animate-right'}`" v-if="toDoListSelected">
+ 
         <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
@@ -106,7 +110,8 @@ const addTodo = async (id) => {
           </button>
         </form>
       </section>
-      <section id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
+      <section
+      id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
         <div v-for="(todo, index) in toDoListSelected.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
           <label>
             <input type="checkbox" v-model="todo.status" @change="saveChanges()" />
@@ -122,7 +127,7 @@ const addTodo = async (id) => {
           </div>
         </div>
       </section>
-      </div>
+ 
 
     </div>
   </div>
