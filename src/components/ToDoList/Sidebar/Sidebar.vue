@@ -8,6 +8,7 @@ import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 
 // Constants
+const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
@@ -32,7 +33,7 @@ onMounted(async () => {
   await getAllLists().then((response) => {
     lists.value = response.data;
     allLists.value = response.data;
-    listsLoading.value = true
+    listsLoading.value =  false;
   });
 });
 
@@ -74,13 +75,16 @@ const items = [
 
 
 const searchInLists = () => {
+  searching.value = true;
   console.log("Searching in lists");
   console.log(search.value);
   if (search.value === "") {
     lists.value = allLists.value;
+    searching.value = false;
     return
   }
   lists.value = lists.value.filter((list) => list.name.toLowerCase().includes(search.value.toLowerCase()));
+  searching.value = false;
 }
 </script>
 
@@ -103,7 +107,7 @@ const searchInLists = () => {
         <v-text-field v-model="search" label="Search"
         @input="searchInLists()"
         placeholder="Find a list..." hide-details
-          class="bg-blue-900 rounded-md mx-3 text-white" style="border: 2px solid white" :loading="listsLoading">
+          class="bg-blue-900 rounded-md mx-3 text-white" style="border: 2px solid white" :loading="searching">
           <span class="material-icons absolute top-5 right-0 text-white mr-1">
             search
           </span>
