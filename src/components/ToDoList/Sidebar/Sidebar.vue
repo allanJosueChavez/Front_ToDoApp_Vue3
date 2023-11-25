@@ -1,6 +1,6 @@
 <script setup>
 // Imports 
-import Lists from "./../Lists/Lists.vue";
+import Lists from "./../Lists/SidebarLists.vue";
 import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import Cookies from "js-cookie";
@@ -8,6 +8,7 @@ import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 
 // Constants
+const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
@@ -21,15 +22,18 @@ const openProfileMenu = () => {
 
 // States
 const lists = ref([]);
-
+const allLists = ref([]);
 // Props and emits
 const props = defineProps(["listSelected"]);
 const emit = defineEmits(['openToDoList'])
 
 // Vue hooks
 onMounted(async () => {
+  listsLoading.value = true;
   await getAllLists().then((response) => {
     lists.value = response.data;
+    allLists.value = response.data;
+    listsLoading.value =  false;
   });
 });
 
@@ -49,7 +53,11 @@ async function createNewList() {
   if (response.status === 200) {
     const listCreated = response.data.list
     lists.value.push(listCreated);
+    console.log(listCreated);
+  emit("openToDoList", listCreated);
+
   }
+  // here I gotta say to the ToDoList component which is the list I just created
 }
 
 const openToDoList = (toDoList) => { // This is triggered by the event emitted by the Lists component 
@@ -70,13 +78,18 @@ const items = [
 ]
 
 
-const jazz = () => {
-  toast.info('This is a beta version, please report any bug you find!', {
-            position: 'top-right',
-            autoClose: 10000,
-          });
+const searchInLists = () => {
+  searching.value = true;
+  console.log("Searching in lists");
+  console.log(search.value);
+  if (search.value === "") {
+    lists.value = allLists.value;
+    searching.value = false;
+    return
+  }
+  lists.value = lists.value.filter((list) => list.name.toLowerCase().includes(search.value.toLowerCase()));
+  searching.value = false;
 }
-
 </script>
 
 <template>
@@ -86,8 +99,8 @@ const jazz = () => {
         class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
         style="display: flex; flex-wrap: wrap">
         <div class="flex justify-center items-center">
-          <span class="font-bold text-2xl sm:text-2xl" style="color: beige"
-          @click="jazz">
+          <span class="font-bold text-2xl sm:text-2xl" style="color: rgb(255, 255, 250)"
+          >
            
             ToDoFlow
           </span>
@@ -95,8 +108,10 @@ const jazz = () => {
         </div>
       </div>
       <div id="search-bar-container" class="w-full h-15 mb-6">
-        <v-text-field v-model="search" label="Search" placeholder="Find a list..." hide-details
-          class="bg-blue-900 rounded-md mx-3 text-white" style="border: 2px solid white" :loading="listsLoading">
+        <v-text-field v-model="search" label="Search"
+        @input="searchInLists()"
+        placeholder="Find a list..." hide-details
+          class="bg-blue-900 rounded-md mx-3 text-white" style="border: 2px solid white" :loading="searching">
           <span class="material-icons absolute top-5 right-0 text-white mr-1">
             search
           </span>
@@ -107,7 +122,9 @@ const jazz = () => {
           <span class="text-white font-semibold"> Add a new list + </span>
         </button>
       </div>
-      <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists" />
+      <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists"
+      :listsLoading="listsLoading"
+      />
       <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" style="width: 20%;">
         <div id="logout" class="flex justify-center items-center h-100 ">
           <v-menu>

@@ -3,9 +3,10 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
-const props = defineProps(["listSelected"]);
-const { createTask, getAllTasks } = listsService;
 
+const { createTask, getAllTasks, updateListName } = listsService;
+
+const props = defineProps(["listSelected"]);
 const listAnimation = ref(false);
 
 const toDoListSelected = computed(() => {
@@ -16,20 +17,26 @@ onMounted(async () => {
 
 });
 
+const originalList = ref(null);
+
 watch(toDoListSelected, (newValue) => {
-  listAnimation.value = !listAnimation.value;
-  console.log("list selected ");
-  console.log(newValue.id);
-  console.log(toDoListSelected.value.id)
+  listAnimation.value = true
+ 
   if (!toDoListSelected.value) {
     console.log("No list selected")
     return
   }
+  originalList.value = newValue;
+  console.log(originalList.value)
   getAllTasks(toDoListSelected.value.id).then((response) => {
     console.log("all the tasks are: ");
     console.log(response.data);
     toDoListSelected.value.todos = response.data.tasks;
   });
+  
+  setTimeout(() => {
+    listAnimation.value = false
+  }, 400); // Why 400? Because the animation lasts 0.4s
 
 });
 
@@ -64,19 +71,53 @@ const addTodo = async (id) => {
     toDoListSelected.value.todos.push(todoCreated);
   }
 };
+
+
+const saveListName = async () => {
+  console.log("Saving list name...");
+  try {
+    console.log(toDoListSelected.value)
+    
+    if(toDoListSelected.value.name.trim() === "") {
+      console.log(originalList.value.name)
+      // Easy problem, it's because you're editing the same property in the originalList and in the toDoListSelected
+      // So originalList is having the same name as the toDoListSelected. Idiot, to fix it you gotta create a new computed property
+      toDoListSelected.value.name = originalList.value.name;
+      return
+    }
+    const listId = toDoListSelected.value.id;
+    const data = {
+      name: toDoListSelected.value.name
+    }
+    const response = await updateListName(listId, data);
+    if(response.status === 200) {
+      toast.success("List name updated!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
+      // toDoListSelected.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+
+
 </script>
 
 <template>
   <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
-    <div class="h-full" v-if="toDoListSelected">
-      <div
-      :class="` ${listAnimation && 'animate-right'}`"
-      >
+    <div   :class="`h-full ${listAnimation && 'animate-right'}`" v-if="toDoListSelected">
+ 
         <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
-            <input type="text" class="" placeholder="Type your list's name here..." v-model="toDoListSelected.name"
-              @change="saveChanges()" />
+            <input type="text" class="" placeholder="Type your list's name here..." v-model="toDoListSelected.name"  
+            @blur="saveListName()" 
+            />
           </h2>
         </div>
         <div id="delete-list-button" class="flex justify-end w-1/5 p-2">
@@ -106,7 +147,8 @@ const addTodo = async (id) => {
           </button>
         </form>
       </section>
-      <section id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
+      <section
+      id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
         <div v-for="(todo, index) in toDoListSelected.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
           <label>
             <input type="checkbox" v-model="todo.status" @change="saveChanges()" />
@@ -122,7 +164,7 @@ const addTodo = async (id) => {
           </div>
         </div>
       </section>
-      </div>
+ 
 
     </div>
   </div>

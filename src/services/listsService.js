@@ -31,6 +31,11 @@ async function getAllTasks(listId){
     return response;
 }
 
+async function updateListName(listId, body){
+    const response =  await axiosInstance.patch(`/api/lists/name/${listId}`, body);
+    return response;
+}
+
 
 export default {
     getAllLists,
@@ -39,5 +44,5 @@ export default {
     deleteTask,
     updateTask,
     getAllTasks,
-    
+    updateListName,
 }
