@@ -45,9 +45,11 @@ onMounted(async () => {
       align-items: center;
       flex-wrap: wrap;
       align-content: center;
-    ">
+    "
+    
+    >
     <div v-if="lists.length > 0 && !listsLoading" v-for="(list, index) in lists" :key="index" style="margin: 0 3% 0 3%">
-      <button @click="openToDoList(list)" class=" tablink hover:bg-sky-900 rounded-lg w-full " style="
+      <button @click="openToDoList(list)" class="truncate tablink hover:bg-sky-900 rounded-lg w-full " style="
           padding-left: 5%;
           padding-right: 5%;
           margin-top: 1%;
