@@ -59,11 +59,11 @@ onMounted(async () => {
         {{ list.name }}
       </button>
     </div>
-    <v-loading>
-      <div v-if="listsLoading" class="h-100 text-center flex justify-center items-center">
+    <div v-if="listsLoading">
+      <div  class="h-100 text-center flex justify-center items-center">
         <v-progress-circular indeterminate color="white"></v-progress-circular>
       </div>
-    </v-loading>
+    </div>
 
       <div id="no-lists-found" v-if="lists.length === 0 && !listsLoading" class="h-100 text-center flex justify-center items-center">
         <span class="text-white font-semibold">
