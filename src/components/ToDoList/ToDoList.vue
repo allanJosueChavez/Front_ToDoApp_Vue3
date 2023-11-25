@@ -17,20 +17,17 @@ onMounted(async () => {
 
 });
 
-const modifiedList = ref({
-  name: ""
-});
+const originalList = ref(null);
 
 watch(toDoListSelected, (newValue) => {
   listAnimation.value = true
-  console.log("list selected ");
-  console.log(newValue.id);
-  console.log(toDoListSelected.value.id)
+ 
   if (!toDoListSelected.value) {
     console.log("No list selected")
     return
   }
-
+  originalList.value = newValue;
+  console.log(originalList.value)
   getAllTasks(toDoListSelected.value.id).then((response) => {
     console.log("all the tasks are: ");
     console.log(response.data);
@@ -81,8 +78,11 @@ const saveListName = async () => {
   try {
     console.log(toDoListSelected.value)
     
-    if(modifiedList.value.name.trim() === "") {
-      modifiedList.value.name = toDoListSelected.value.name;
+    if(toDoListSelected.value.name.trim() === "") {
+      console.log(originalList.value.name)
+      // Easy problem, it's because you're editing the same property in the originalList and in the toDoListSelected
+      // So originalList is having the same name as the toDoListSelected. Idiot, to fix it you gotta create a new computed property
+      toDoListSelected.value.name = originalList.value.name;
       return
     }
     const listId = toDoListSelected.value.id;
@@ -95,7 +95,7 @@ const saveListName = async () => {
         position: "top-right",
         autoClose: 1000,
       });
-      toDoListSelected.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
+      // toDoListSelected.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
     }
   } catch (error) {
     console.log(error);
@@ -115,7 +115,7 @@ const saveListName = async () => {
         <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
-            <input type="text" class="" placeholder="Type your list's name here..." v-model="modifiedList.name"
+            <input type="text" class="" placeholder="Type your list's name here..." v-model="toDoListSelected.name"  
             @blur="saveListName()" 
             />
           </h2>

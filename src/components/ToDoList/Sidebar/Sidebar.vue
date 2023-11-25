@@ -1,6 +1,6 @@
 <script setup>
 // Imports 
-import Lists from "./../Lists/Lists.vue";
+import Lists from "./../Lists/SidebarLists.vue";
 import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import Cookies from "js-cookie";
@@ -53,7 +53,11 @@ async function createNewList() {
   if (response.status === 200) {
     const listCreated = response.data.list
     lists.value.push(listCreated);
+    console.log(listCreated);
+  emit("openToDoList", listCreated);
+
   }
+  // here I gotta say to the ToDoList component which is the list I just created
 }
 
 const openToDoList = (toDoList) => { // This is triggered by the event emitted by the Lists component 
@@ -95,8 +99,8 @@ const searchInLists = () => {
         class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
         style="display: flex; flex-wrap: wrap">
         <div class="flex justify-center items-center">
-          <span class="font-bold text-2xl sm:text-2xl" style="color: beige"
-          @click="jazz">
+          <span class="font-bold text-2xl sm:text-2xl" style="color: rgb(255, 255, 250)"
+          >
            
             ToDoFlow
           </span>
