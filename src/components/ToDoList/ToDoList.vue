@@ -4,12 +4,13 @@ import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
 
-const { createTask, getAllTasks, updateListName } = listsService;
+const { createTask, getAllTasks, updateListName, deleteList } = listsService;
 
 const props = defineProps(["listSelected"]);
+const emit = defineEmits(['removeList'])
 const listAnimation = ref(false);
 
-const toDoListSelected = computed(() => {
+const currentList = computed(() => {
   return props.listSelected;
 });
 
@@ -19,19 +20,24 @@ onMounted(async () => {
 
 const originalList = ref(null);
 
-watch(toDoListSelected, (newValue) => {
+watch(currentList, (newValue) => {
   listAnimation.value = true
  
-  if (!toDoListSelected.value) {
+  if (!currentList.value) {
     console.log("No list selected")
     return
   }
   originalList.value = newValue;
+  console.log("The current list is: ")
   console.log(originalList.value)
-  getAllTasks(toDoListSelected.value.id).then((response) => {
+  if((currentList.value === currentList.value.id)){
+    console.log("The list is the same") // This is no use because it will never get into this watch since the prop will actually never change
+    return
+  }
+  getAllTasks(currentList.value.id).then((response) => {
     console.log("all the tasks are: ");
     console.log(response.data);
-    toDoListSelected.value.todos = response.data.tasks;
+    currentList.value.todos = response.data.tasks;
   });
   
   setTimeout(() => {
@@ -68,7 +74,7 @@ const addTodo = async (id) => {
 
   if (response.status === 200) {
     const todoCreated = response.data.task
-    toDoListSelected.value.todos.push(todoCreated);
+    currentList.value.todos.push(todoCreated);
   }
 };
 
@@ -76,18 +82,18 @@ const addTodo = async (id) => {
 const saveListName = async () => {
   console.log("Saving list name...");
   try {
-    console.log(toDoListSelected.value)
-    
-    if(toDoListSelected.value.name.trim() === "") {
-      console.log(originalList.value.name)
-      // Easy problem, it's because you're editing the same property in the originalList and in the toDoListSelected
-      // So originalList is having the same name as the toDoListSelected. Idiot, to fix it you gotta create a new computed property
-      toDoListSelected.value.name = originalList.value.name;
+    console.log(currentList.value)
+    const originalListName = originalList.value.name;
+    if(currentList.value.name.trim() === "") {
+      console.log(originalListName)
+      // Easy problem, it's because you're editing the same property in the originalList and in the currentList
+      // So originalList is having the same name as the currentList. Idiot, to fix it you gotta create a new computed property
+      currentList.value.name = originalListName;
       return
     }
-    const listId = toDoListSelected.value.id;
+    const listId = currentList.value.id;
     const data = {
-      name: toDoListSelected.value.name
+      name: currentList.value.name
     }
     const response = await updateListName(listId, data);
     if(response.status === 200) {
@@ -95,14 +101,26 @@ const saveListName = async () => {
         position: "top-right",
         autoClose: 1000,
       });
-      // toDoListSelected.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
+      // currentList.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
     }
   } catch (error) {
     console.log(error);
   }
 };
 
+async function deleteToDoList(){
+  console.log("Deleting list with id: " + currentList.value.id);
+  const response = await deleteList(currentList.value.id);
+  if(response.status === 200) {
+    toast.success("List deleted!", {
+      position: "top-right",
+      autoClose: 1000,
+    });
+  }
+  emit("removeList", currentList.value.id);
 
+
+}
 
 
 
@@ -110,12 +128,12 @@ const saveListName = async () => {
 
 <template>
   <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
-    <div   :class="`h-full ${listAnimation && 'animate-right'}`" v-if="toDoListSelected">
+    <div   :class="`h-full ${listAnimation && 'animate-right'}`" v-if="currentList">
  
         <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
-            <input type="text" class="" placeholder="Type your list's name here..." v-model="toDoListSelected.name"  
+            <input type="text" class="" placeholder="Type your list's name here..." v-model="currentList.name"  
             @blur="saveListName()" 
             />
           </h2>
@@ -124,7 +142,7 @@ const saveListName = async () => {
           <v-tooltip>
             <template v-slot:activator="{ props }">
               <span v-bind="props" class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer"
-                @click="deleteToDoList(toDoListSelected.id)">
+                @click="deleteToDoList(currentList.id)">
                 delete
               </span>
             </template>
@@ -133,7 +151,7 @@ const saveListName = async () => {
         </div>
       </section>
       <section id="create-todo-section" class="create-todo h-36">
-        <form @submit.prevent="addTodo(toDoListSelected.id)">
+        <form @submit.prevent="addTodo(currentList.id)">
           <input type="text" :placeholder="defaultPlaceholder" v-model="input_content" id="AddTaskInput"
             @click="changePlaceholder()" />
 
@@ -149,7 +167,7 @@ const saveListName = async () => {
       </section>
       <section
       id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
-        <div v-for="(todo, index) in toDoListSelected.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
+        <div v-for="(todo, index) in currentList.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
           <label>
             <input type="checkbox" v-model="todo.status" @change="saveChanges()" />
             <span :class="`bubble ${todo.category}`"> </span>
@@ -158,7 +176,7 @@ const saveListName = async () => {
             <input type="text" v-model="todo.name" @change="saveChanges()" />
           </div>
           <div class="actions">
-            <button class="delete" @click="removeTodo(toDoListSelected.id, todo)">
+            <button class="delete" @click="removeTodo(currentList.id, todo)">
               Delete
             </button>
           </div>

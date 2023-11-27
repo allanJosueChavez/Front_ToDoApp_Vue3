@@ -11,6 +11,11 @@ async function createList(ToDoList){
     return response;
 }
 
+async function deleteList(listId){
+    const response =  await axiosInstance.delete(`/api/lists/${listId}`);
+    return response;
+}
+
 async function createTask(task){
     const response =  await axiosInstance.post("/api/tasks", task);
     return response;
@@ -40,6 +45,7 @@ async function updateListName(listId, body){
 export default {
     getAllLists,
     createList,
+    deleteList,
     createTask,
     deleteTask,
     updateTask,

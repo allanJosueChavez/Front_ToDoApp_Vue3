@@ -7,7 +7,7 @@ import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
 import ToDoList from "../components/ToDoList/ToDoList.vue";
 import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
 
-const allLists = ref([]);
+ 
 // const defaultPlaceholder = ref("Add a new item...");
 
 
@@ -152,6 +152,13 @@ const openToDoList = (taskList ) => {
     activeTaskList.value = taskList;
 }
 
+const removeList = (taskListId) => {
+  console.log("Removing list with id: " + taskListId);
+  // In the sidebar component I need a function to remove the list from the sidebar
+  // I need to emit an event to the parent component to remove the list from the taskLists array
+ 
+};
+
 //trash
 
 </script>
@@ -160,12 +167,14 @@ const openToDoList = (taskList ) => {
 <template>
   <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
   <div class="sm:flex h-screen w-full">
-  <Sidebar :allLists="allLists" 
+  <Sidebar   
     :listSelected="activeTaskList"
     @openToDoList="openToDoList"
+ 
   />
   <ToDoList 
     :listSelected="activeTaskList"
+    @removeList="removeList"
   />
 
     <!-- <div
