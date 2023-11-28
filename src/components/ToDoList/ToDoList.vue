@@ -13,23 +13,24 @@ const listAnimation = ref(false);
 const currentList = computed(() => {
   return props.listSelected;
 });
-
+ 
+const listInEdition = ref(null);
+const originalListName = ref(null);
 onMounted(async () => {
 
 });
-
-const originalList = ref(null);
+ 
 
 watch(currentList, (newValue) => {
   listAnimation.value = true
- 
+  console.log("watching...")
   if (!currentList.value) {
     console.log("No list selected")
     return
   }
-  originalList.value = newValue;
-  console.log("The current list is: ")
-  console.log(originalList.value)
+  originalListName.value = currentList.value.name
+  listInEdition.value = currentList.value
+ 
   if((currentList.value === currentList.value.id)){
     console.log("The list is the same") // This is no use because it will never get into this watch since the prop will actually never change
     return
@@ -80,15 +81,9 @@ const addTodo = async (id) => {
 
 
 const saveListName = async () => {
-  console.log("Saving list name...");
   try {
-    console.log(currentList.value)
-    const originalListName = originalList.value.name;
-    if(currentList.value.name.trim() === "") {
-      console.log(originalListName)
-      // Easy problem, it's because you're editing the same property in the originalList and in the currentList
-      // So originalList is having the same name as the currentList. Idiot, to fix it you gotta create a new computed property
-      currentList.value.name = originalListName;
+    if(currentList.value.name.trim() === "" || currentList.value.name === originalListName.value) {
+      currentList.value.name = originalListName.value;
       return
     }
     const listId = currentList.value.id;
@@ -101,7 +96,6 @@ const saveListName = async () => {
         position: "top-right",
         autoClose: 1000,
       });
-      // currentList.value.name = modifiedList.value.name; // This is to update the name in the sidebar. So I don't have to 
     }
   } catch (error) {
     console.log(error);

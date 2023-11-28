@@ -34,13 +34,21 @@ onMounted(async () => {
     lists.value = response.data;
     allLists.value = response.data;
     listsLoading.value =  false;
+  }).catch((error) => {
+    console.log(error);
+    toast.error("Error loading lists");
+    listsLoading.value = false;
   });
 });
 
 // Methods
-const logout = async () => {
+const clearCookies = () => {
   Cookies.remove("user_jwt");
   Cookies.remove("user_name");
+};
+
+const logout = () => {
+  clearCookies();
   router.push("/login");
 };
 
