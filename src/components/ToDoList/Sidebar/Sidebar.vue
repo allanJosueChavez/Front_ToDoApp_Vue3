@@ -6,13 +6,15 @@ import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
-
+import {useTodoListsStore} from '../../../stores/listsStore.js'
 // Constants
 const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
 const router = useRouter();
+const listsStore = useTodoListsStore();
+const {getTodoLists, addAllLists } = listsStore;
 
 
 const openProfileMenu = () => {
@@ -34,6 +36,10 @@ onMounted(async () => {
     lists.value = response.data;
     allLists.value = response.data;
     listsLoading.value =  false;
+    addAllLists(response.data);
+    console.log("All lists are: ");
+     // I wanna test the getters of the store it'd be as easy as this: 
+    console.log(listsStore.todoLists); // nice now it's saving
   }).catch((error) => {
     console.log(error);
     toast.error("Error loading lists");

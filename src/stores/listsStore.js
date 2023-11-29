@@ -1,12 +1,16 @@
 // store.js
-import { createPinia } from 'pinia';
+import { defineStore } from 'pinia';
 
-const pinia = createPinia();
 
-export const useTodoListsStore = pinia.createStore({
+export const useTodoListsStore = defineStore('todoListsStore', { // 'alerts' means this store name is 'alertsStore' in this case would be 'todoListsStore'
   state: () => ({
     todoLists: [],
   }),
+  getters: {
+    getTodoLists() {
+      return this.todoLists;
+    },
+  },
   actions: {
     removeList(taskListId) {
       // Remove the list with the given ID from the todoLists array
@@ -18,4 +22,4 @@ export const useTodoListsStore = pinia.createStore({
   },
 });
 
-export default pinia;
+ 

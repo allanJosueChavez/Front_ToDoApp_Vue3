@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import './style.css'
 import App from './App.vue'
 import router from './config/router/router.js'
-import { createPinia } from 'pinia'
 // Vuetify
 
 import 'vuetify/styles'
