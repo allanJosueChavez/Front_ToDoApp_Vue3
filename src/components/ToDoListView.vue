@@ -6,19 +6,7 @@ import "vue3-toastify/dist/index.css";
 import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
 import ToDoList from "../components/ToDoList/ToDoList.vue";
 import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
-
-const todos = ref([]);
-
-const todos_asc = computed(() =>
-  todos.value.sort((a, b) => {
-    return b.createdAt - a.createdAt;
-  })
-);
-
-const taskLists = ref([]);
-const sortedTaskLists = computed(() => {
-  return taskLists.value.slice().sort((a, b) => b.id - a.id);
-});
+ 
 </script>
 
 <template>
