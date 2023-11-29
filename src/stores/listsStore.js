@@ -12,9 +12,9 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
     },
   },
   actions: {
-    removeList(taskListId) {
+    removeList(todoList) {
       // Remove the list with the given ID from the todoLists array
-      this.todoLists = this.todoLists.filter((list) => list.id !== taskListId);
+      this.todoLists = this.todoLists.filter((list) => list.id !== todoList);
     },
     addAllLists(lists) {
       this.todoLists = lists;

@@ -56,7 +56,7 @@ onMounted(async () => {
           padding-right: 5%;
           margin-top: 1%;
           margin-bottom: 1%;
-        " v-bind:id="list.id" :class="listSelected.id === list.id 
+        " v-bind:id="list.id" :class="listSelected && listSelected.id === list.id 
             ? ' taskListActive bg-blue-950 '
             : ' inactiveTodoList' + ' ' + 'font-semibold'
           ">
