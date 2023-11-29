@@ -16,7 +16,7 @@
     "js-cookie": "^3.0.5",
     "material-icons": "^1.13.12",
     "pinia": "^2.1.7",
-    "vue": "^3.2.37",
+    "vue": "^3.3.3",
     "vue-router": "^4.2.5",
     "vue3-toastify": "^0.1.14",
     "vuetify": "^3.3.23",
