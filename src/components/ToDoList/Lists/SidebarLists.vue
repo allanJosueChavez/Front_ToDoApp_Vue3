@@ -22,13 +22,11 @@ async function openToDoList(todolist) {
   emit("openToDoList", todolist);
 }
 
-const activeTaskList = ref(null);
-const isActiveTaskList = computed(() => {
-  return (id) => {
-    // return activeTaskList.value === id;
-    return false
-  };
-});
+const activeTodoList = ref(null);
+const isTodoListActive = (listId) => {
+  console.log(props.listSelected)
+  return activeTodoList.value === listId;
+};
 
 onMounted(async () => {
 
@@ -49,17 +47,26 @@ onMounted(async () => {
     
     >
     <div v-if="lists.length > 0 && !listsLoading" v-for="(list, index) in lists" :key="index" style="margin: 0 3% 0 3%">
-      <button @click="openToDoList(list)" class="truncate tablink hover:bg-sky-900 rounded-lg w-full " style="
+      <v-tooltip>
+            <template v-slot:activator="{ props }">
+              <button 
+              v-bind="props"
+              @click="openToDoList(list)" class="truncate tablink hover:bg-sky-900 rounded-lg w-full " style="
           padding-left: 5%;
           padding-right: 5%;
           margin-top: 1%;
           margin-bottom: 1%;
-        " v-bind:id="list.id" :class="isActiveTaskList(list.id)
+        " v-bind:id="list.id" :class="listSelected.id === list.id 
             ? ' taskListActive bg-blue-950 '
             : ' inactiveTodoList' + ' ' + 'font-semibold'
           ">
-        {{ list.name }}
+        {{ list.name }} {{ " " }} {{"("+ list.taskCount+")" }}
       </button>
+            </template>
+            <span> {{"("+ list.taskCount+")" }} Not completed.
+              </span>
+          </v-tooltip>
+
     </div>
     <div v-if="listsLoading">
       <div  class="h-100 text-center flex justify-center items-center">
