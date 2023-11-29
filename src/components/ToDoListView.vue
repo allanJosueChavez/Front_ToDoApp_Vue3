@@ -145,15 +145,12 @@ const deleteToDoList = (taskListId) => {
 
 
 
-const openToDoList = (taskList ) => {
-  console.log("In the parent component");
-  console.log(taskList.name);
-    // console.log(sortedTaskLists.value);
-    activeTaskList.value = taskList;
+const openToDoList = (todoList ) => {
+    activeTaskList.value = todoList;
 }
 
-const removeList = (taskListId) => {
-  console.log("Removing list with id: " + taskListId);
+const removeList = (todoList) => {
+  console.log("Removing list with id: " + todoList);
   // In the sidebar component I need a function to remove the list from the sidebar
   // I need to emit an event to the parent component to remove the list from the taskLists array
  
