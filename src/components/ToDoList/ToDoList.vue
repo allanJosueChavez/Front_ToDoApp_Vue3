@@ -6,20 +6,27 @@ import listsService from "../../services/listsService.js";
 import { useTodoListsStore } from "@/stores/listsStore.js"; 
 
 
+const listsStore = useTodoListsStore();
+const { setSelectedList, removeList } = listsStore;
 const { createTask, getAllTasks, updateListName, deleteList } = listsService;
 
-const props = defineProps(["listSelected"]);
-const emit = defineEmits(['removeList'])
+// const props = defineProps(["listSelected"]);
+
+const listSelected = computed(() => {
+  return listsStore.selectedList;
+});
+
+ 
 const listAnimation = ref(false);
 
 const currentList = computed(() => {
-  return props.listSelected;
+  // return props.listSelected;
+  return listsStore.selectedList;
 });
  
 const listInEdition = ref(null);
 const originalListName = ref(null);
-const listsStore = useTodoListsStore();
-const {addAllLists,updateListCounter, removeList } = listsStore;
+
 onMounted(async () => {
 
 });
@@ -117,9 +124,8 @@ async function deleteToDoList(){
     });
   }
 
-  emit("removeList", currentList.value.id);
-
-
+  removeList(currentList.value);
+  setSelectedList(null);
 }
 
 

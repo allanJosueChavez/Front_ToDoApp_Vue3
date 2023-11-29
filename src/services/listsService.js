@@ -12,6 +12,7 @@ async function createList(ToDoList){
 }
 
 async function deleteList(listId){
+    console.log(listId);
     const response =  await axiosInstance.delete(`/api/lists/${listId}`);
     return response;
 }

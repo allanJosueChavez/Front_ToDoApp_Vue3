@@ -2,6 +2,8 @@
 
 import { ref, onMounted, watch, computed } from "vue";
 
+import {useTodoListsStore} from '../../../stores/listsStore.js'
+const listsStore = useTodoListsStore();
 
 //Difference between accessing a prop and creating a ref from a prop. The difference relies on the fact that the prop is reactive and the ref is not. 
 // The best way to use a prop is to create a computed property from it.
@@ -9,28 +11,20 @@ import { ref, onMounted, watch, computed } from "vue";
 // const props = defineProps({
 //     allLists: Array,
 // });
-// const lists = ref([props.allLists]); 
-const computedLists = computed(() => {
-  return props.allLists;
-})
+// const lists =  computed(() => {
+//   return listsStore.todoLists;
+// })
+// const computedLists = computed(() => {
+//   return props.allLists;
+// })
 
+// in order 
 const props = defineProps(["lists", "listSelected", 'listsLoading']);
-
 const emit = defineEmits(['openToDoList'])
 
 async function openToDoList(todolist) {
   emit("openToDoList", todolist);
 }
-
-const activeTodoList = ref(null);
-const isTodoListActive = (listId) => {
-  console.log(props.listSelected)
-  return activeTodoList.value === listId;
-};
-
-onMounted(async () => {
-
-});
 
 
 </script>
@@ -47,7 +41,7 @@ onMounted(async () => {
     
     >
     <div v-if="lists.length > 0 && !listsLoading" v-for="(list, index) in lists" :key="index" style="margin: 0 3% 0 3%">
-      <v-tooltip>
+      <v-tooltip >
             <template v-slot:activator="{ props }">
               <button 
               v-bind="props"
@@ -60,10 +54,12 @@ onMounted(async () => {
             ? ' taskListActive bg-blue-950 '
             : ' inactiveTodoList' + ' ' + 'font-semibold'
           ">
-        {{ list.name }} {{ " " }} {{"("+ list.taskCount+")" }}
+        {{ list.name }} {{ " " }} {{"("+ (list.taskCount ?list.taskCount:0)+")" }}
       </button>
             </template>
-            <span> {{"("+ list.taskCount+")" }} Not completed.
+            <span
+           
+            > {{"("+ (list.taskCount ?list.taskCount:0) +")" }} Not completed.
               </span>
           </v-tooltip>
 

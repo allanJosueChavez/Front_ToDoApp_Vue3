@@ -14,7 +14,7 @@ const search = ref("");
 const { getAllLists, createList } = listsService;
 const router = useRouter();
 const listsStore = useTodoListsStore();
-const { addAllLists } = listsStore;
+const { addAllLists, setSelectedList } = listsStore;
 
 
 const openProfileMenu = () => {
@@ -23,7 +23,10 @@ const openProfileMenu = () => {
 
 
 // States
-const lists = ref([]);
+// const lists = ref([]);
+const lists = computed(() => {
+  return listsStore.todoLists;
+})
 const allLists = ref([]);
 // Props and emits
 const props = defineProps(["listSelected"]);
@@ -74,7 +77,7 @@ async function createNewList() {
     const listCreated = response.data.list
     lists.value.push(listCreated);
     console.log(listCreated);
-  emit("openToDoList", listCreated);
+    setSelectedList(listCreated);
 
   }
   // here I gotta say to the ToDoList component which is the list I just created
@@ -82,6 +85,7 @@ async function createNewList() {
 
 const openToDoList = (toDoList) => { // This is triggered by the event emitted by the Lists component 
   emit("openToDoList", toDoList);
+  setSelectedList(toDoList);
   // Future implementation send the id as a route params:  router.push("/to-do-list/" + taskListId); benefits?
 }
 
