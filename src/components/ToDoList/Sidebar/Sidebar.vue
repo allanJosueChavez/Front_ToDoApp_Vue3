@@ -14,7 +14,7 @@ const search = ref("");
 const { getAllLists, createList } = listsService;
 const router = useRouter();
 const listsStore = useTodoListsStore();
-const {getTodoLists, addAllLists } = listsStore;
+const { addAllLists } = listsStore;
 
 
 const openProfileMenu = () => {
@@ -31,21 +31,9 @@ const emit = defineEmits(['openToDoList'])
 
 // Vue hooks
 onMounted(async () => {
-  listsLoading.value = true;
-  await getAllLists().then((response) => {
-    lists.value = response.data;
-    allLists.value = response.data;
-    listsLoading.value =  false;
-    addAllLists(response.data);
-    console.log("All lists are: ");
-     // I wanna test the getters of the store it'd be as easy as this: 
-    console.log(listsStore.todoLists); // nice now it's saving
-  }).catch((error) => {
-    console.log(error);
-    toast.error("Error loading lists");
-    listsLoading.value = false;
-  });
+  await getLists()
 });
+
 
 // Methods
 const clearCookies = () => {
@@ -57,6 +45,24 @@ const logout = () => {
   clearCookies();
   router.push("/login");
 };
+
+const getLists = async () => {
+  listsLoading.value = true;
+  await getAllLists().then((response) => {
+    const listsResponse = response.data;
+    addAllLists(listsResponse);
+    lists.value =  listsStore.todoLists
+    allLists.value =  listsStore.todoLists
+    console.log("All lists are: ");
+    console.log(listsStore.todoLists); 
+  }).catch((error) => {
+    console.log(error);
+    toast.error("Error loading lists");
+    listsLoading.value = false;
+  });
+  listsLoading.value =  false;
+};
+
 
 async function createNewList() {
   const ToDolist = {
