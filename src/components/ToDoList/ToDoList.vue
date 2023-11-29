@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
+import { useTodoListsStore } from "../../stores/listsStore.js";
 
 const { createTask, getAllTasks, updateListName, deleteList } = listsService;
 
@@ -16,6 +17,8 @@ const currentList = computed(() => {
  
 const listInEdition = ref(null);
 const originalListName = ref(null);
+const listsStore = useTodoListsStore();
+const {addAllLists,updateListCounter } = listsStore;
 onMounted(async () => {
 
 });
@@ -76,6 +79,7 @@ const addTodo = async (id) => {
   if (response.status === 200) {
     const todoCreated = response.data.task
     currentList.value.todos.push(todoCreated);
+    updateListCounter(currentList.value.id, (currentList.value.taskCount + 1));
   }
 };
 
