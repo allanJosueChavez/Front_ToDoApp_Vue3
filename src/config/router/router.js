@@ -1,6 +1,7 @@
 import Login from  "./../../views/Login/Login.vue";
 import Signup from "./../../views/Signup/Signup.vue";
 import ToDoList from "./../../components/ToDoListView.vue";
+import AccountConfirmation from "./../../views/AccountConfirmation/AccountConfirmation.vue";
 import AppLayoutExample from "../../components/AppLayoutExample.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import authGuard from '../guards/authGuard.js';
@@ -25,6 +26,10 @@ const routes = [
   {
     path:  '/:pathMatch(.*)*',
     redirect: "/to-do-list",
+  },
+  {
+    path:  '/userConfirmation/:token',
+    component: AccountConfirmation,
   }
 ];
 
