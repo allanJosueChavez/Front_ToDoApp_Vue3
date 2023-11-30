@@ -29,7 +29,10 @@ const lists = computed(() => {
 })
 const allLists = ref([]);
 // Props and emits
-const props = defineProps(["listSelected"]);
+// const props = defineProps(["listSelected"])
+const listSelected = computed(() => {
+  return listsStore.selectedList;
+});
 const emit = defineEmits(['openToDoList'])
 
 // Vue hooks
@@ -59,10 +62,10 @@ const getLists = async () => {
     console.log("All lists are: ");
     console.log(listsStore.todoLists); 
   }).catch((error) => {
-    console.log(error);
+    if(error.code === 'ERR_NETWORK') return
     toast.error("Error loading lists");
     listsLoading.value = false;
-  });
+  }); 
   listsLoading.value =  false;
 };
 
@@ -146,7 +149,7 @@ const searchInLists = () => {
           <span class="text-white font-semibold"> Add a new list + </span>
         </button>
       </div>
-      <Lists style="height: 62%; " :listSelected="props.listSelected" @openToDoList="openToDoList" :lists="lists"
+      <Lists style="height: 62%; " :listSelected="listSelected" @openToDoList="openToDoList" :lists="lists"
       :listsLoading="listsLoading"
       />
       <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" style="width: 20%;">
@@ -161,9 +164,11 @@ const searchInLists = () => {
               </button>
             </template>
             <v-list>
-              <v-list-item v-for="(item, index) in items" :key="index" :value="index">
-                <v-list-item-title @click="item.itemFunction">{{ item.title }}</v-list-item-title>
-              </v-list-item>
+              <div v-for="(item, index) in items" :key="index"   >
+                <v-list-item  @click="item.itemFunction">
+                  <v-list-item-title >{{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </div>
             </v-list>
           </v-menu>
         </div>
