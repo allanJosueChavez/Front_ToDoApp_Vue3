@@ -3,7 +3,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
-import { useTodoListsStore } from "@/stores/listsStore.js"; 
+import { useTodoListsStore } from "@/stores/listsStore.js";
 import ConfirmationDialog from "@/components/dialogs/ConfirmationDialogs/ConfirmationDialog.vue";
 
 
@@ -17,21 +17,21 @@ const listSelected = computed(() => {
   return listsStore.selectedList;
 });
 
- 
+
 const listAnimation = ref(false);
 
 const currentList = computed(() => {
   // return props.listSelected;
   return listsStore.selectedList;
 });
- 
+
 const listInEdition = ref(null);
 const originalListName = ref(null);
 
 onMounted(async () => {
 
 });
- 
+
 
 watch(currentList, (newValue) => {
   listAnimation.value = true
@@ -42,8 +42,8 @@ watch(currentList, (newValue) => {
   }
   originalListName.value = currentList.value.name
   listInEdition.value = currentList.value
- 
-  if((currentList.value === currentList.value.id)){
+
+  if ((currentList.value === currentList.value.id)) {
     console.log("The list is the same") // This is no use because it will never get into this watch since the prop will actually never change
     return
   }
@@ -52,7 +52,7 @@ watch(currentList, (newValue) => {
     console.log(response.data);
     currentList.value.todos = response.data.tasks;
   });
-  
+
   setTimeout(() => {
     listAnimation.value = false
   }, 400); // Why 400? Because the animation lasts 0.4s
@@ -95,7 +95,7 @@ const addTodo = async (id) => {
 
 const saveListName = async () => {
   try {
-    if(currentList.value.name.trim() === "" || currentList.value.name === originalListName.value) {
+    if (currentList.value.name.trim() === "" || currentList.value.name === originalListName.value) {
       currentList.value.name = originalListName.value;
       return
     }
@@ -104,7 +104,7 @@ const saveListName = async () => {
       name: currentList.value.name
     }
     const response = await updateListName(listId, data);
-    if(response.status === 200) {
+    if (response.status === 200) {
       toast.success("List name updated!", {
         position: "top-right",
         autoClose: 1000,
@@ -119,17 +119,17 @@ const saveListName = async () => {
 const askConfirmation = (id) => {
   console.log("Asking confirmation to delete list with id: " + id);
   deleteConfirmationDialog.value = true;
- 
+
 };
 
-const deleteConfirmationDialog  = ref(false);
-async function deleteToDoList(){
- 
+const deleteConfirmationDialog = ref(false);
+async function deleteToDoList() {
+
   // console.log("deleteConfirmationDialog ", deleteConfirmationDialog.value)
   // console.log("Deleting list with id: " + currentList.value.id);
 
   const response = await deleteList(currentList.value.id);
-  if(response.status === 200) {
+  if (response.status === 200) {
     toast.success("List deleted!", {
       position: "top-right",
       autoClose: 1000,
@@ -146,14 +146,13 @@ async function deleteToDoList(){
 
 <template>
   <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
-    <div   :class="`h-full ${listAnimation && 'animate-right'}`" v-if="currentList">
- 
-        <section id="greeting-section" class="my-4 align-center flex h-18">
+    <div :class="`h-full ${listAnimation && 'animate-right'}`" v-if="currentList">
+
+      <section id="greeting-section" class="my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
-            <input type="text" class="" placeholder="Type your list's name here..." v-model="currentList.name"  
-            @blur="saveListName()" 
-            />
+            <input type="text" class="" placeholder="Type your list's name here..." v-model="currentList.name"
+              @blur="saveListName()" />
           </h2>
         </div>
         <div id="delete-list-button" class="flex justify-end w-1/5 p-2">
@@ -183,8 +182,7 @@ async function deleteToDoList(){
           </button>
         </form>
       </section>
-      <section
-      id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
+      <section id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
         <div v-for="(todo, index) in currentList.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
           <label>
             <input type="checkbox" v-model="todo.status" @change="saveChanges()" />
@@ -200,23 +198,13 @@ async function deleteToDoList(){
           </div>
         </div>
       </section>
- 
-
     </div>
   </div>
-  <div
-  v-if="currentList"
-  >
-    <ConfirmationDialog
-  :showDialog="deleteConfirmationDialog"
-  :v-text="`Are you sure you want to delete the list ${currentList.name}? This will delete all the to-dos inside it.`"
-  :v-title="`Confirm delete`"
-  @closeDialog="deleteConfirmationDialog = false"
-  @confirmAction="deleteToDoList"
-  
-  />
+  <div v-if="currentList">
+    <ConfirmationDialog :showDialog="deleteConfirmationDialog"
+      :v-text="`Are you sure you want to delete the list ${currentList.name}? This will delete all the to-dos inside it.`"
+      :v-title="`Confirm delete`" @closeDialog="deleteConfirmationDialog = false" @confirmAction="deleteToDoList" />
   </div>
-
 </template>
 
 
@@ -224,7 +212,7 @@ async function deleteToDoList(){
 .animate-right {
   position: relative;
   animation: animateright 0.4s;
- 
+
 }
 
 
@@ -236,9 +224,10 @@ async function deleteToDoList(){
     right: -300px;
     opacity: 0;
   }
+
   to {
     right: 0;
     opacity: 1;
   }
-} 
+}
 </style>
