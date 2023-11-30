@@ -28,7 +28,7 @@ async function deleteTask(taskId){
 }
 
 async function updateTask(taskId, task){
-    const response =  await axiosInstance.put(`/api/tasks/${taskId}`, task);
+    const response =  await axiosInstance.patch(`/api/tasks/${taskId}`, task);
     return response;
 }
 
