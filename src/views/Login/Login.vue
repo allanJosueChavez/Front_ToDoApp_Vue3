@@ -53,9 +53,7 @@ const authentication = async () => {
     return
    }
     evaluateResponse(err);
-  } finally {
-    loading.value = false;
-  }
+  }  
 };
 
 const validateForm = async () => {
@@ -68,15 +66,14 @@ const handleLoginResponse = async (response) => {
     await Cookies.set("user_jwt", response.data.token);
     await Cookies.set("user_name", response.data.username);
 
-    setTimeout(() => {
-      router.push("/to-do-list");
-    }, 2000);
-    toast.success("Log in successful!", {
-      position: "top-right",
-      autoClose: 2000,
-    });
+    router.push("/to-do-list");
+      loading.value = false;
+    // toast.success("Log in successful!", {
+    //   position: "top-right",
+    //   autoClose: 1500,
+    // });
   } 
-  loading.value = false;
+  
 };
 
 // Login form validation rules
@@ -137,7 +134,9 @@ const passwordRules = [
               </div>
               <div class="w-100 flex items-center justify-center mb-4">
                 <button>
-                  <v-btn class="text-purple-800" color="primary" type="submit">
+                  <v-btn 
+                  :loading="loading"
+                  class="text-purple-800" color="primary" type="submit">
                     <span class="text-md"> Login </span>
                   </v-btn>
                 </button>
