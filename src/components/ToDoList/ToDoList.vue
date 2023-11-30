@@ -8,11 +8,12 @@ import ConfirmationDialog from "@/components/dialogs/ConfirmationDialogs/Confirm
 
 
 const listsStore = useTodoListsStore();
-const { setSelectedList, removeList } = listsStore;
-const { createTask, getAllTasks, updateListName, deleteList } = listsService;
+const { setSelectedList, removeList, updateListCounter } = listsStore;
+const { createTask, getAllTasks, updateListName, deleteList, deleteTask , updateTask} = listsService;
 
 // const props = defineProps(["listSelected"]);
 
+const deleteConfirmationDialog = ref(false);
 const listSelected = computed(() => {
   return listsStore.selectedList;
 });
@@ -88,6 +89,7 @@ const addTodo = async (id) => {
   if (response.status === 200) {
     const todoCreated = response.data.task
     currentList.value.todos.push(todoCreated);
+    input_content.value = "";
     updateListCounter(currentList.value.id, (currentList.value.taskCount + 1));
   }
 };
@@ -122,23 +124,41 @@ const askConfirmation = (id) => {
 
 };
 
-const deleteConfirmationDialog = ref(false);
 async function deleteToDoList() {
-
-  // console.log("deleteConfirmationDialog ", deleteConfirmationDialog.value)
-  // console.log("Deleting list with id: " + currentList.value.id);
-
-  const response = await deleteList(currentList.value.id);
+   const response = await deleteList(currentList.value.id);
   if (response.status === 200) {
     toast.success("List deleted!", {
       position: "top-right",
       autoClose: 1000,
     });
+    removeList(currentList.value);
+    setSelectedList(null);
+    deleteConfirmationDialog.value = false;
+    return
   }
+  toast.error("Error deleting list!", {
+    position: "top-right",
+    autoClose: 1000,
+  });
 
-  removeList(currentList.value);
-  setSelectedList(null);
 }
+
+async function deleteTodo(list, todo) {
+  const response = await deleteTask(todo.id);
+  if (response.status === 200) {
+    currentList.value.todos = currentList.value.todos.filter((t) => t !== todo);
+    updateListCounter(list, (currentList.value.taskCount - 1));
+  }
+}
+
+const updateTodo = async (todo) => {
+  const body = {
+    status:  todo.status,
+    name: todo.name
+  }
+  await updateTask(todo.id, body);
+};
+
 
 
 
@@ -185,14 +205,14 @@ async function deleteToDoList() {
       <section id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
         <div v-for="(todo, index) in currentList.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
           <label>
-            <input type="checkbox" v-model="todo.status" @change="saveChanges()" />
+            <input type="checkbox" v-model="todo.status" @change="updateTodo(todo)" />
             <span :class="`bubble ${todo.category}`"> </span>
           </label>
           <div class="todo-content">
-            <input type="text" v-model="todo.name" @change="saveChanges()" />
+            <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
           </div>
           <div class="actions">
-            <button class="delete" @click="removeTodo(currentList.id, todo)">
+            <button class="delete" @click="deleteTodo(currentList.id, todo)">
               Delete
             </button>
           </div>
