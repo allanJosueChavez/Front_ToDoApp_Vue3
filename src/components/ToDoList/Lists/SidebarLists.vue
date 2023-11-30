@@ -64,12 +64,9 @@ async function openToDoList(todolist) {
           </v-tooltip>
 
     </div>
-    <div v-if="listsLoading">
-      <div  class="h-100 text-center flex justify-center items-center">
+    <div class="h-100 text-center flex justify-center items-center" v-if="listsLoading">
         <v-progress-circular indeterminate color="white"></v-progress-circular>
-      </div>
     </div>
-
       <div id="no-lists-found" v-if="lists.length === 0 && !listsLoading" class="h-100 text-center flex justify-center items-center">
         <span class="text-white font-semibold">
           No lists found!  
