@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import listsService from "../../services/listsService.js";
 import { useTodoListsStore } from "@/stores/listsStore.js"; 
+import ConfirmationDialog from "@/components/dialogs/ConfirmationDialogs/ConfirmationDialog.vue";
 
 
 const listsStore = useTodoListsStore();
@@ -114,8 +115,19 @@ const saveListName = async () => {
   }
 };
 
+
+const askConfirmation = (id) => {
+  console.log("Asking confirmation to delete list with id: " + id);
+  deleteConfirmationDialog.value = true;
+ 
+};
+
+const deleteConfirmationDialog  = ref(false);
 async function deleteToDoList(){
-  console.log("Deleting list with id: " + currentList.value.id);
+ 
+  // console.log("deleteConfirmationDialog ", deleteConfirmationDialog.value)
+  // console.log("Deleting list with id: " + currentList.value.id);
+
   const response = await deleteList(currentList.value.id);
   if(response.status === 200) {
     toast.success("List deleted!", {
@@ -148,7 +160,7 @@ async function deleteToDoList(){
           <v-tooltip>
             <template v-slot:activator="{ props }">
               <span v-bind="props" class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer"
-                @click="deleteToDoList(currentList.id)">
+                @click="askConfirmation(currentList.id)">
                 delete
               </span>
             </template>
@@ -192,6 +204,19 @@ async function deleteToDoList(){
 
     </div>
   </div>
+  <div
+  v-if="currentList"
+  >
+    <ConfirmationDialog
+  :showDialog="deleteConfirmationDialog"
+  :v-text="`Are you sure you want to delete the list ${currentList.name}? This will delete all the to-dos inside it.`"
+  :v-title="`Confirm delete`"
+  @closeDialog="deleteConfirmationDialog = false"
+  @confirmAction="deleteToDoList"
+  
+  />
+  </div>
+
 </template>
 
 
