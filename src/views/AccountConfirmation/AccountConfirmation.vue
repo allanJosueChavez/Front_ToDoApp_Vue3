@@ -1,15 +1,7 @@
 <template>
   <div class="h-screen bg-gradient-to-b from-purple-100 to-yellow-100">
-    <div
-      class="flex justify-center items-center bg-blue-900"
-      style="height: 10%"
-    >
-      <span class="font-bold text-2xl sm:text-2xl text-white"> ToDoFlow </span>
-      <img
-        src="https://i.ibb.co/QrjrV7B/image.webp"
-        alt=""
-        class="w-6 sm:w-10 sm:p-auto"
-      />
+    <div  style="height: 10%">
+      <smallLogo />
     </div>
     <div
       class="flex flex-col justify-center items-center space-y-2"
@@ -43,7 +35,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-
+import SmallLogo from "../../components/app/smallLogo.vue";
 const router = useRouter();
 
 const redirectToLogin = () => {
