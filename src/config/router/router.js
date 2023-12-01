@@ -29,7 +29,8 @@ const routes = [
   },
   {
     // Example /email-confirmation/?token=YmQzU1lEUTZL
-    path: '/email-confirmation/:token',
+    // path: '/email-confirmation/:token',
+    path: '/email-confirmation',
     component: AccountConfirmation, meta: {
       requiresAuth: true
     }
