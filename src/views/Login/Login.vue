@@ -45,14 +45,15 @@ const authentication = async () => {
     console.log("err: ", err);
    if(err.response && err.response.data && err.response.data.error){
     toast.warning(err.response.data.error,{
-        position: "top-right",
-        autoClose: 2000,
+        position: "bottom-center",
+        autoClose: 4000,
+        width: "300px",
       });
-
-
     return
    }
     evaluateResponse(err);
+  }finally{
+    loading.value = false;
   }  
 };
 
