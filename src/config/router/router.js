@@ -28,8 +28,10 @@ const routes = [
     redirect: "/to-do-list",
   },
   {
-    path:  '/userConfirmation/:token',
-    component: AccountConfirmation,
+    path:  '/userConfirmation',
+    component: AccountConfirmation, meta: {
+      requiresAuth: true
+    }
   }
 ];
 
