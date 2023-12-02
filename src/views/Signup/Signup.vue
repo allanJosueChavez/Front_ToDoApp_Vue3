@@ -37,6 +37,8 @@ const signup = async () => {
     await handleSignupResponse(response);
   }catch(err){
       console.log(err);
+  }finally{
+    loading.value = false;
   }
 };
 

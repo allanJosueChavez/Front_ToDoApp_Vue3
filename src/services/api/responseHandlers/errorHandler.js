@@ -22,7 +22,7 @@ async function evaluateResponse(error) {
     // toast.success('Success');
   } else if (error.response.status === 400 || error.response.status === 500) {
     if (error.response.data.error) {
-      toast.error(error.response.data.error, {
+      toast.warning(error.response.data.error, {
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
