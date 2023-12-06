@@ -59,7 +59,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import SmallLogo from "../../components/app/smallLogo.vue";
+import smallLogo from "../../components/app/smallLogo.vue";
 import { ref, onMounted } from "vue";
 const router = useRouter();
 
@@ -72,6 +72,5 @@ const confirmAccount = () => {
 };
 
 const mailConfirmed = ref(false);
-
 
 </script>
