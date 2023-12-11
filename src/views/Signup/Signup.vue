@@ -51,16 +51,16 @@ const handleSignupResponse = async (response) => {
   if(response.status === 200){
       setTimeout(() => {
         router.push("/login");
-      }, 2000);
-      toast.success("You just signed up successfully!", {
+      }, 2500);
+      toast.success("You just signed up successfully! Please check your email", {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 2500,
       });
     }
     else{
       toast.error("Sorry, something went wrong registering your user.", {
         position: "top-right",
-        duration: 2000,
+        duration:  2500,
       });
     }
     loading.value = false;

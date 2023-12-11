@@ -2,6 +2,7 @@ import Login from  "./../../views/Login/Login.vue";
 import Signup from "./../../views/Signup/Signup.vue";
 import ToDoList from "./../../components/ToDoListView.vue";
 import AccountConfirmation from "./../../views/AccountConfirmation/AccountConfirmation.vue";
+import verifyToken from "../../views/AccountConfirmation/VerifyToken.vue";
 import AppLayoutExample from "../../components/AppLayoutExample.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import authGuard from '../guards/authGuard.js';
@@ -29,12 +30,19 @@ const routes = [
   },
   {
     // Example /email-confirmation/?token=YmQzU1lEUTZL
-    // path: '/email-confirmation/:token',
     path: '/email-confirmation',
     component: AccountConfirmation, meta: {
       requiresAuth: true
     }
+  },
+  {
+    // Example /verify-token/?token=YmQzU1lEUTZL
+    path: '/verify-token',
+    component: verifyToken, meta: {
+      requiresAuth: true
+    }
   }
+
 ];
 
 const router = createRouter({
@@ -43,5 +51,5 @@ const router = createRouter({
 });
 
 
-router.beforeEach(authGuard); 
+// router.beforeEach(authGuard); 
 export default router;

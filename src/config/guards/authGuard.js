@@ -9,6 +9,7 @@ const authGuard = (to, from, next) => {
     // console.log('Already logged in. Going to the to-do-list.');
     next('/to-do-list');
   } else { // User getting to the desired page
+    // console.log('User getting to the desired page');
     next();
   }
 };
