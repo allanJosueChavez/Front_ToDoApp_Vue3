@@ -19,9 +19,15 @@ async function verifyEmailConfirmationToken(token){
     return response;
 }
 
+async function confirmAccount(userId){
+    const response = await axiosInstance.post(`api/user/confirm-account/${userId}`);
+    return response;
+}
+
 
 export default {
     create,
     login,
     verifyEmailConfirmationToken,
+    confirmAccount,
 }

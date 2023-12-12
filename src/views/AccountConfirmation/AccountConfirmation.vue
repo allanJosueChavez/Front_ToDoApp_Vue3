@@ -1,3 +1,42 @@
+<script setup>
+import { useRouter } from "vue-router";
+import smallLogo from "../../components/app/smallLogo.vue";
+import { ref, onMounted } from "vue";
+import { useUsersStore } from "@/stores/usersStore.js";
+import usersService from "@/services/usersService.js";
+
+const { confirmAccount } =  usersService;
+const router = useRouter();
+const usersStore = useUsersStore();
+ 
+const redirectToLogin = () => {
+  router.push("/login");
+};
+
+ 
+const token = ref(null);
+const mailConfirmed = ref(false);
+
+onMounted(() => {
+  token.value = usersStore.userConfirmationToken
+    if (!token.value) {
+
+      // Show view of token invalid or expired. Resend email confirmation.
+    }
+});
+
+function setAccountConfirmed() {
+  const token = usersStore.userConfirmationToken
+  if (token) {
+    // confirmAccount
+    mailConfirmed.value = true;
+    // usersStore.confirmAccount(token)
+  }
+}
+
+</script>
+
+
 <template>
   <div class="h-screen bg-gradient-to-b from-purple-100 to-yellow-100">
     <div  style="height: 10%">
@@ -26,14 +65,14 @@
           Do you wish to start using ToDoFlow? Start
           <a
             class="cursor-pointer text-lime-500 font-bold"
-            @click="redirectToLogin"
+            @click="setAccountConfirmed()"
             >here</a
           >
         </span>
       </div>
     </div>
     <div
-    v-if="!mailConfirmed"
+    v-if="!mailConfirmed && token"
     class="flex flex-col justify-center items-center space-y-2"
       style="height: 90%"
     >
@@ -54,23 +93,24 @@
         </button>
       </div>
     </div>
+
+    <div
+    v-if="!token"
+    class="flex flex-col justify-center items-center space-y-2"
+      style="height: 90%"
+    >
+    <div class="my-4">
+        <span class="text-4xl font-bold text-center">
+           Sorry! The token is invalid or it has expired.
+        </span>
+      </div>
+ 
+      <div>
+        <button class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500" @click="redirectToLogin()">
+            Resend email confirmation
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { useRouter } from "vue-router";
-import smallLogo from "../../components/app/smallLogo.vue";
-import { ref, onMounted } from "vue";
-const router = useRouter();
-
-const redirectToLogin = () => {
-  router.push("/login");
-};
-
-const confirmAccount = () => {
-  mailConfirmed.value = true;
-};
-
-const mailConfirmed = ref(false);
-
-</script>
