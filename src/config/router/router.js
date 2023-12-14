@@ -5,6 +5,7 @@ import AccountConfirmation from "./../../views/AccountConfirmation/AccountConfir
 import verifyToken from "../../views/AccountConfirmation/VerifyToken.vue";
 import AppLayoutExample from "../../components/AppLayoutExample.vue";
 import editProfile from "../../views/Profile/EditProfile.vue";  
+import ResendEmailConfirmation from "../../views/AccountConfirmation/ResendEmailConfirmation.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import authGuard from "../guards/authGuard.js";
 
@@ -32,13 +33,21 @@ const routes = [
     redirect: "/to-do-list",
   },
   {
-    // Example /email-confirmation/?token=YmQzU1lEUTZL
+   
     path: "/email-confirmation",
     component: AccountConfirmation,
     meta: {
       requiresAuth: true,
     },
   },
+    {
+      path: "/resend-email-confirmation",
+      component: ResendEmailConfirmation,
+      meta: {
+        requiresAuth: true
+      },
+    },
+ 
   {
     // Example /verify-token/?token=YmQzU1lEUTZL
     path: "/verify-token",
@@ -53,7 +62,8 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-  }
+  },
+
 ];
 
 const router = createRouter({
