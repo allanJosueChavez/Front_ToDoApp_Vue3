@@ -9,10 +9,11 @@ import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import errorHandler from "../../services/api/responseHandlers/errorHandler";
-const {evaluateResponse} = errorHandler;
+const { evaluateResponse } = errorHandler;
 const { login } = usersService;
 const router = useRouter();
 
+const unverifiedUser = ref(false);
 const loading = ref(false);
 const loginForm = ref(null);
 const showPassword = ref(false);
@@ -26,6 +27,7 @@ const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
 
 const authentication = async () => {
   loading.value = true;
+  unverifiedUser.value = false;
   const isValid = await validateForm();
   if (!isValid) return;
   try {
@@ -41,20 +43,23 @@ const authentication = async () => {
     const response = await login(userCredentials);
     await handleLoginResponse(response);
   } catch (err) {
-    if( err.code === 'ERR_NETWORK') return
-    console.log("err: ", err);
-   if(err.response && err.response.data && err.response.data.error){
-    toast.warning(err.response.data.error,{
+    if (err.code === "ERR_NETWORK") return;
+    if (err.response && err.response.data && err.response.data.error) {
+       console.log(err.response)
+      if (err.response.status === 406) {
+        unverifiedUser.value = true;
+      }
+      toast.warning(err.response.data.error, {
         position: "bottom-center",
         autoClose: 4000,
         width: "300px",
       });
-    return
-   }
+      return;
+    }
     evaluateResponse(err);
-  }finally{
+  } finally {
     loading.value = false;
-  }  
+  }
 };
 
 const validateForm = async () => {
@@ -68,13 +73,12 @@ const handleLoginResponse = async (response) => {
     await Cookies.set("user_name", response.data.username);
 
     router.push("/to-do-list");
-      loading.value = false;
+    loading.value = false;
     // toast.success("Log in successful!", {
     //   position: "top-right",
     //   autoClose: 1500,
     // });
-  } 
-  
+  }
 };
 
 // Login form validation rules
@@ -89,8 +93,11 @@ const passwordRules = [
 ];
 
 // The mdi-close of the clearable option of the v-text-field is not working.
-</script>
 
+const redirectResendEmailView = () => {
+  router.push("/resend-email-confirmation");
+};
+</script>
 
 <template>
   <div class="h-screen sm:flex">
@@ -98,10 +105,10 @@ const passwordRules = [
     <div
       class="sm:w-4/6 sm:h-full bg-gray-200 flex justify-center items-center"
     >
-      <div class="sm:px-44 w-full h-4/6">
+      <div class="sm:px-44 w-full">
         <div class="bg-white shadow-md rounded-2xl">
           <v-form ref="loginForm" fast-fail @submit.prevent="authentication">
-            <div class="px-16 py-8 grid gap-y-6">
+            <div class="px-16 grid gap-y-6">
               <div id="title-page" class="my-10">
                 <h1 class="text-4xl text-center font-bold text-purple-900">
                   LOGIN
@@ -133,16 +140,45 @@ const passwordRules = [
                   </span>
                 </v-text-field>
               </div>
+              <div
+                v-show="unverifiedUser"
+                id="unverified-user-banner"
+                class="bg-red-100 px-4 py-3 rounded text-purple border-2 border-purple-400 rounded relative flex"
+              >
+                <div class="flex justify-center items-center h-full w-14">
+                  <span class="material-icons-outlined absolute"> error </span>
+                </div>
+                <div
+                class="ml-4"
+                >
+                  <span class="text-purple-800" 
+                  >
+                    The account is not verified. Please check your inbox.
+                    If you need to resend the email confirmation
+                    <span>
+                      <a
+                        class="text-purple-800 font-bold cursor-pointer"
+                        @click="redirectResendEmailView"
+                      > 
+                        click here
+                      </a>
+                    </span>
+                  </span>
+                </div>
+              </div>
               <div class="w-100 flex items-center justify-center mb-4">
                 <button>
-                  <v-btn 
-                  :loading="loading"
-                  class="text-purple-800" color="primary" type="submit">
+                  <v-btn
+                    :loading="loading"
+                    class="text-purple-800"
+                    color="primary"
+                    type="submit"
+                  >
                     <span class="text-md"> Login </span>
                   </v-btn>
                 </button>
               </div>
-              <div class="pb-3 grid gap-y-3">
+              <div class="pb-8 grid gap-y-3">
                 <div id="forgotPassBtn" class="text-center">
                   <span class="text-purple-800"> Forgot your password? </span>
                   <span
@@ -171,5 +207,3 @@ const passwordRules = [
     </div>
   </div>
 </template>
-
- 
