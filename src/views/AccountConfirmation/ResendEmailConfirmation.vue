@@ -3,6 +3,10 @@ import smallLogo from "../../components/app/smallLogo.vue";
 import {ref, onMounted} from 'vue'
 import { toast } from "vue3-toastify";
 
+import usersService from "@/services/usersService.js";
+
+const { resendEmailConfirmation } =  usersService;
+
 const email = ref("");
 const emailRules = ref([
   (v) => !!v || "E-mail is required",
@@ -19,7 +23,24 @@ const sendEmail = async () => {
       position: "top-right",
       autoClose: 1500,
     });
+    return
     }
+    const body = {
+        email: email.value
+    }
+    resendEmailConfirmation(body).then((response) => {
+        if(response.status === 200){
+            toast.success("Email sent! Please check out your inbox!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
+        }
+    }).catch((err) => {
+        toast.info(err.response.data.message, {
+      position: "top-right",
+      autoClose: 1500,
+    });
+    })
     console.log("send email");
     };
  
