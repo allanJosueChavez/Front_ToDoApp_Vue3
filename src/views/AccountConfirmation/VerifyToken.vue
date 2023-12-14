@@ -30,7 +30,8 @@ onMounted(() => {
         }
     }).catch((err) => {
         // page that says that the token is invalid go to the login.
-        // router.push("/login")
+        router.push("/email-confirmation")
+        console.log("holy shit! the token is expired")
         console.log(err)
     })
 
