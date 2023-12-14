@@ -19,8 +19,13 @@ async function verifyEmailConfirmationToken(token){
     return response;
 }
 
-async function confirmAccount(userId){
-    const response = await axiosInstance.post(`api/user/confirm-account/${userId}`);
+async function confirmAccount(body){
+    const response = await axiosInstance.post(`api/user/confirm-account`, body);
+    return response;
+}
+
+async function resendEmailConfirmation(body){
+    const response = await axiosInstance.post(`api/user/resend-email-confirmation`, body);
     return response;
 }
 
@@ -30,4 +35,5 @@ export default {
     login,
     verifyEmailConfirmationToken,
     confirmAccount,
+    resendEmailConfirmation,
 }
