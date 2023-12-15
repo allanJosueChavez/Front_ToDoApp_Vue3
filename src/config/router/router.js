@@ -33,18 +33,17 @@ const routes = [
     redirect: "/to-do-list",
   },
   {
-   
     path: "/email-confirmation",
     component: AccountConfirmation,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
     },
   },
     {
       path: "/resend-email-confirmation",
       component: ResendEmailConfirmation,
       meta: {
-        requiresAuth: true
+        requiresAuth: false,
       },
     },
  
@@ -53,7 +52,7 @@ const routes = [
     path: "/verify-token",
     component: verifyToken,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
     },
   },
   {
@@ -71,5 +70,5 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach(authGuard);
+router.beforeEach(authGuard);
 export default router;
