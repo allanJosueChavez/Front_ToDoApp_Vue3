@@ -2,11 +2,13 @@
 import smallLogo from "../../components/app/smallLogo.vue";
 import { ref, onMounted } from 'vue'
 import { toast } from "vue3-toastify";
-
+import "vue3-toastify/dist/index.css";
+import { useRouter } from "vue-router"; 
 import usersService from "@/services/usersService.js";
 
-const { resendEmailConfirmation } = usersService;
 
+const router = useRouter();
+const { resendEmailConfirmation } = usersService;
 const email = ref("");
 const emailRules = ref([
     (v) => !!v || "E-mail is required",
@@ -36,7 +38,8 @@ const sendEmail = async () => {
             });
         }
     }).catch((err) => {
-        toast.info(err.response.data.message, {
+        toast.info(err.response.data.message ? err.response.data.message : "Something went wrong!"
+        , {
             position: "top-right",
             autoClose: 1500,
         });
@@ -44,6 +47,9 @@ const sendEmail = async () => {
     console.log("send email");
 };
 
+const redirectToLogin = () => {
+  router.push("/login");
+};
 </script>
 
 <template>
@@ -71,7 +77,7 @@ const sendEmail = async () => {
             <div class=" w-full flex justify-center  bottom-32 fixed">
  
           <button
-            class=" text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800" 
+            class=" text-gray-600 px-4 py-2 font-semibold underline hover:text-gray-900" 
            
             type="submit"
             @click="redirectToLogin"

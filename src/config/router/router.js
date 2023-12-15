@@ -37,6 +37,7 @@ const routes = [
     component: AccountConfirmation,
     meta: {
       requiresAuth: false,
+      verifyLogin:false,
     },
   },
     {
@@ -44,6 +45,7 @@ const routes = [
       component: ResendEmailConfirmation,
       meta: {
         requiresAuth: false,
+        verifyLogin:false,
       },
     },
  
@@ -53,6 +55,7 @@ const routes = [
     component: verifyToken,
     meta: {
       requiresAuth: false,
+      verifyLogin:false,
     },
   },
   {
