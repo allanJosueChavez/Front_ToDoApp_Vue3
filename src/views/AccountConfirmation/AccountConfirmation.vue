@@ -117,7 +117,7 @@ const redirectResendEmailView = () => {
 
         <div>
           <button
-            class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
+            class="bg-amber-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
             @click="redirectResendEmailView()"
           >
             Resend email confirmation
@@ -125,13 +125,24 @@ const redirectResendEmailView = () => {
         </div>
       </div>
 
-      <div class="bg-red-100 w-full flex justify-center">
-        <!-- <span class="text-xl font-semibold text-center text-gray-600  bottom-12 fixed">
+      <div class=" w-full flex justify-center  bottom-32 fixed">
+        <!-- <span class="text-xl font-semibold text-center text-gray-600 ">
         If you need help, please contact us at
         <a class="cursor-pointer text-lime-500 font-bold" href="mailto:achavez@mem.gob.gt"> 
         </a>
 
       </span> -->
+          <button
+            class=" text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800" 
+           
+            type="submit"
+            @click="redirectToLogin"
+          >
+            <span class="text-md"> Go back to login 
+ 
+
+            </span>
+          </button>
       </div>
     </section>
   </div>

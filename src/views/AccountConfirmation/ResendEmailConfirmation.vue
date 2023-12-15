@@ -68,6 +68,20 @@ const sendEmail = async () => {
                     </div>
                 </v-form>
             </div>
+            <div class=" w-full flex justify-center  bottom-32 fixed">
+ 
+          <button
+            class=" text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800" 
+           
+            type="submit"
+            @click="redirectToLogin"
+          >
+            <span class="text-md"> Go back to login 
+ 
+
+            </span>
+          </button>
+      </div>
 <!-- Right here a button to redirect to the login page "Go back to login". The same thing should be in the view of account confirmation. that gotta be fixed at the bottom no matter if the token's valid or not. whatever  -->
         </div>
     </div>
