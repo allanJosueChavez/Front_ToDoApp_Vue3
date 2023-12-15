@@ -68,7 +68,7 @@ const sendEmail = async () => {
                     </div>
                 </v-form>
             </div>
-
+<!-- Right here a button to redirect to the login page "Go back to login". The same thing should be in the view of account confirmation. that gotta be fixed at the bottom no matter if the token's valid or not. whatever  -->
         </div>
     </div>
 </template>
