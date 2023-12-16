@@ -21,6 +21,9 @@ const user = ref({
 
 const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
 
+const showPassword = ref(false);
+
+
 const signup = async () => {
   const isValid = await validateForm();
   if (!isValid) return;
@@ -142,8 +145,20 @@ const passwordConfirmationRules = [
                   label="Password"
                   v-model="user.password"
                   clearable
+                  autocomplete="off"
+                  :type="showPassword ? 'text' : 'password'"
                   :rules="passwordRules"
-                ></v-text-field>
+                >
+                <span
+                class="material-icons-outlined absolute right-3 top-5 cursor-pointer text-purple-800"
+                @click="showPassword = !showPassword"
+              >
+                {{ showPassword ? "visibility" : "visibility_off" }}
+              </span>
+              </v-text-field>
+                
+
+             
               </div>
               <div>
                 <v-text-field
@@ -151,6 +166,7 @@ const passwordConfirmationRules = [
                   label="Password Confirmation"
                   v-model="user.passwordConfirmation"
                   clearable
+                  type="password"
                   :rules="passwordConfirmationRules"
                 ></v-text-field>
               </div>
