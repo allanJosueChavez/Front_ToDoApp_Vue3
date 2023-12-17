@@ -23,10 +23,11 @@ const openProfileMenu = () => {
 
 
 // States
-// const lists = ref([]);
-const lists = computed(() => {
-  return listsStore.todoLists;
-})
+// Question: Why ref instead of computed? Because computed is a function that returns a value, and ref is a value that can be changed.
+const lists = ref([]);
+// const lists = computed(() => {
+//   return listsStore.todoLists;
+// })
 const allLists = ref([]);
 // Props and emits
 // const props = defineProps(["listSelected"])

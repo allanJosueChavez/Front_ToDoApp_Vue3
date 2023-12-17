@@ -30,10 +30,16 @@ async function resendEmailConfirmation(body){
 }
 
 
+async function loginThroughToken(body){
+    const response = await axiosInstance.post(`api/user/login-through-token`, body);
+    return response;
+}
+
 export default {
     create,
     login,
     verifyEmailConfirmationToken,
     confirmAccount,
     resendEmailConfirmation,
+    loginThroughToken,
 }

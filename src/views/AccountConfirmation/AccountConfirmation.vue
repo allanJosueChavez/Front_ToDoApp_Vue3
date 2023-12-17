@@ -4,17 +4,17 @@ import smallLogo from "../../components/app/smallLogo.vue";
 import { ref, onMounted } from "vue";
 import { useUsersStore } from "@/stores/usersStore.js";
 import usersService from "@/services/usersService.js";
+import Cookies from "js-cookie";
+import { toast } from "vue3-toastify";
 
-const { confirmAccount } = usersService;
+const { confirmAccount, loginThroughToken } = usersService;
 const router = useRouter();
 const usersStore = useUsersStore();
 
-const redirectToLogin = () => {
-  router.push("/login");
-};
 
 const token = ref(null);
 const mailConfirmed = ref(false);
+const loading = ref(false);
 
 onMounted(() => {
   token.value = usersStore.userConfirmationToken;
@@ -40,6 +40,26 @@ async function setAccountConfirmed() {
 
 const redirectResendEmailView = () => {
   router.push("/resend-email-confirmation");
+};
+
+
+const authenticateVerifiedUser = async () => {
+  const body = {
+    token: token.value,
+  };
+  console.log("Login through token", body);
+  const loginResponse = await loginThroughToken(body);
+  console.log("loginResponse", loginResponse);
+  if (loginResponse && loginResponse.status === 200) {
+    await Cookies.set("user_jwt", loginResponse.data.token);
+    await Cookies.set("user_name", loginResponse.data.username);
+    router.push("/to-do-list");
+    loading.value = false;
+  }
+};
+
+const redirectToLogin = async () => {
+  router.push("/login");
 };
 </script>
 
@@ -74,7 +94,7 @@ const redirectResendEmailView = () => {
             Do you wish to start using ToDoFlow? Start
             <a
               class="cursor-pointer text-lime-500 font-bold"
-              @click="redirectToLogin"
+              @click="authenticateVerifiedUser"
               >here</a
             >
           </span>
