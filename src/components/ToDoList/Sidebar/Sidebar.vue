@@ -121,7 +121,9 @@ const searchInLists = () => {
 </script>
 
 <template>
-  <div class="top-0 sm:w-1/5 p-0 h-full" id="sidebar">
+  <div class="  top-0 sm:w-1/5 p-0 h-full "
+  :class="listSelected ? ' sm:block hidden ' : ' sm:block block '"
+  id="sidebar">
     <div class="sidebar sm:bg-blue-900 bg-gray-700 w-full" style="text-align: center; height: 100%; align-items: center">
       <div id="sidebar-title"
         class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
@@ -153,7 +155,7 @@ const searchInLists = () => {
       <Lists style="height: 62%; " :listSelected="listSelected" @openToDoList="openToDoList" :lists="lists"
       :listsLoading="listsLoading"
       />
-      <div id="profile" class="bg-blue-950 mt-1 h-16  fixed bottom-0" style="width: 20%;">
+      <div id="profile" class="sm:block hidden bg-blue-950 mt-1 h-16 fixed bottom-0" style="width: 20%;">
         <div id="logout" class="flex justify-center items-center h-100 ">
           <v-menu>
             <template v-slot:activator="{ props }">

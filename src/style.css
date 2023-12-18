@@ -161,8 +161,11 @@ h4 {
 	display: flex;
 	padding: 0px 0px 10px 0px;
 }
-.greeting:hover {
+.greeting:hover { 
 	border-radius: 0.5rem;
+}
+.greeting {
+	border-radius: 0.2rem;
 	box-shadow: var(--shadow);
 }
 
@@ -284,7 +287,6 @@ input:checked ~ .bubble::after {
 } 
 
 .todo-list .todo-item {
-	
 	display: flex;
 	align-items: center;
 	background-color: #FFF;

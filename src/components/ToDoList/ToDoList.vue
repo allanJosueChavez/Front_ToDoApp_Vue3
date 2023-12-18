@@ -70,7 +70,7 @@ const changePlaceholder = () => {
 const addTodo = async (id) => {
   if (!input_content.value) {
     // Something nicer than this can be that the input gets red and a message appears saying that it can't be empty
-    toast.warning("Please write something!", {
+    toast.info("Please write something!", {
       position: "top-right",
       autoClose: 1000,
     });
@@ -160,15 +160,24 @@ const updateTodo = async (todo) => {
 };
 
 
+const removeListSelectedOnMobile = () => {
+  setSelectedList(null);
+};
+
 
 
 </script>
 
 <template>
-  <div id="to-do-list" class="sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-10">
+  <div id="to-do-list" 
+  :class="listSelected ? ' block sm:block ' : ' hidden sm:block ' "
+  class="sm:h-auto h-full sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10">
     <div :class="`h-full ${listAnimation && 'animate-right'}`" v-if="currentList">
-
-      <section id="greeting-section" class="my-4 align-center flex h-18">
+      <span   class="material-icons fixed top-2 left-2 text-3xl p-2 cursor-pointer"
+                @click="removeListSelectedOnMobile">
+                arrow_back
+              </span>
+      <section id="greeting-section" class="my-8 sm:my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
             <input type="text" class="" placeholder="Type your list's name here..." v-model="currentList.name"
@@ -191,7 +200,11 @@ const updateTodo = async (todo) => {
         <form @submit.prevent="addTodo(currentList.id)">
           <input type="text" :placeholder="defaultPlaceholder" v-model="input_content" id="AddTaskInput"
             @click="changePlaceholder()" />
-
+            <!-- <p
+          class="text-red-500"
+          >
+              You must write something!
+          </p> -->
           <button class="bg-yellow-400 font-bold" type="submit" value="Add to-do">
             <span class="text-purple-900 flex align-items justify-center">
               <span class="material-icons text-purple-900 cursor-pointer">
@@ -202,12 +215,30 @@ const updateTodo = async (todo) => {
           </button>
         </form>
       </section>
-      <section id="to-dos-list" class="todo-list my-8 h-4/6 overflow-y-auto">
+      <section id="to-dos-list" class=" todo-list my-8  overflow-y-auto"
+        style="height: 60%;"
+      >
         <div v-for="(todo, index) in currentList.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
-          <label>
+          <!-- <label>
             <input type="checkbox" v-model="todo.status" @change="updateTodo(todo)" />
-            <span :class="`bubble ${todo.category}`"> </span>
-          </label>
+            <span :class="`bubble`"> </span> 
+          </label> -->
+          <div class="mt-2 mr-3">
+            <span
+          class="material-icons-outlined cursor-pointer text-blue-800 select-none          "
+          @click="todo.status = !todo.status; updateTodo(todo)"
+          v-if="todo.status"
+          >
+            check_circle
+          </span>
+          <span class="material-icons-outlined  cursor-pointer text-blue-800 select-none" 
+          @click="todo.status = !todo.status; updateTodo(todo)"
+          v-if="!todo.status"
+          >
+            circle
+          </span>
+          </div>
+
           <div class="todo-content">
             <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
           </div>
