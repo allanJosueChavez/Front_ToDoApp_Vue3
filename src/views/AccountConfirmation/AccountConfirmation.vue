@@ -55,6 +55,11 @@ const authenticateVerifiedUser = async () => {
     await Cookies.set("user_name", loginResponse.data.username);
     router.push("/to-do-list");
     loading.value = false;
+  }else{
+    toast.error("Something went wrong!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
   }
 };
 
