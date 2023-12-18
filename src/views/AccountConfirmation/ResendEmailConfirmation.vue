@@ -65,7 +65,9 @@ const redirectToLogin = () => {
                 <v-form ref="resendEmailForm" fast-fail @submit.prevent="sendEmail"
                     class="flex flex-col justify-center items-center">
                     <div class="flex flex-col justify-center items-center">
-                        <v-text-field id="email" label="Email" v-model="email" :rules="emailRules" class="w-96">
+                        <v-text-field 
+                        prepend-inner-icon="mdi-email"
+                        id="email" label="Email" v-model="email" :rules="emailRules" class="w-96">
                         </v-text-field>
                         <button
                             class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500 mt-2">

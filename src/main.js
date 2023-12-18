@@ -10,7 +10,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import 'material-icons/iconfont/material-icons.css';
-
+import '@mdi/font/css/materialdesignicons.css' //This in order to use mdi icons in vuetify
 const pinia = createPinia()
 
 const vuetify = createVuetify({
