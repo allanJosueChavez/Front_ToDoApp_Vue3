@@ -26,11 +26,12 @@ const user = ref({
 const PASSPHRASE = ref(import.meta.env.VITE_PASSPHRASE);
 
 const authentication = async () => {
-  loading.value = true;
+
   unverifiedUser.value = false;
   const isValid = await validateForm();
   if (!isValid) return;
   try {
+    loading.value = true;
     // I have a env variable using vite. it's called PASSPHRASE. The syntax to get it from the code is import.meta.env.PASSPHRASE
     const hashedPassword = CryptoJS.AES.encrypt(
       user.value.password,
@@ -89,7 +90,7 @@ const emailRules = [
 
 const passwordRules = [
   (v) => !!v || "Password is required",
-  (v) => (v && v.length >= 8) || "Password must be larger than 8 characters",
+  // (v) => (v && v.length >= 8) || "Password must be larger than 8 characters",
 ];
 
 // The mdi-close of the clearable option of the v-text-field is not working.

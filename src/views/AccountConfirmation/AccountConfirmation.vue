@@ -66,6 +66,8 @@ const authenticateVerifiedUser = async () => {
 const redirectToLogin = async () => {
   router.push("/login");
 };
+
+
 </script>
 
 <template>
@@ -73,6 +75,13 @@ const redirectToLogin = async () => {
     <div style="height: 10%">
       <smallLogo />
     </div>
+            <v-overlay
+          v-model="loading"
+          contained
+          class="align-center justify-center"
+        >
+ 
+        </v-overlay>
     <section
       style="height: 90%"
       class="flex flex-col justify-center items-center"
@@ -123,6 +132,7 @@ const redirectToLogin = async () => {
         <div>
           <button
             class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
+            :loading="loading"
             @click="setAccountConfirmed()"
           >
             Confirm email address

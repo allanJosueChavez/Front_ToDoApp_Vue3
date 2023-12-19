@@ -39,13 +39,14 @@ async function evaluateResponse(error) {
       });
     }
   } else if (error.response.status === 401) {
-    toast.error("Unauthorized", {
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      position: "bottom-right",
-    });
+    // toast.error("Unauthorized", {
+    //   autoClose: 1500,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   position: "bottom-right",
+    // });
+    console.log("401 Unauthorized");
     await logout();
   }
 }
