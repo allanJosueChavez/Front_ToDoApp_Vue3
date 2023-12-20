@@ -43,7 +43,6 @@ watch(currentList, (newValue) => {
   console.log(loading.value)
   listAnimation.value = true
   console.log("Watching. Perceiving a new value...")
-  setTimeout(() => {
   if (!currentList.value) {
     console.log("No list selected")
     return
@@ -66,7 +65,6 @@ watch(currentList, (newValue) => {
   }
   loading.value = false
 
-}, 500); 
   // notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
   // doneTodos.value = currentList.value.todos.filter((todo) => todo.status);
   setTimeout(() => {
