@@ -74,7 +74,7 @@ const handleSignupResponse = async (response) => {
 // Login form validation rules
 const usernameRules = [
   (v) => !!v || "Name is required",
-  (v) => (v && v.length <= 15) || "Name must be less than 15 characters",
+  (v) => (v && v.length <= 80) || "Name must be less than 80 characters",
   (v) => (v && v.length >= 3) || "Name must be larger than 3 characters",
 ];
 

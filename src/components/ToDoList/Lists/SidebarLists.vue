@@ -4,7 +4,7 @@ import { ref, onMounted, watch, computed } from "vue";
 
 import {useTodoListsStore} from '../../../stores/listsStore.js'
 const listsStore = useTodoListsStore();
-const { addAllLists, setSelectedList } = listsStore;
+
 //Difference between accessing a prop and creating a ref from a prop. The difference relies on the fact that the prop is reactive and the ref is not. 
 // The best way to use a prop is to create a computed property from it.
 

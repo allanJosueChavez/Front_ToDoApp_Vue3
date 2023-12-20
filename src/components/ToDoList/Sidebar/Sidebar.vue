@@ -73,6 +73,9 @@ const getLists = async () => {
 
 
 async function createNewList() {
+  const cookieJwt = Cookies.get('user_jwt');
+  console.log(cookieJwt)
+
   const ToDolist = {
     name: "Untitled",
   };
@@ -85,6 +88,8 @@ async function createNewList() {
     setSelectedList(listCreated);
 
   }
+
+
   // here I gotta say to the ToDoList component which is the list I just created
 }
 
