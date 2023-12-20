@@ -76,6 +76,7 @@ const changePlaceholder = () => {
   defaultPlaceholder.value = "Type your to-do here...";
 };
 
+const creatingTodo = ref(false);
 const addTodo = async (id) => {
   if (!input_content.value) {
     // Something nicer than this can be that the input gets red and a message appears saying that it can't be empty
@@ -91,7 +92,7 @@ const addTodo = async (id) => {
     status: false,
     listId: id
   };
-
+  creatingTodo.value = true;
   const response = await createTask(newTodo);
   console.log(response.data)
 
@@ -101,6 +102,7 @@ const addTodo = async (id) => {
     notDoneTodos.value.push(todoCreated);
     input_content.value = "";
     updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount + 1));
+    creatingTodo.value = false;
   }
 };
 
@@ -251,12 +253,15 @@ const removeListSelectedOnMobile = () => {
               You must write something!
           </p> -->
           <button class="bg-yellow-400 font-bold" type="submit" value="Add to-do">
-            <span class="text-purple-900 flex align-items justify-center">
+            <span  v-if=" !creatingTodo" class="text-purple-900 flex align-items justify-center">
               <span class="material-icons text-purple-900 cursor-pointer">
                 add
               </span>
-              Add to-do
+              <span>Add to-do</span>
             </span>
+            <v-progress-circular   :width="4" :size="25" v-if="creatingTodo" indeterminate color="white"></v-progress-circular>
+
+            <!-- <v-progress-linear indeterminate></v-progress-linear> -->
 
           </button>
         </form>
