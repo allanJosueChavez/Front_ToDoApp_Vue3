@@ -61,9 +61,10 @@ watch(currentList, (newValue) => {
       currentList.value.todos = response.data.tasks;
       notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
       doneTodos.value = currentList.value.todos.filter((todo) => todo.status);  
+      loading.value = false
+
   });
   }
-  loading.value = false
 
   // notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
   // doneTodos.value = currentList.value.todos.filter((todo) => todo.status);
