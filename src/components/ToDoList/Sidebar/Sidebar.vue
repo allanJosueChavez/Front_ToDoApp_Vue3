@@ -56,6 +56,7 @@ const logout = () => {
 const getLists = async () => {
   listsLoading.value = true;
   await getAllLists().then((response) => {
+    //Well here the token is not the one expected, after that confirmation the user is seeing all the notes. weird as fuck. 
     const listsResponse = response.data;
     addAllLists(listsResponse);
     lists.value =  listsStore.todoLists
