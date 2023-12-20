@@ -51,6 +51,8 @@ const authenticateVerifiedUser = async () => {
   const loginResponse = await loginThroughToken(body);
   console.log("loginResponse", loginResponse);
   if (loginResponse && loginResponse.status === 200) {
+    console.log("Debugging loginResponse", loginResponse.data)
+
     await Cookies.set("user_jwt", loginResponse.data.token);
     await Cookies.set("user_name", loginResponse.data.username);
     router.push("/to-do-list");
