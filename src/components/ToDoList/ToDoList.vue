@@ -8,7 +8,7 @@ import ConfirmationDialog from "@/components/dialogs/ConfirmationDialogs/Confirm
 
 
 const listsStore = useTodoListsStore();
-const { setSelectedList, removeList, updateListCounter } = listsStore;
+const { setSelectedList, removeList, updateUncompletedTodosCounter } = listsStore;
 const { createTask, getAllTasks, updateListName, deleteList, deleteTask , updateTask} = listsService;
 
 // const props = defineProps(["listSelected"]);
@@ -26,10 +26,13 @@ const currentList = computed(() => {
   return listsStore.selectedList;
 });
 
+const notDoneTodos = ref([])
+const doneTodos = ref([])
 const listInEdition = ref(null);
 const originalListName = ref(null);
 
 onMounted(async () => {
+  console.log(currentList)
 
 });
 
@@ -48,12 +51,21 @@ watch(currentList, (newValue) => {
     console.log("The list is the same") // This is no use because it will never get into this watch since the prop will actually never change
     return
   }
-  getAllTasks(currentList.value.id).then((response) => {
-    console.log("all the tasks are: ");
-    console.log(response.data);
-    currentList.value.todos = response.data.tasks;
-  });
+  console.log("Current list is: ")
+  console.log(currentList.value)
+  if(currentList.value){
+      
 
+    getAllTasks(currentList.value.id).then((response) => {
+      console.log("all the tasks are: ");
+      console.log(response.data);
+      currentList.value.todos = response.data.tasks;
+      notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
+      doneTodos.value = currentList.value.todos.filter((todo) => todo.status);  
+  });
+  }
+  // notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
+  // doneTodos.value = currentList.value.todos.filter((todo) => todo.status);
   setTimeout(() => {
     listAnimation.value = false
   }, 400); // Why 400? Because the animation lasts 0.4s
@@ -88,9 +100,10 @@ const addTodo = async (id) => {
 
   if (response.status === 200) {
     const todoCreated = response.data.task
-    currentList.value.todos.push(todoCreated);
+    // currentList.value.todos.push(todoCreated);
+    notDoneTodos.value.push(todoCreated);
     input_content.value = "";
-    updateListCounter(currentList.value.id, (currentList.value.taskCount + 1));
+    updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount + 1));
   }
 };
 
@@ -144,11 +157,33 @@ async function deleteToDoList() {
 }
 
 async function deleteTodo(list, todo) {
-  const response = await deleteTask(todo.id);
+  if(todo.status){
+      doneTodos.value = doneTodos.value.map((t) => {
+        if(t.id === todo.id){
+          t.deleting = true
+        }
+        return t});
+    }else{
+      notDoneTodos.value = notDoneTodos.value.map((t) => {
+        if(t.id === todo.id){
+          t.deleting = true
+        }
+        return t});
+    }
+    const response = await deleteTask(todo.id);
   if (response.status === 200) {
-    currentList.value.todos = currentList.value.todos.filter((t) => t !== todo);
-    updateListCounter(list, (currentList.value.taskCount - 1));
+    // currentList.value.todos = currentList.value.todos.filter((t) => t !== todo);
+    if(todo.status){
+      doneTodos.value = doneTodos.value.filter((t) => t !== todo);
+    }else{
+      notDoneTodos.value = notDoneTodos.value.filter((t) => t !== todo);
+      updateUncompletedTodosCounter(list, (currentList.value.taskCount - 1));
+
+    }
+
+ 
   }
+
 }
 
 const updateTodo = async (todo) => {
@@ -159,6 +194,19 @@ const updateTodo = async (todo) => {
   await updateTask(todo.id, body);
 };
 
+const markAsDone = async (todo) => {
+  await updateTodo(todo);
+  notDoneTodos.value = notDoneTodos.value.filter((t) => t !== todo);
+  doneTodos.value.push(todo);
+  updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount - 1));
+};
+
+const markAsNotDone = async (todo) => {
+  await updateTodo(todo);
+  doneTodos.value = doneTodos.value.filter((t) => t !== todo);
+  notDoneTodos.value.push(todo);
+  updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount + 1));
+};
 
 const removeListSelectedOnMobile = () => {
   setSelectedList(null);
@@ -212,39 +260,65 @@ const removeListSelectedOnMobile = () => {
               </span>
               Add to-do
             </span>
+
           </button>
         </form>
       </section>
-      <section id="to-dos-list" class=" todo-list my-8  overflow-y-auto"
+      <section id="to-dos-list" class=" todo-list my-8  overflow-y-auto  "
         style="height: 60%;"
       >
-        <div v-for="(todo, index) in currentList.todos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
-          <!-- <label>
-            <input type="checkbox" v-model="todo.status" @change="updateTodo(todo)" />
-            <span :class="`bubble`"> </span> 
-          </label> -->
+        <div 
+        
+        v-for="(todo, index) in  notDoneTodos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
           <div class="mt-2 mr-3">
-            <span
-          class="material-icons-outlined cursor-pointer text-blue-800 select-none          "
-          @click="todo.status = !todo.status; updateTodo(todo)"
-          v-if="todo.status"
-          >
-            check_circle
-          </span>
+ 
           <span class="material-icons-outlined  cursor-pointer text-blue-800 select-none" 
-          @click="todo.status = !todo.status; updateTodo(todo)"
-          v-if="!todo.status"
+          @click="todo.status = !todo.status; markAsDone(todo)"
+          
           >
             circle
           </span>
           </div>
-
+          <div class="todo-content">
+            <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
+          </div>
+          <div class="actions">
+            <button class="delete w-20" @click="deleteTodo(currentList.id, todo)">
+              <span v-show="!todo.deleting">Delete</span>
+              <v-progress-circular   :size="25" v-show="todo.deleting" indeterminate color="white"></v-progress-circular>
+            </button>
+          </div>
+        </div>
+        <div class=" my-4
+        "
+        v-if="doneTodos.length > 0"
+        >
+          <hr class="text-gray-800 my-4" />
+            <span 
+            class="text-gray-800 font-bold"
+            >
+                Completed:
+            </span>
+        </div>
+        <div 
+       
+        v-for="(todo, index) in doneTodos" :class="`todo-item ${todo.status && 'done bg-blue-400'}`" :key="index">
+          <div class="mt-2 mr-3">
+            <span class="material-icons-outlined cursor-pointer text-blue-800 select-none"
+          @click="todo.status = !todo.status; markAsNotDone(todo)"
+          
+          >
+            check_circle
+          </span>
+ 
+          </div>
           <div class="todo-content">
             <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
           </div>
           <div class="actions">
             <button class="delete" @click="deleteTodo(currentList.id, todo)">
-              Delete
+             <span v-show="!todo.deleting">Delete</span>
+              <v-progress-circular  v-show="todo.deleting" indeterminate color="white"></v-progress-circular>
             </button>
           </div>
         </div>

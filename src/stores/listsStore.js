@@ -23,7 +23,7 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
       const listIndex = this.todoLists.findIndex((listItem) => listItem.id === list.id);
       this.todoLists[listIndex] = list;
     },
-    updateListCounter(listId, counter) {
+    updateUncompletedTodosCounter(listId, counter) {
         const listIndex = this.todoLists.findIndex((listItem) => listItem.id === listId);
         this.todoLists[listIndex].taskCount = counter;
     },
