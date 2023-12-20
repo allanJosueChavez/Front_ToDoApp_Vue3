@@ -62,16 +62,11 @@ watch(currentList, (newValue) => {
       notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
       doneTodos.value = currentList.value.todos.filter((todo) => todo.status);  
       loading.value = false
-
+      setTimeout(() => {
+        listAnimation.value = false
+      }, 400); // Why 400? Because the animation lasts 0.4s
   });
   }
-
-  // notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
-  // doneTodos.value = currentList.value.todos.filter((todo) => todo.status);
-  setTimeout(() => {
-    listAnimation.value = false
-  }, 400); // Why 400? Because the animation lasts 0.4s
-  console.log(loading.value)
 });
 
 const defaultPlaceholder = ref("Add a new item...");
