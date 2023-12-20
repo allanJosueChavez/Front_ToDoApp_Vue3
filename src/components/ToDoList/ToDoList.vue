@@ -19,6 +19,7 @@ const listSelected = computed(() => {
 });
 
 
+const loading = ref(false)
 const listAnimation = ref(false);
 
 const currentList = computed(() => {
@@ -38,8 +39,11 @@ onMounted(async () => {
 
 
 watch(currentList, (newValue) => {
+  loading.value = true
+  console.log(loading.value)
   listAnimation.value = true
-  console.log("watching...")
+  console.log("Watching. Perceiving a new value...")
+  setTimeout(() => {
   if (!currentList.value) {
     console.log("No list selected")
     return
@@ -51,11 +55,7 @@ watch(currentList, (newValue) => {
     console.log("The list is the same") // This is no use because it will never get into this watch since the prop will actually never change
     return
   }
-  console.log("Current list is: ")
-  console.log(currentList.value)
   if(currentList.value){
-      
-
     getAllTasks(currentList.value.id).then((response) => {
       console.log("all the tasks are: ");
       console.log(response.data);
@@ -64,12 +64,15 @@ watch(currentList, (newValue) => {
       doneTodos.value = currentList.value.todos.filter((todo) => todo.status);  
   });
   }
+  loading.value = false
+
+}, 500); 
   // notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
   // doneTodos.value = currentList.value.todos.filter((todo) => todo.status);
   setTimeout(() => {
     listAnimation.value = false
   }, 400); // Why 400? Because the animation lasts 0.4s
-
+  console.log(loading.value)
 });
 
 const defaultPlaceholder = ref("Add a new item...");
@@ -217,10 +220,10 @@ const removeListSelectedOnMobile = () => {
 </script>
 
 <template>
-  <div id="to-do-list" 
+  <div id="to-do-list "  
   :class="listSelected ? ' block sm:block ' : ' hidden sm:block ' "
-  class="sm:h-auto h-full sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10">
-    <div :class="`h-full ${listAnimation && 'animate-right'}`" v-if="currentList">
+  class="sm:h-auto h-full sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10  ">
+    <div :class="`h-full ${listAnimation && 'animate-right'}`" v-if="listSelected && !loading">
       <span   class="material-icons fixed top-2 left-2 text-3xl p-2 cursor-pointer"
                 @click="removeListSelectedOnMobile">
                 arrow_back
@@ -324,6 +327,11 @@ const removeListSelectedOnMobile = () => {
         </div>
       </section>
     </div>
+    <div class="h-full w-full flex justify-center items-center">
+      <v-progress-circular class="mx-auto my-auto"   :size="40" v-if="loading"  indeterminate color="white"></v-progress-circular>
+
+    </div>
+
   </div>
   <div v-if="currentList">
     <ConfirmationDialog :showDialog="deleteConfirmationDialog"

@@ -6,6 +6,7 @@ import CryptoJS from "crypto-js";
 import usersService from "../../services/usersService.js";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import * as yup from 'yup';
 
 const router = useRouter();
 const loading = ref(false);
