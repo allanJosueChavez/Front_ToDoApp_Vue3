@@ -100,7 +100,9 @@ const addTodo = async (id) => {
     // currentList.value.todos.push(todoCreated);
     notDoneTodos.value.push(todoCreated);
     input_content.value = "";
-    updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount + 1));
+    console.log(currentList.value.taskCount)
+    // There was an error here because after creating a new task, the response did not have the taskcount.
+    updateUncompletedTodosCounter(currentList.value.id,   (currentList.value.taskCount + 1));
   }
 };
 
