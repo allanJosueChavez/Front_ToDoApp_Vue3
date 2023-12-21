@@ -3,7 +3,7 @@
 import Lists from "./../Lists/SidebarLists.vue";
 import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
-
+import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import {useTodoListsStore} from '../../../stores/listsStore.js'
@@ -45,7 +45,7 @@ onMounted(async () => {
   await getLists()
 });
 
-
+const username = Cookies.get("user_name");
 // Methods
 const logout = () => {
   clearCookies();
@@ -118,11 +118,16 @@ const searchInLists = () => {
   lists.value = lists.value.filter((list) => list.name.toLowerCase().includes(search.value.toLowerCase()));
   searching.value = false;
 }
+
+const sidebarCollapsed = ref(false);
+
 </script>
 
 <template>
-  <div class="  top-0 sm:w-1/5 p-0 h-full "
-  :class="listSelected ? ' sm:block hidden ' : ' sm:block block '"
+  <div class=" top-0 sm:w-1/5 p-0 h-full" 
+  
+
+  :class="(listSelected ? ' sm:block hidden ' : ' sm:block block ') + (sidebarCollapsed ? ' sm:w-20 ' : '   ' + ' transition-all duration-500 ')"
   id="sidebar">
     <div class="sidebar sm:bg-blue-900 bg-gray-700 w-full" style="text-align: center; height: 100%; align-items: center">
       <div id="sidebar-title"
@@ -160,7 +165,7 @@ const searchInLists = () => {
           <v-menu>
             <template v-slot:activator="{ props }">
               <button v-bind="props" class="rounded-lg  w-full h-full flex justify-center items-center">
-                <span class="text-white font-semibold"> Profile </span>
+                <span class="text-white font-semibold"> {{ username }} </span>
                 <span class="material-icons right-0 text-white mx-1">
                   account_circle
                 </span>
