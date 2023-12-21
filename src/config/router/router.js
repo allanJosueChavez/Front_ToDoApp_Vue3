@@ -59,7 +59,7 @@ const routes = [
     },
   },
   {
-    path: "/editProfile", 
+    path: "/edit-profile", 
     component: editProfile,
     meta: {
       requiresAuth: true,

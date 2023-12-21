@@ -3,11 +3,14 @@
 import Lists from "./../Lists/SidebarLists.vue";
 import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
-import Cookies from "js-cookie";
+
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import {useTodoListsStore} from '../../../stores/listsStore.js'
+import cookieUtils  from "../../../utils/cookies/cookiesUtils.js";
+
 // Constants
+const { clearCookies } = cookieUtils;
 const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
@@ -18,7 +21,8 @@ const { addAllLists, setSelectedList } = listsStore;
 
 
 const openProfileMenu = () => {
-  console.log("Opening profile menu");
+  router.push("/edit-profile");
+
 }
 
 
@@ -43,11 +47,6 @@ onMounted(async () => {
 
 
 // Methods
-const clearCookies = () => {
-  Cookies.remove("user_jwt");
-  Cookies.remove("user_name");
-};
-
 const logout = () => {
   clearCookies();
   router.push("/login");
@@ -73,9 +72,6 @@ const getLists = async () => {
 
 
 async function createNewList() {
-  const cookieJwt = Cookies.get('user_jwt');
-  console.log(cookieJwt)
-
   const ToDolist = {
     name: "Untitled",
   };
@@ -88,8 +84,6 @@ async function createNewList() {
     setSelectedList(listCreated);
 
   }
-
-
   // here I gotta say to the ToDoList component which is the list I just created
 }
 
