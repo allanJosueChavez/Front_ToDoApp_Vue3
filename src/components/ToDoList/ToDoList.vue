@@ -39,8 +39,8 @@ onMounted(async () => {
 
 
 watch(currentList, (newValue) => {
-  loading.value = true
-  console.log(loading.value)
+  // loading.value = true
+  // console.log(loading.value)
   listAnimation.value = true
   console.log("Watching. Perceiving a new value...")
   if (!currentList.value) {
@@ -55,6 +55,7 @@ watch(currentList, (newValue) => {
     return
   }
   if(currentList.value){
+    loading.value = true // Changed it from up top to here because if it changes and there's no list selected it'll be spinning forever
     getAllTasks(currentList.value.id).then((response) => {
       console.log("all the tasks are: ");
       console.log(response.data);
@@ -323,15 +324,15 @@ const removeListSelectedOnMobile = () => {
         </div>
       </section>
     </div>
-    <div class="h-full w-full flex justify-center items-center">
-      <v-progress-circular class="mx-auto my-auto"   :size="40" v-if="loading"  indeterminate color="white"></v-progress-circular>
+    <div  v-if="loading" class="h-full w-full flex justify-center items-center">
+      <v-progress-circular class="mx-auto my-auto"   :size="40"  indeterminate color="white"></v-progress-circular>
 
     </div>
 
   </div>
   <div v-if="currentList">
     <ConfirmationDialog :showDialog="deleteConfirmationDialog"
-      :v-text="`Are you sure you want to delete the list ${currentList.name}? This will delete all the to-dos inside it.`"
+      :v-text="`Are you sure you want to delete the list '${currentList.name}'? This will delete all the to-dos inside it.`"
       :v-title="`Confirm delete`" @closeDialog="deleteConfirmationDialog = false" @confirmAction="deleteToDoList" />
   </div>
 </template>

@@ -11,15 +11,15 @@ const listsStore = useTodoListsStore();
 // const props = defineProps({
 //     allLists: Array,
 // });
-// const lists =  computed(() => {
-//   return listsStore.todoLists;
-// })
+const lists =  computed(() => {
+  return listsStore.todoLists;
+})
 // const computedLists = computed(() => {
 //   return props.allLists;
 // })
 
 // in order 
-const props = defineProps(["lists", "listSelected", 'listsLoading']);
+const props = defineProps([ "listSelected", 'listsLoading']);
 const emit = defineEmits(['openToDoList'])
 
 async function openToDoList(todolist) {

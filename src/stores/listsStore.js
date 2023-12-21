@@ -14,7 +14,9 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
   },
   actions: {
     removeList(todoList) {
+      console.log("todoListsLength", this.todoLists.length)
       this.todoLists = this.todoLists.filter((list) => list.id !== todoList.id);
+      console.log("todoListsLength", this.todoLists.length)
     },
     addAllLists(lists) {
       this.todoLists = lists;
