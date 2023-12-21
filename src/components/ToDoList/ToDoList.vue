@@ -221,12 +221,15 @@ const removeListSelectedOnMobile = () => {
 <template>
   <div id="to-do-list "  
   :class="listSelected ? ' block sm:block ' : ' hidden sm:block ' "
-  class="sm:h-auto h-full sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10  ">
+  class=" sm:h-auto h-full sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10  ">
     <div :class="`h-full ${listAnimation && 'animate-right'}`" v-if="listSelected && !loading">
-      <span   class="material-icons fixed top-2 left-2 text-3xl p-2 cursor-pointer"
+      <div class="sm:hidden block">
+        <span   class=" material-icons fixed top-2 left-2 text-3xl p-2 cursor-pointer"
                 @click="removeListSelectedOnMobile">
                 arrow_back
               </span>
+      </div>
+
       <section id="greeting-section" class="my-8 sm:my-4 align-center flex h-18">
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
