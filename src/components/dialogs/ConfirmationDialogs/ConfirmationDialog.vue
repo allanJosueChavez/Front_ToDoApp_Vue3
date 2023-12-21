@@ -2,7 +2,6 @@
       <v-dialog
         v-model="dialog"
         persistent
-
         max-width="600px"
       >
         <v-card class="p-8">
@@ -34,6 +33,7 @@
               color = "red"
               variant="text"
               @click="accept()"
+              :loading="processing"
             >
               Accept
             </v-btn>
@@ -52,12 +52,16 @@
 
 <script setup>
 import { computed, ref, watch } from "vue";
- const props = defineProps(["showDialog","v-title", "v-text"]);
+ const props = defineProps(["showDialog","v-title", "v-text", "loading"]);
  const dialog = computed(() => {
    return props.showDialog;
  });
 
 const showDialog = ref(false);
+ 
+const processing = computed(() => {
+  return props.loading;
+});
 
 // watch(dialog, (newVal, oldVal) => {
 //   console.log("watching...");
@@ -76,6 +80,7 @@ const close = () => {
 }
 
 const accept = () => {
+ 
   emit('confirmAction')
 }
 

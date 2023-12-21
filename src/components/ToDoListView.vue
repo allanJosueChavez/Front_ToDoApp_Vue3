@@ -6,35 +6,34 @@ import "vue3-toastify/dist/index.css";
 import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
 import ToDoList from "../components/ToDoList/ToDoList.vue";
 import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
- 
+import horizontalNavbar from "./app/navbar/horizontalNavbar.vue";
 </script>
 
 <template>
-  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
-  <div class="sm:flex h-screen w-full">
-    <Sidebar />
-    <ToDoList />
+
+<div class="h-screen flex flex-col w-full">
+  <!-- Navbar -->
+  <horizontalNavbar />
+  <!-- View -->
+  <div class="flex-1 bg-purple-200 overflow-y-auto overflow-x-hidden">
+    <div class="sm:flex w-full h-full">
+      <Sidebar />
+      <ToDoList />
+    </div>
   </div>
+</div>
+
+<!-- 
+  <div class="h-screen bg-yellow-900"> 
+
+
+  </div> -->
+  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" /> -->
+
 </template>
 
 <style scoped>
-.container {
-  width: 100%;
-  height: 100%;
-}
-.read-the-docs {
-  color: #888;
-}
-
-.taskListActive {
-  border-radius: 0.5rem;
-}
-
-.inactiveTodoList {
-  /* background-color: #1953ac; */
-  /* border-bottom: 1px solid #d4d4d4; */
-  /* border-radius: 0.5rem; */
-}
+ 
  
 #AddTaskInput:hover {
   background-color: #d4d4d4;

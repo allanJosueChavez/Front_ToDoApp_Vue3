@@ -31,7 +31,10 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
     },
     setSelectedList(list) {
         this.selectedList = list;
-    }
+    },
+    updateLists(lists) {
+      this.todoLists = lists;
+    },
 
   },
 });

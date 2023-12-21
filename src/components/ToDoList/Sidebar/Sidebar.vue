@@ -3,27 +3,21 @@
 import Lists from "./../Lists/SidebarLists.vue";
 import listsService from "../../../services/listsService.js";
 import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
-import Cookies from "js-cookie";
-import { useRouter } from "vue-router";
+
 import { toast } from "vue3-toastify";
 import {useTodoListsStore} from '../../../stores/listsStore.js'
-import cookieUtils  from "../../../utils/cookies/cookiesUtils.js";
-
+import smallLogo from "../../app/smallLogo.vue";
 // Constants
-const { clearCookies } = cookieUtils;
+
 const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
-const router = useRouter();
 const listsStore = useTodoListsStore();
-const { addAllLists, setSelectedList } = listsStore;
+const { addAllLists, setSelectedList, updateLists } = listsStore;
 
 
-const openProfileMenu = () => {
-  router.push("/edit-profile");
 
-}
 
 
 // States
@@ -45,12 +39,8 @@ onMounted(async () => {
   await getLists()
 });
 
-const username = Cookies.get("user_name");
 // Methods
-const logout = () => {
-  clearCookies();
-  router.push("/login");
-};
+
 
 const getLists = async () => {
   listsLoading.value = true;
@@ -80,6 +70,7 @@ async function createNewList() {
   if (response.status === 200) {
     const listCreated = response.data.list
     lists.value.push(listCreated);
+    updateLists(lists.value)
     console.log(listCreated);
     setSelectedList(listCreated);
 
@@ -93,17 +84,6 @@ const openToDoList = (toDoList) => { // This is triggered by the event emitted b
   // Future implementation send the id as a route params:  router.push("/to-do-list/" + taskListId); benefits?
 }
 
-const items = [
-  {
-    title: 'Profile',
-    itemFunction: openProfileMenu
-
-  },
-  {
-    title: 'Logout'
-    , itemFunction: logout
-  },
-]
 
 
 const searchInLists = () => {
@@ -115,34 +95,52 @@ const searchInLists = () => {
     searching.value = false;
     return
   }
+  console.log("Searching...")
   lists.value = lists.value.filter((list) => list.name.toLowerCase().includes(search.value.toLowerCase()));
   searching.value = false;
 }
 
-const sidebarCollapsed = ref(false);
+const sidebarCollapsed = ref(true);
+
+const expandSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value;
+}
+
+const collapseSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value;
+} 
+
 
 </script>
 
 <template>
-  <div class=" top-0 sm:w-1/5 p-0 h-full" 
+
+  <div class="h-full top-0 sm:w-1/5 p-0 " 
   
 
-  :class="(listSelected ? ' sm:block hidden ' : ' sm:block block ') + (sidebarCollapsed ? ' sm:w-20 ' : '   ' + ' transition-all duration-500 ')"
+  :class="(listSelected ? ' sm:block hidden ' : ' sm:block block ') + (sidebarCollapsed ? ' sm:w-20 ' : '   ') + ' transition-all duration-500 '"
   id="sidebar">
+
     <div class="sidebar sm:bg-blue-900 bg-gray-700 w-full" style="text-align: center; height: 100%; align-items: center">
-      <div id="sidebar-title"
-        class="w-full h-20 flex justify-center align-center bg-opacity-25 bg-gradient-to- from-sky-800 to-blue-900"
-        style="display: flex; flex-wrap: wrap">
-        <div class="flex justify-center items-center">
-          <span class="font-bold text-2xl sm:text-2xl" style="color: rgb(255, 255, 250)"
-          >
-           
-            ToDoFlow
-          </span>
-          <img src="https://i.ibb.co/QrjrV7B/image.webp" alt="" class="w-6 sm:w-10 sm:p-auto" />
+      <div class="h-20 relative" v-if="!sidebarCollapsed">
+        <smallLogo />
+        <div id="collapse-button" class="absolute right-0 text-white top-6 cursor-pointer text-3xl"
+        @click="collapseSidebar()"
+        >
+
+          <span class="material-icons transform scale-150 mr-4"> 
+            keyboard_arrow_left
+          </span> 
         </div>
+
       </div>
-      <div id="search-bar-container" class="w-full h-15 mb-6">
+      <div v-else class="hover:bg-blue-950 cursor-pointer" @click="expandSidebar()"> 
+        <img src="https://i.ibb.co/QrjrV7B/image.webp" alt="" class=" " />
+      </div>
+ 
+      <div
+      v-if="!sidebarCollapsed"
+      id="search-bar-container" class="w-full h-15 mb-6">
         <v-text-field v-model="search" label="Search"
         @input="searchInLists()"
         placeholder="Find a list..." hide-details
@@ -157,31 +155,12 @@ const sidebarCollapsed = ref(false);
           <span class="text-white font-semibold"> Add a new list + </span>
         </button>
       </div>
-      <Lists style="height: 62%; " :listSelected="listSelected" @openToDoList="openToDoList" :lists="lists"
+      <Lists style="height: 60%; " :listSelected="listSelected" @openToDoList="openToDoList" :lists="lists"
       :listsLoading="listsLoading"
       />
-      <div id="profile" class="sm:block hidden bg-blue-950 mt-1 h-16 fixed bottom-0" style="width: 20%;">
-        <div id="logout" class="flex justify-center items-center h-100 ">
-          <v-menu>
-            <template v-slot:activator="{ props }">
-              <button v-bind="props" class="rounded-lg  w-full h-full flex justify-center items-center">
-                <span class="text-white font-semibold"> {{ username }} </span>
-                <span class="material-icons right-0 text-white mx-1">
-                  account_circle
-                </span>
-              </button>
-            </template>
-            <v-list>
-              <div v-for="(item, index) in items" :key="index"   >
-                <v-list-item  @click="item.itemFunction">
-                  <v-list-item-title >{{ item.title }}</v-list-item-title>
-                </v-list-item>
-              </div>
-            </v-list>
-          </v-menu>
-        </div>
-      </div>
+
     </div>
+
   </div>
 </template>
 

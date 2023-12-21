@@ -153,7 +153,10 @@ const askConfirmation = (id) => {
   deleteConfirmationDialog.value = true;
 };
 
+
+const deleting = ref(false);
 async function deleteToDoList() {
+  deleting.value = true
   const response = await deleteList(currentList.value.id);
   if (response.status === 200) {
     toast.success("List deleted!", {
@@ -163,12 +166,14 @@ async function deleteToDoList() {
     removeList(currentList.value);
     setSelectedList(null);
     deleteConfirmationDialog.value = false;
+    deleting.value = false
     return;
   }
   toast.error("Error deleting list!", {
     position: "top-right",
     autoClose: 1000,
   });
+
 }
 
 async function deleteTodo(list, todo) {
@@ -410,6 +415,7 @@ const removeListSelectedOnMobile = () => {
       :showDialog="deleteConfirmationDialog"
       :v-text="`Are you sure you want to delete the list '${currentList.name}'? This will delete all the to-dos inside it.`"
       :v-title="`Confirm delete`"
+      :loading="deleting"
       @closeDialog="deleteConfirmationDialog = false"
       @confirmAction="deleteToDoList"
     />
