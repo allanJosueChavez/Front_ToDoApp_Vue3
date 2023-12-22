@@ -7,15 +7,20 @@ import { ref, onMounted, computed, watch, onBeforeMount } from "vue";
 import ToDoList from "../components/ToDoList/ToDoList.vue";
 import Sidebar from "./ToDoList/Sidebar/Sidebar.vue";
 import horizontalNavbar from "./app/navbar/horizontalNavbar.vue";
+
+
 </script>
 
 <template>
 
 <div class="h-screen flex flex-col w-full">
   <!-- Navbar -->
-  <horizontalNavbar />
+  <div class="hidden sm:block">
+    <horizontalNavbar  />
+  </div>
+
   <!-- View -->
-  <div class="flex-1 bg-purple-200 overflow-y-auto overflow-x-hidden">
+  <div class="flex-1 bg-purple-200 overflow-y-hidden overflow-x-hidden">
     <div class="sm:flex w-full h-full">
       <Sidebar />
       <ToDoList />

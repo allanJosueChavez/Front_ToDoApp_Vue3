@@ -6,6 +6,7 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
   state: () => ({
     todoLists: [],
     selectedList: null,
+    sidebarCollapsed: false,
   }),
   getters: { // getters are like computed properties but for stores. they are used to calculate derived state based on store state// an easy example of how it can be used is to calculate the number of items in a todo list
     getTodoLists() {
@@ -35,6 +36,9 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
     updateLists(lists) {
       this.todoLists = lists;
     },
+    setSidebarCollapsed(value) {
+      this.sidebarCollapsed = value;
+    }
 
   },
 });
