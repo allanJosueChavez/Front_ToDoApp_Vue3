@@ -86,17 +86,16 @@ const openToDoList = (toDoList) => {
 
 const searchInLists = () => {
   searching.value = true;
-  console.log("Searching in lists");
-  console.log(search.value);
   if (search.value === "") {
     lists.value = allLists.value;
+    updateLists(lists.value);
     searching.value = false;
     return;
   }
-  console.log("Searching...");
   lists.value = lists.value.filter((list) =>
     list.name.toLowerCase().includes(search.value.toLowerCase())
   );
+  updateLists(lists.value);
   searching.value = false;
 };
 
@@ -218,6 +217,7 @@ const collapseSidebar = () => {
       </div>
       <Lists
         style="height: 65%"
+        :search="search"
         :listSelected="listSelected"
         @openToDoList="openToDoList"
         :lists="lists"

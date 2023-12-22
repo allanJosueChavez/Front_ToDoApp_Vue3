@@ -18,12 +18,16 @@ const lists = computed(() => {
 // })
 
 // in order
-const props = defineProps(["listSelected", "listsLoading"]);
+const props = defineProps(["listSelected", "listsLoading", "search"]);
 const emit = defineEmits(["openToDoList"]);
 
 async function openToDoList(todolist) {
   emit("openToDoList", todolist);
 }
+
+const search = computed(() => {
+  return listsStore.search;
+});
 
 const sidebarCollapsed = computed(() => {
   return listsStore.sidebarCollapsed;
