@@ -317,13 +317,13 @@ const removeListSelectedOnMobile = () => {
               </span>
               <span>Add to-do</span>
             </span>
-            <v-progress-circular
-              :width="4"
-              :size="25"
-              v-if="creatingTodo"
-              indeterminate
-              color="white"
-            ></v-progress-circular>
+              <v-progress-circular
+                :width="4"
+                :size="25"
+                v-if="creatingTodo"
+                indeterminate
+                color="white"
+              ></v-progress-circular>
 
             <!-- <v-progress-linear indeterminate></v-progress-linear> -->
           </button>
