@@ -20,6 +20,9 @@ const {
 
 // const props = defineProps(["listSelected"]);
 
+const sidebarCollapsed = computed(() => {
+  return listsStore.sidebarCollapsed;
+});
 const deleteConfirmationDialog = ref(false);
 const listSelected = computed(() => {
   return listsStore.selectedList;
@@ -240,8 +243,8 @@ const removeListSelectedOnMobile = () => {
 <template>
   <div
     id="to-do-list "
-    :class="listSelected ? ' block sm:block ' : ' hidden sm:block '"
-    class="sm:h-auto h-full sm:full bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10"
+    :class="(listSelected ? ' block sm:block ' : ' hidden sm:block ') + (sidebarCollapsed ? ' sm:w-full ' : '   ') + ' transition-all duration-500 '"
+    class="sm:h-auto h-full sm:w-4/5 bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10"
   >
     <div
       :class="`h-full ${listAnimation && 'animate-right'}`"
