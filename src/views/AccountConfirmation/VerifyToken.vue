@@ -13,15 +13,16 @@ const { verifyEmailConfirmationToken } =  usersService;
 const route = useRoute();
 const router = useRouter();
 const token = ref("");
-
+const isEmailUpdate = ref(false);
 onMounted(() => {
   // Access the token from the route query
   token.value = route.query.token;
+  isEmailUpdate.value = route.query.isEmailUpdate;
   // Now you can use the 'token' variable in your component
   if(token) console.log("There is a token");
     verifyEmailConfirmationToken(token.value).then((response) => {
         if(response.status === 200){
-            addUserConfirmationToken(token.value)
+            addUserConfirmationToken(token.value, isEmailUpdate.value)
             console.log("The token was successfully validated")
             router.push("/email-confirmation")
         }

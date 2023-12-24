@@ -17,14 +17,14 @@ const mailConfirmed = ref(false);
 const loading = ref(false);
 
 onMounted(() => {
-  token.value = usersStore.userConfirmationToken;
+  token.value = usersStore.emailConfirmation.userConfirmationToken;
   if (!token.value) {
     // Show view of token invalid or expired. Resend email confirmation.
   }
 });
 
 async function setAccountConfirmed() {
-  const token = usersStore.userConfirmationToken;
+  const token = usersStore.emailConfirmation.userConfirmationToken;
   if (token) {
     // confirmAccount
     const body = {
