@@ -40,6 +40,15 @@ async function updateUserInfo(body){
     return response;
 }
 
+async function sendNewEmailConfirmation(body){
+    const response = await axiosInstance.post(`api/user/resend-email-confirmation`, body);
+    return response;
+}
+
+async function getUserInfo(){
+    const response = await axiosInstance.get(`api/user`);
+    return response;
+}
 
 export default {
     create,
@@ -49,4 +58,7 @@ export default {
     resendEmailConfirmation,
     loginThroughToken,
     updateUserInfo,
+    sendNewEmailConfirmation,
+    getUserInfo,
+
 }

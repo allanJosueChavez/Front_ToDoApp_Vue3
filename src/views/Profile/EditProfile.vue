@@ -22,16 +22,18 @@
             <div class="grid grid-cols-2 gap-x-6">
               <div>
                 <v-text-field
+                  @input="validateUserInfoForm()"
                   class="text-purple-900"
                   label="Full name"
                   :rules="fullNameRules"
-                  v-model="user.name"
+                  v-model="userInfo.name"
                 ></v-text-field>
               </div>
             </div>
           </div>
           <button
-            class="bg-sky-500 text-white px-4 py-2 rounded-md h-full my-3"
+            v-bind:disabled="userInfoButton"
+            :class="userInfoButton ? 'bg-gray-400 text-white px-4 py-2 rounded-md h-full my-3' : 'bg-sky-500 text-white px-4 py-2 rounded-md h-full my-3'"
           >
             Update profile
           </button>
@@ -50,7 +52,7 @@
                 class="text-purple-900 mb-4"
                 label="Email"
                 :rules="emailRules"
-                v-model="user.email"
+                v-model="userEmail"
               ></v-text-field>
             </div>
             <button
@@ -78,19 +80,19 @@
                 class="text-purple-900 mb-4"
                 label="Current password"
                 :rules="emailRules"
-                v-model="user.currentPassword"
+                v-model="passwords.currentPassword"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
                 label="Password"
                 :rules="emailRules"
-                v-model="user.password"
+                v-model="passwords.password"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
                 label="Password confirmation"
                 :rules="emailRules"
-                v-model="user.passwordConfirmation"
+                v-model="passwords.passwordConfirmation"
               ></v-text-field>
             </div>
             <button class="text-white px-4 py-2 rounded-md bg-purple-900">
@@ -184,9 +186,26 @@ import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 
 
-const {  updateUserInfo } = usersService;
+const {  updateUserInfo,  getUserInfo } = usersService;
 
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+
+
+const userEmail = ref("");
+const userInfoButton = ref(true);
+const user = ref(null);
+onMounted(async () => {
+  const response = await getUserInfo();
+  if (response.status === 200) {
+   user.value = response.data.user;
+   console.log(response.data.user.email)
+   // userInfo.value.name = response.data.name;
+   userEmail.value =response.data.user.email;
+  }
+});
+
+
+
 
 const dialog = ref(false);
 const fullNameRules = [
@@ -199,13 +218,19 @@ const emailRules = [
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
 
-const user = ref({
-  name: "",
-  email: "",
+const userInfo = ref({
+  name: Cookies.get("user_name"),
+});
+
+
+const passwords = ref({
   currentPassword: "",
   password: "",
   passwordConfirmation: "",
 });
+
+ 
+
 
 const updateUser = async () => {
    const isFormValid =  await validateUserInfoForm();
@@ -216,14 +241,14 @@ const updateUser = async () => {
      });
      return
    }
- 
-   const response = await updateUserInfo(user.value);
+
+   const response = await updateUserInfo(userInfo.value);
    if(response.status === 200){
      toast.success("User updated successfully!", {
        position: "top-right",
        autoClose: 1500,
      });
-     await Cookies.set("user_name", user.value.name);
+     await Cookies.set("user_name", userInfo.value.name);
    }
 
   console.log("updateUser");
@@ -231,7 +256,9 @@ const updateUser = async () => {
 const updateInfo = ref(null);
 const validateUserInfoForm = async () => {
   const isValid = await updateInfo.value.validate();
-  return isValid.valid;
+  const differentName = userInfo.value.name !== user.value.name;
+  userInfoButton.value =  !isValid.valid || !differentName;
+  return isValid.valid && differentName;
 };
 
 const sendVerificationEmail = () => {
