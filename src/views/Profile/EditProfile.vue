@@ -181,6 +181,8 @@
 import Navbar from "../../components/app/navbar/horizontalNavbar.vue";
 import usersService from "@/services/usersService.js";
 import { toast } from "vue3-toastify";
+import Cookies from "js-cookie";
+
 
 const {  updateUserInfo } = usersService;
 
@@ -221,7 +223,9 @@ const updateUser = async () => {
        position: "top-right",
        autoClose: 1500,
      });
+     await Cookies.set("user_name", user.value.name);
    }
+
   console.log("updateUser");
 };
 const updateInfo = ref(null);

@@ -35,8 +35,8 @@ async function loginThroughToken(body){
     return response;
 }
 
-async function updateUserInfo(){
-    const response = await axiosInstance.patch(`api/user`);
+async function updateUserInfo(body){
+    const response = await axiosInstance.patch(`api/user`, body);
     return response;
 }
 
