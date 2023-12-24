@@ -17,7 +17,7 @@
         <h1 class="mb-8 text-4xl text-left font-bold text-blue-900">
           Update your personal information
         </h1>
-        <v-form ref="updateInfo" fast-fail @submit.prevent="updateUser()">
+        <v-form ref="userInfoForm" fast-fail @submit.prevent="updateUser()">
           <div class="grid gap-y-6">
             <div class="grid grid-cols-2 gap-x-6">
               <div>
@@ -45,19 +45,20 @@
             If you want to change your email you must enter a new one and click on the button 'Send verification email.'
             Check your inbox and click on the link to confirm the email. Then the email will be updated.
         </span> -->
-        <v-form ref="changeEmail" fast-fail @submit.prevent="updateUser()">
+        <v-form ref="changeEmailForm" fast-fail @submit.prevent="sendVerificationEmail()">
           <div class="w-2/5">
             <div>
               <v-text-field
                 class="text-purple-900 mb-4"
                 label="Email"
+                @input="validateChangeEmailForm()"
                 :rules="emailRules"
                 v-model="userEmail"
               ></v-text-field>
             </div>
             <button
-              class="bg-lime-600 text-white px-4 py-2 rounded-md"
-              @click="sendVerificationEmail()"
+              v-bind:disabled="confirmationEmailBtn"
+              :class="confirmationEmailBtn ? 'bg-gray-400 text-white px-4 py-2 rounded-md' : 'bg-sky-500 text-white px-4 py-2 rounded-md'"
             >
               Send verification email
             </button>
@@ -194,17 +195,24 @@ import { onMounted, ref, watch } from "vue";
 const userEmail = ref("");
 const userInfoButton = ref(true);
 const user = ref(null);
+const userInfo = ref({
+  name:  null
+});
+
+const passwords = ref({
+  currentPassword: "",
+  password: "",
+  passwordConfirmation: "",
+});
+
 onMounted(async () => {
   const response = await getUserInfo();
   if (response.status === 200) {
    user.value = response.data.user;
-   console.log(response.data.user.email)
-   // userInfo.value.name = response.data.name;
+   userInfo.value.name = response.data.user.name;
    userEmail.value =response.data.user.email;
   }
 });
-
-
 
 
 const dialog = ref(false);
@@ -218,18 +226,6 @@ const emailRules = [
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
 
-const userInfo = ref({
-  name: Cookies.get("user_name"),
-});
-
-
-const passwords = ref({
-  currentPassword: "",
-  password: "",
-  passwordConfirmation: "",
-});
-
- 
 
 
 const updateUser = async () => {
@@ -241,7 +237,6 @@ const updateUser = async () => {
      });
      return
    }
-
    const response = await updateUserInfo(userInfo.value);
    if(response.status === 200){
      toast.success("User updated successfully!", {
@@ -250,22 +245,35 @@ const updateUser = async () => {
      });
      await Cookies.set("user_name", userInfo.value.name);
    }
-
-  console.log("updateUser");
 };
-const updateInfo = ref(null);
+
+
+const userInfoForm = ref(null);
 const validateUserInfoForm = async () => {
-  const isValid = await updateInfo.value.validate();
+  const isValid = await userInfoForm.value.validate();
   const differentName = userInfo.value.name !== user.value.name;
   userInfoButton.value =  !isValid.valid || !differentName;
   return isValid.valid && differentName;
 };
 
+const confirmationEmailBtn = ref(true);
+const changeEmailForm = ref(null);
+const validateChangeEmailForm = async () => {
+   if(!userEmail.value){
+     return false
+   }
+
+  const isValid = await changeEmailForm.value.validate();
+  const differentEmail = userEmail.value !== user.value.email;
+   confirmationEmailBtn.value =  !isValid.valid || !differentEmail;
+  return isValid.valid && differentEmail;
+};
+
+
 const sendVerificationEmail = () => {
   dialog.value = true;
   console.log("sendVerificationEmail");
 };
-
 
 
 </script>
