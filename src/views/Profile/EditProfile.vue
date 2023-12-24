@@ -17,7 +17,7 @@
         <h1 class="mb-8 text-4xl text-left font-bold text-blue-900">
           Update your personal information
         </h1>
-        <v-form ref="editProfileForm" fast-fail @submit.prevent="updateUser()">
+        <v-form ref="updateInfo" fast-fail @submit.prevent="updateUser()">
           <div class="grid gap-y-6">
             <div class="grid grid-cols-2 gap-x-6">
               <div>
@@ -25,7 +25,7 @@
                   class="text-purple-900"
                   label="Full name"
                   :rules="fullNameRules"
-                  v-model="user.fullName"
+                  v-model="user.name"
                 ></v-text-field>
               </div>
             </div>
@@ -43,7 +43,7 @@
             If you want to change your email you must enter a new one and click on the button 'Send verification email.'
             Check your inbox and click on the link to confirm the email. Then the email will be updated.
         </span> -->
-        <v-form ref="editProfileForm" fast-fail @submit.prevent="updateUser()">
+        <v-form ref="changeEmail" fast-fail @submit.prevent="updateUser()">
           <div class="w-2/5">
             <div>
               <v-text-field
@@ -179,6 +179,11 @@
 <script setup>
 // import Navbar from "../../components/app/navbar/verticalNavbar.vue";
 import Navbar from "../../components/app/navbar/horizontalNavbar.vue";
+import usersService from "@/services/usersService.js";
+import { toast } from "vue3-toastify";
+
+const {  updateUserInfo } = usersService;
+
 import { ref } from "vue";
 
 const dialog = ref(false);
@@ -193,19 +198,43 @@ const emailRules = [
 ];
 
 const user = ref({
-  fullName: "",
+  name: "",
   email: "",
   currentPassword: "",
   password: "",
   passwordConfirmation: "",
 });
 
-const updateUser = () => {
+const updateUser = async () => {
+   const isFormValid =  await validateUserInfoForm();
+   if(!isFormValid){
+     toast.warning("Please fill correctly the form!", {
+       position: "top-right",
+       autoClose: 1500,
+     });
+     return
+   }
+ 
+   const response = await updateUserInfo(user.value);
+   if(response.status === 200){
+     toast.success("User updated successfully!", {
+       position: "top-right",
+       autoClose: 1500,
+     });
+   }
   console.log("updateUser");
+};
+const updateInfo = ref(null);
+const validateUserInfoForm = async () => {
+  const isValid = await updateInfo.value.validate();
+  return isValid.valid;
 };
 
 const sendVerificationEmail = () => {
   dialog.value = true;
   console.log("sendVerificationEmail");
 };
+
+
+
 </script>

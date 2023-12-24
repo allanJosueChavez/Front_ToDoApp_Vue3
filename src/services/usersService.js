@@ -35,6 +35,12 @@ async function loginThroughToken(body){
     return response;
 }
 
+async function updateUserInfo(){
+    const response = await axiosInstance.patch(`api/user`);
+    return response;
+}
+
+
 export default {
     create,
     login,
@@ -42,4 +48,5 @@ export default {
     confirmAccount,
     resendEmailConfirmation,
     loginThroughToken,
+    updateUserInfo,
 }
