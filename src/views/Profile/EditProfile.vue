@@ -58,7 +58,7 @@
             </div>
             <button
               v-bind:disabled="confirmationEmailBtn"
-              :class="confirmationEmailBtn ? 'bg-gray-400 text-white px-4 py-2 rounded-md' : 'bg-sky-500 text-white px-4 py-2 rounded-md'"
+              :class="confirmationEmailBtn ? 'bg-gray-400 text-white px-4 py-2 rounded-md' : 'bg-lime-500 text-white px-4 py-2 rounded-md'"
             >
               Send verification email
             </button>
@@ -187,7 +187,7 @@ import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 
 
-const {  updateUserInfo,  getUserInfo } = usersService;
+const {  updateUserInfo,  getUserInfo, resendEmailConfirmation } = usersService;
 
 import { onMounted, ref, watch } from "vue";
 
@@ -272,6 +272,20 @@ const validateChangeEmailForm = async () => {
 
 const sendVerificationEmail = () => {
   dialog.value = true;
+  resendEmailConfirmation({email: userEmail.value}).then((response) => {
+    if (response.status === 200) {
+      toast.success("Email sent! Please check out your inbox!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+    }
+  }).catch((err) => {
+    toast.info(err.response.data.message ? err.response.data.message : "Something went wrong!"
+    , {
+        position: "top-right",
+        autoClose: 1500,
+    });
+  })
   console.log("sendVerificationEmail");
 };
 

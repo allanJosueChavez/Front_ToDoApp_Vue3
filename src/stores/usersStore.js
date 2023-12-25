@@ -4,7 +4,10 @@ export const useUsersStore = defineStore('usersStore', { // '' is the name of th
     state: () => ({
         users: [],
         selectedUser: null,
-        userConfirmationToken: null,
+        emailConfirmation :{
+            userConfirmationToken: null,
+            emailUpdate : false
+        }
     }),
     getters: { // getters are like computed properties but for stores. they are used to calculate derived state based on store state// an easy example of how it can be used is to calculate the number of items in a todo list
         getUsers() {
@@ -25,12 +28,13 @@ export const useUsersStore = defineStore('usersStore', { // '' is the name of th
         setSelectedUser(user) {
             this.selectedUser = user;
         },
-        addUserConfirmationToken(token) {
+        addUserConfirmationToken(token, emailUpdate) {
             console.log(token)
-            this.userConfirmationToken = token;
+            this.emailConfirmation.emailUpdate = emailUpdate;
+            this.emailConfirmation.userConfirmationToken = token;
         },
         removeUserConfirmationToken() {
-            this.userConfirmationToken = null;
+            this.emailConfirmation.userConfirmationToken = null;
         }
 
     },
