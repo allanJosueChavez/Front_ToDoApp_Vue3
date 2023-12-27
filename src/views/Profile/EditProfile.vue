@@ -187,7 +187,7 @@ import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 
 
-const {  updateUserInfo,  getUserInfo, resendEmailConfirmation } = usersService;
+const {  updateUserInfo,  getUserInfo ,sendNewEmailConfirmation } = usersService;
 
 import { onMounted, ref, watch } from "vue";
 
@@ -272,7 +272,7 @@ const validateChangeEmailForm = async () => {
 
 const sendVerificationEmail = () => {
   dialog.value = true;
-  resendEmailConfirmation({email: userEmail.value}).then((response) => {
+  sendNewEmailConfirmation({email: userEmail.value}).then((response) => {
     if (response.status === 200) {
       toast.success("Email sent! Please check out your inbox!", {
         position: "top-right",

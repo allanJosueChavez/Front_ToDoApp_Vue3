@@ -41,7 +41,7 @@ async function updateUserInfo(body){
 }
 
 async function sendNewEmailConfirmation(body){
-    const response = await axiosInstance.post(`api/user/resend-email-confirmation`, body);
+    const response = await axiosInstance.post(`api/user/new-email-confirmation`, body);
     return response;
 }
 
