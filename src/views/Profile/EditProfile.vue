@@ -265,8 +265,10 @@ const validateChangeEmailForm = async () => {
 
   const isValid = await changeEmailForm.value.validate();
   const differentEmail = userEmail.value !== user.value.email;
-   confirmationEmailBtn.value =  !isValid.valid || !differentEmail;
+  confirmationEmailBtn.value =  !isValid.valid || !differentEmail;
   return isValid.valid && differentEmail;
+  // confirmationEmailBtn.value =  false 
+  // return  true
 };
 
 

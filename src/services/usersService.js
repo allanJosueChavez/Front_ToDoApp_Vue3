@@ -50,6 +50,11 @@ async function getUserInfo(){
     return response;
 }
 
+async function updateMainEmail(body){
+    const response = await axiosInstance.patch(`api/user/update-main-email`, body);
+    return response;
+}
+
 export default {
     create,
     login,
@@ -60,5 +65,6 @@ export default {
     updateUserInfo,
     sendNewEmailConfirmation,
     getUserInfo,
+    updateMainEmail,
 
 }

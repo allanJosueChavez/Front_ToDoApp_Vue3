@@ -7,17 +7,21 @@ import usersService from "@/services/usersService.js";
 import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
 
-const { confirmAccount, loginThroughToken } = usersService;
+const { confirmAccount, loginThroughToken, updateMainEmail } = usersService;
 const router = useRouter();
 const usersStore = useUsersStore();
 
-
 const token = ref(null);
 const mailConfirmed = ref(false);
+const isEmailUpdate = ref(false);
 const loading = ref(false);
 
 onMounted(() => {
   token.value = usersStore.emailConfirmation.userConfirmationToken;
+  console.log(token.value);
+  isEmailUpdate.value = usersStore.emailConfirmation.emailUpdate;
+  console.log("isEmailUpdate.value");
+  console.log(isEmailUpdate.value);
   if (!token.value) {
     // Show view of token invalid or expired. Resend email confirmation.
   }
@@ -38,10 +42,26 @@ async function setAccountConfirmed() {
   }
 }
 
+async function updateUserEmail() {
+  const newEmail = usersStore.emailConfirmation.newEmail;
+  const token = usersStore.emailConfirmation.userConfirmationToken;
+  console.log(newEmail)
+  if (newEmail && token) {
+    const body = {
+      token: token.value,
+      newEmail: newEmail,
+    };
+    const response = await updateMainEmail(body);
+    if (response && response.status === 200) {
+      mailConfirmed.value = true;
+      usersStore.removeUserConfirmationToken();
+    }
+  }
+}
+
 const redirectResendEmailView = () => {
   router.push("/resend-email-confirmation");
 };
-
 
 const authenticateVerifiedUser = async () => {
   const body = {
@@ -51,13 +71,13 @@ const authenticateVerifiedUser = async () => {
   const loginResponse = await loginThroughToken(body);
   console.log("loginResponse", loginResponse);
   if (loginResponse && loginResponse.status === 200) {
-    console.log("Debugging loginResponse", loginResponse.data)
+    console.log("Debugging loginResponse", loginResponse.data);
 
     await Cookies.set("user_jwt", loginResponse.data.token);
     await Cookies.set("user_name", loginResponse.data.username);
     router.push("/to-do-list");
     loading.value = false;
-  }else{
+  } else {
     toast.error("Something went wrong!", {
       position: "top-right",
       autoClose: 1500,
@@ -68,8 +88,6 @@ const authenticateVerifiedUser = async () => {
 const redirectToLogin = async () => {
   router.push("/login");
 };
-
-
 </script>
 
 <template>
@@ -77,13 +95,8 @@ const redirectToLogin = async () => {
     <div style="height: 10%">
       <smallLogo />
     </div>
-            <v-overlay
-          v-model="loading"
-          contained
-          class="align-center justify-center"
-        >
- 
-        </v-overlay>
+    <v-overlay v-model="loading" contained class="align-center justify-center">
+    </v-overlay>
     <section
       style="height: 90%"
       class="flex flex-col justify-center items-center"
@@ -125,20 +138,44 @@ const redirectToLogin = async () => {
             Please confirm your email address!
           </span>
         </div>
-        <div class="w-auto">
-          <span class="text-xl font-semibold text-center text-gray-600">
-            Hi Allan, Thanks for signing up for ToDoFlow! Please confirm your
-            email address by clicking the button
-          </span>
+        <div
+          v-if="!isEmailUpdate"
+          class="flex flex-col justify-center items-center space-y-2 h-auto"
+        >
+          <div class="w-auto">
+            <span class="text-xl font-semibold text-center text-gray-600">
+              Hi Allan, Thanks for signing up for ToDoFlow! Please confirm your
+              email address by clicking the button
+            </span>
+          </div>
+          <div>
+            <button
+              class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
+              :loading="loading"
+              @click="setAccountConfirmed()"
+            >
+              Confirm email address
+            </button>
+          </div>
         </div>
-        <div>
-          <button
-            class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
-            :loading="loading"
-            @click="setAccountConfirmed()"
-          >
-            Confirm email address
-          </button>
+        <div
+          v-if="isEmailUpdate"
+          class="flex flex-col justify-center items-center space-y-2 h-auto"
+        >
+          <div class="w-auto">
+            <span class="text-xl font-semibold text-center text-gray-600">
+              Hi Allan, to confirm your email address please click the button
+            </span>
+          </div>
+          <div>
+            <button
+              class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
+              :loading="loading"
+              @click="updateUserEmail()"
+            >
+              Confirm and update email address
+            </button>
+          </div>
         </div>
       </div>
 
@@ -162,24 +199,20 @@ const redirectToLogin = async () => {
         </div>
       </div>
 
-      <div class=" w-full flex justify-center  bottom-32 fixed">
+      <div class="w-full flex justify-center bottom-32 fixed">
         <!-- <span class="text-xl font-semibold text-center text-gray-600 ">
         If you need help, please contact us at
         <a class="cursor-pointer text-lime-500 font-bold" href="mailto:achavez@mem.gob.gt"> 
         </a>
 
       </span> -->
-          <button
-            class=" text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800" 
-           
-            type="submit"
-            @click="redirectToLogin"
-          >
-            <span class="text-md"> Go back to login 
- 
-
-            </span>
-          </button>
+        <button
+          class="text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800"
+          type="submit"
+          @click="redirectToLogin"
+        >
+          <span class="text-md"> Go back to login </span>
+        </button>
       </div>
     </section>
   </div>

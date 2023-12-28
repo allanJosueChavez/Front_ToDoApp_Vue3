@@ -4,8 +4,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {useUsersStore} from "@/stores/usersStore.js";
 import usersService from "@/services/usersService.js";
-
-
+ 
 
 const usersStore = useUsersStore();
 const {  addUserConfirmationToken } =  usersStore;
@@ -15,14 +14,14 @@ const router = useRouter();
 const token = ref("");
 const isEmailUpdate = ref(false);
 onMounted(() => {
-  // Access the token from the route query
   token.value = route.query.token;
-  isEmailUpdate.value = route.query.isEmailUpdate;
-  // Now you can use the 'token' variable in your component
+  isEmailUpdate.value = route.query.newEmail;
   if(token) console.log("There is a token");
     verifyEmailConfirmationToken(token.value).then((response) => {
         if(response.status === 200){
-            addUserConfirmationToken(token.value, isEmailUpdate.value)
+            const newEmail = response.data.newEmail
+
+            addUserConfirmationToken(token.value, isEmailUpdate.value, newEmail)
             console.log("The token was successfully validated")
             router.push("/email-confirmation")
         }
@@ -37,4 +36,8 @@ onMounted(() => {
     })
 
 });
+
+ 
+
+
 </script>

@@ -38,7 +38,7 @@ const sendEmail = async () => {
             });
         }
     }).catch((err) => {
-        toast.info(err.response.data.message ? err.response.data.message : "Something went wrong!"
+        toast.info(err.respons && err.response.data.message ? err.response.data.message : "Something went wrong!"
         , {
             position: "top-right",
             autoClose: 1500,
