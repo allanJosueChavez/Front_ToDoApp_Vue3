@@ -154,7 +154,7 @@
       <div class="mt-4">
         <v-row>
           <v-card-title class="text-h5 mx-6 mt-2">
-            The email has been sent
+            {{ dialogTexts.title }}
           </v-card-title>
           <div class="ml-auto rounded-md p-2 cursor-pointer">
             <span
@@ -167,8 +167,9 @@
         </v-row>
       </div>
       <v-card-text class="m-2">
-        Check your inbox and click on the link to confirm the email. Then the
-        email will be updated.
+         <span class="text-gray-600">
+             {{ dialogTexts.text }}
+         </span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -197,6 +198,11 @@ const userInfoButton = ref(true);
 const user = ref(null);
 const userInfo = ref({
   name:  null
+});
+
+const dialogTexts = ref({
+  title: "",
+  text: "",
 });
 
 const passwords = ref({
@@ -275,19 +281,24 @@ const validateChangeEmailForm = async () => {
 const sendVerificationEmail = () => {
   sendNewEmailConfirmation({email: userEmail.value}).then((response) => {
     if (response.status === 200) {
+      dialogTexts.value.title = "Email sent!";
+      dialogTexts.value.text =
+        "Check your inbox and click on the button that will redirect you to a page to confirm the email.";
       responseDialog.value = true;
-      // toast.success("Email sent! Please check out your inbox!", {
-      //   position: "top-right",
-      //   autoClose: 1500,
-      // });
     }
   }).catch((err) => {
-   console.log(err)
-    toast.info(err.response.data.error ? err.response.data.error : "Something went wrong!"
-    , {
-        position: "top-right",
-        autoClose: 1500,
-    });
+   if(err.response && err.response.data && err.response.data.error){
+       dialogTexts.value.title = "Error!";
+       dialogTexts.value.text = err.response.data.error;
+       responseDialog.value = true;
+   }
+
+   // console.log(err)
+   //  toast.info(err.response.data.error ? err.response.data.error : "Something went wrong!"
+   //  , {
+   //      position: "top-right",
+   //      autoClose: 1500,
+   //  });
   })
   console.log("sendVerificationEmail");
 };
