@@ -149,7 +149,7 @@
     </div>
   </div>
 
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="responseDialog" persistent max-width="600px">
     <v-card class="p-8">
       <div class="mt-4">
         <v-row>
@@ -158,7 +158,7 @@
           </v-card-title>
           <div class="ml-auto rounded-md p-2 cursor-pointer">
             <span
-              @click="dialog = false"
+              @click="responseDialog = false"
               class="material-icons mr-4 text-gray rounded-md p-2 cursor-pointer"
             >
               close
@@ -172,7 +172,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+        <v-btn color="green-darken-1" variant="text" @click="responseDialog = false">
           Accept
         </v-btn>
       </v-card-actions>
@@ -215,7 +215,7 @@ onMounted(async () => {
 });
 
 
-const dialog = ref(false);
+const responseDialog = ref(false);
 const fullNameRules = [
   (v) => !!v || "Full name is required",
   (v) => (v && v.length >= 3) || "Full name must be at least 3 characters",
@@ -273,16 +273,17 @@ const validateChangeEmailForm = async () => {
 
 
 const sendVerificationEmail = () => {
-  dialog.value = true;
   sendNewEmailConfirmation({email: userEmail.value}).then((response) => {
     if (response.status === 200) {
-      toast.success("Email sent! Please check out your inbox!", {
-        position: "top-right",
-        autoClose: 1500,
-      });
+      responseDialog.value = true;
+      // toast.success("Email sent! Please check out your inbox!", {
+      //   position: "top-right",
+      //   autoClose: 1500,
+      // });
     }
   }).catch((err) => {
-    toast.info(err.response.data.message ? err.response.data.message : "Something went wrong!"
+   console.log(err)
+    toast.info(err.response.data.error ? err.response.data.error : "Something went wrong!"
     , {
         position: "top-right",
         autoClose: 1500,

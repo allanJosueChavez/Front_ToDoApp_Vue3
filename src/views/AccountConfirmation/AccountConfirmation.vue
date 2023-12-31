@@ -45,12 +45,17 @@ async function setAccountConfirmed() {
 async function updateUserEmail() {
   const newEmail = usersStore.emailConfirmation.newEmail;
   const token = usersStore.emailConfirmation.userConfirmationToken;
+  console.log("newEmail")
   console.log(newEmail)
+  console.log("token")
+  console.log(token)
   if (newEmail && token) {
     const body = {
-      token: token.value,
+      token: token,
       newEmail: newEmail,
     };
+    console.log("body", body)
+
     const response = await updateMainEmail(body);
     if (response && response.status === 200) {
       mailConfirmed.value = true;
