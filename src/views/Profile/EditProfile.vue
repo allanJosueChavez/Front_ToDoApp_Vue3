@@ -32,8 +32,8 @@
             </div>
           </div>
           <button
-            v-bind:disabled="userInfoButton"
-            :class="userInfoButton ? 'bg-gray-400 text-white px-4 py-2 rounded-md h-full my-3' : 'bg-sky-500 text-white px-4 py-2 rounded-md h-full my-3'"
+            v-bind:disabled="updateUserInfoBtn"
+            :class="updateUserInfoBtn ? 'bg-gray-400 text-white px-4 py-2 rounded-md h-full my-3' : 'bg-sky-500 text-white px-4 py-2 rounded-md h-full my-3'"
           >
             Update profile
           </button>
@@ -42,7 +42,7 @@
           Change the registered email
         </h4>
         <!-- <span>
-            If you want to change your email you must enter a new one and click on the button 'Send verification email.'
+            If you want to change your email you must enter a new one and click on the button 'Send verification mail.'
             Check your inbox and click on the link to confirm the email. Then the email will be updated.
         </span> -->
         <v-form ref="changeEmailForm" fast-fail @submit.prevent="sendVerificationEmail()">
@@ -60,9 +60,9 @@
               v-bind:disabled="confirmationEmailBtn"
               :class="confirmationEmailBtn ? 'bg-gray-400 text-white px-4 py-2 rounded-md' : 'bg-lime-500 text-white px-4 py-2 rounded-md'"
             >
-              Send verification email
+              Send verification mail
             </button>
-            <!-- If you want to update the email you must enter it and click on the button send verification email.
+            <!-- If you want to update the email you must enter it and click on the button send verification mail.
               Then if he confirms the email, the email will be updated. -->
           </div>
         </v-form>
@@ -71,7 +71,7 @@
         </h4>
 
         <v-form
-          ref="updatePassword"
+          ref="changePassForm"
           fast-fail
           @submit.prevent="updatePassword()"
         >
@@ -89,6 +89,7 @@
                 type="password"
                 :rules="passwordRules"
                 v-model="passwords.password"
+                @input="verifyPasswordForm()"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
@@ -96,14 +97,16 @@
                 type="password"
                 :rules="confirmationPasswordRules"
                 v-model="passwords.passwordConfirmation"
+                @input="verifyPasswordForm()"
               ></v-text-field>
             </div>
-            <button class="text-white px-4 py-2 rounded-md bg-purple-900"
-          
+            <button  
+            :class='!passwordUpdateBtn ? "text-white px-4 py-2 rounded-md bg-purple-900" : "text-white px-4 py-2 rounded-md bg-gray-400"'
+            :disabled="passwordUpdateBtn"
             >
               Update password
             </button>
-            <!-- If you want to update the email you must enter it and click on the button send verification email.
+            <!-- If you want to update the email you must enter it and click on the button send verification mail
               Then if he confirms the email, the email will be updated. -->
           </div>
         </v-form>
@@ -198,7 +201,8 @@ import { onMounted, ref, watch } from "vue";
 
 
 const userEmail = ref("");
-const userInfoButton = ref(true);
+const updateUserInfoBtn = ref(true);
+const passwordUpdateBtn = ref(true)
 const user = ref(null);
 const userInfo = ref({
   name:  null
@@ -247,6 +251,20 @@ const confirmationPasswordRules = [
   (v) => v === passwords.value.password || "Passwords must match",
 ];
 
+const changePassForm = ref(null)
+const verifyPasswordForm = async () => {
+  const isValid = await changePassForm.value.validate();
+  passwordUpdateBtn.value = !isValid.valid || !passwords.value.currentPassword;
+
+}
+
+const updatePassword = () =>{
+// Endpoint that will validate if the current password is correct otherwise throw an error.
+// Then if the current password matches, it will execute the update. It'll show a message that the pass has been changed successfully and then would it be a good idea to log out the user to reenter his credentials.
+
+// It'd be a good idea to not copy anything into the v-text-field, that can be achieved through  
+}
+
 const updateUser = async () => {
    const isFormValid =  await validateUserInfoForm();
    if(!isFormValid){
@@ -271,7 +289,7 @@ const userInfoForm = ref(null);
 const validateUserInfoForm = async () => {
   const isValid = await userInfoForm.value.validate();
   const differentName = userInfo.value.name !== user.value.name;
-  userInfoButton.value =  !isValid.valid || !differentName;
+  updateUserInfoBtn.value =  !isValid.valid || !differentName;
   return isValid.valid && differentName;
 };
 
