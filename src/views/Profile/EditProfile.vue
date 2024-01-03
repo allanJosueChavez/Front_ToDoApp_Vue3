@@ -80,23 +80,27 @@
               <v-text-field
                 class="text-purple-900 mb-4"
                 label="Current password"
-                :rules="emailRules"
+                type="password"
                 v-model="passwords.currentPassword"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
-                label="Password"
-                :rules="emailRules"
+                label="New password"
+                type="password"
+                :rules="passwordRules"
                 v-model="passwords.password"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
                 label="Password confirmation"
-                :rules="emailRules"
+                type="password"
+                :rules="confirmationPasswordRules"
                 v-model="passwords.passwordConfirmation"
               ></v-text-field>
             </div>
-            <button class="text-white px-4 py-2 rounded-md bg-purple-900">
+            <button class="text-white px-4 py-2 rounded-md bg-purple-900"
+          
+            >
               Update password
             </button>
             <!-- If you want to update the email you must enter it and click on the button send verification email.
@@ -232,7 +236,16 @@ const emailRules = [
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
 
+const passwordRules = [
+  (v) => !!v || "Password is required",
+  (v) => (v && v.length >= 8) || "Password must be at least 8 characters",
+];
 
+const confirmationPasswordRules = [
+  (v) => !!v || "Password confirmation is required",
+  (v) => (v && v.length >= 8) || "Password must be at least 8 characters",
+  (v) => v === passwords.value.password || "Passwords must match",
+];
 
 const updateUser = async () => {
    const isFormValid =  await validateUserInfoForm();
