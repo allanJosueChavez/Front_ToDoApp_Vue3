@@ -73,7 +73,7 @@
         <v-form
           ref="changePassForm"
           fast-fail
-          @submit.prevent="updatePassword()"
+          @submit.prevent="updateUserPassword()"
         >
           <div class="w-2/5">
             <div>
@@ -258,7 +258,13 @@ const verifyPasswordForm = async () => {
 
 }
 
-const updatePassword = () =>{
+const updateUserPassword = () =>{
+  try{
+    
+  }catch(err){
+    console.log(err)
+  }
+
 // Endpoint that will validate if the current password is correct otherwise throw an error.
 // Then if the current password matches, it will execute the update. It'll show a message that the pass has been changed successfully and then would it be a good idea to log out the user to reenter his credentials.
 
