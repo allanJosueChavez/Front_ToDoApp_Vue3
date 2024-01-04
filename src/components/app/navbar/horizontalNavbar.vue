@@ -14,7 +14,9 @@
         <span class="material-icons right-0 text-white mx-1">
           account_circle
         </span>
-        <span class="text-white font-semibold"> {{ username }} </span>
+        <span class="text-white font-semibold
+        truncate
+        "> {{ username }} </span>
       </button>
         </template>
         <v-list>
