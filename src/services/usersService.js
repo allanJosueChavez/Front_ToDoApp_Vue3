@@ -73,7 +73,7 @@ async function updatePassword(body) {
   return response;
 }
 
-export default {
+export default {    
   create,
   login,
   verifyEmailConfirmationToken,
