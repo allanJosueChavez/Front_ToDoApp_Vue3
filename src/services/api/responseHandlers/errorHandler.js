@@ -21,8 +21,9 @@ async function evaluateResponse(error) {
   if (error.response && error.response.status === 200) {
     // toast.success('Success');
   } else if (error.response.status === 400 || error.response.status === 500) {
-    if (error.response.data.error) {
-      toast.warning(error.response.data.error, {
+    console.log(error.response.data)
+    if (error.response.data.error || error.response.data.message) {
+      toast.error(error.response.data.error, {
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,

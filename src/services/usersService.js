@@ -68,7 +68,7 @@ async function updateMainEmail(body) {
   return response;
 }
 
-async function updatePassword() {
+async function updatePassword(body) {
   const response = await axiosInstance.patch(`${userPrefix}/update-password`, body);
   return response;
 }

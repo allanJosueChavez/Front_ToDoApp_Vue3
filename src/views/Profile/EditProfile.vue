@@ -263,7 +263,6 @@ const updateUserPassword = () =>{
     const body = {
       currentPassword: passwords.value.currentPassword,
       newPassword: passwords.value.password,
-      newPasswordConfirmation: passwords.value.passwordConfirmation
     }
     updatePassword(body).then((response) => {
       if(response.status === 200){
