@@ -195,7 +195,7 @@ import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 
 
-const {  updateUserInfo,  getUserInfo ,sendNewEmailConfirmation } = usersService;
+const {  updateUserInfo,  getUserInfo ,sendNewEmailConfirmation, updatePassword } = usersService;
 
 import { onMounted, ref, watch } from "vue";
 
@@ -260,7 +260,19 @@ const verifyPasswordForm = async () => {
 
 const updateUserPassword = () =>{
   try{
-    
+    const body = {
+      currentPassword: passwords.value.currentPassword,
+      newPassword: passwords.value.password,
+      newPasswordConfirmation: passwords.value.passwordConfirmation
+    }
+    updatePassword(body).then((response) => {
+      if(response.status === 200){
+        toast.success("Password updated successfully!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
+      }
+    })
   }catch(err){
     console.log(err)
   }
