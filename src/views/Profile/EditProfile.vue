@@ -151,6 +151,25 @@
         vue-social-login
       </div>
     </div>
+    <v-overlay v-model="loadingOverlay">
+      <div
+      class="flex flex-col items-center justify-center h-screen w-screen"
+      >
+
+      
+      <div>
+      </div>
+      <div class="text-2xl text-purple-900 mb-4">Loading...</div>
+ 
+
+      <v-progress-circular
+        indeterminate
+        size="64"
+        color="primary"
+        class=""
+      ></v-progress-circular>
+    </div>
+    </v-overlay>
   </div>
 
   <v-dialog v-model="responseDialog" persistent max-width="600px">
@@ -196,7 +215,7 @@ const {  updateUserInfo,  getUserInfo ,sendNewEmailConfirmation } = usersService
 
 import { onMounted, ref, watch } from "vue";
 
-
+const loadingOverlay = ref(true);
 const userEmail = ref("");
 const userInfoButton = ref(true);
 const user = ref(null);
