@@ -94,16 +94,19 @@
                 label="Current password"
                 type="password"
                 v-model="passwords.currentPassword"
+                autocomplete="false"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
                 label="New password"
                 type="password"
                 :rules="passwordRules"
+                autocomplete="false"
                 v-model="passwords.password"
                 @input="verifyPasswordForm()"
               ></v-text-field>
               <v-text-field
+              autocomplete="false"
                 class="text-purple-900 mb-4"
                 label="Password confirmation"
                 type="password"
@@ -126,7 +129,11 @@
               Then if he confirms the email, the email will be updated. -->
           </div>
         </v-form>
-
+        <v-form
+          ref="deleteAccountForm"
+          fast-fail
+          @submit.prevent="confirmDelete()"
+        >        
         <div
           id="danger-zone"
           class="border-2 border-red-600 rounded-md p-8 flex flex-col justify-start w-2/5 h-full mt-8"
@@ -147,6 +154,7 @@
             <span>Delete account</span>
           </button>
         </div>
+      </v-form>
       </div>
       <div id="profile-edit-description" class="h-full hidden">
         This is the profile edit page. It'll have: - a form to edit the user's
@@ -178,13 +186,13 @@
       
       <div>
       </div>
-      <div class="text-2xl text-purple-900 mb-4">Loading...</div>
+      <div class="text-2xl text-blue-900 mb-4">Loading...</div>
  
 
       <v-progress-circular
         indeterminate
         size="64"
-        color="primary"
+        color="blue"
         class=""
       ></v-progress-circular>
     </div>
@@ -221,6 +229,13 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <ConfirmationDialog
+    :showDialog="deleteAccountDialog"
+    :v-title="'Delete account'"
+    :v-text="'Are you sure you want to delete your account? This action cannot be undone.'"
+    @closeDialog="deleteAccountDialog = false" @confirmAction="confirmAccountDeletion"
+  ></ConfirmationDialog>
+
 </template>
 <script setup>
 // import Navbar from "../../components/app/navbar/verticalNavbar.vue";
@@ -229,13 +244,17 @@ import usersService from "@/services/usersService.js";
 import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 import { onMounted, ref, watch } from "vue";
+import ConfirmationDialog from "../../components/dialogs/ConfirmationDialogs/ConfirmationDialog.vue";
 
+
+const deleteAccountDialog = ref(false);
 const loadingOverlay = ref(false);
 const {
   updateUserInfo,
   getUserInfo,
   sendNewEmailConfirmation,
   updatePassword,
+  deleteAccount,
 } = usersService;
 
 const userEmail = ref("");
@@ -438,5 +457,21 @@ const sendVerificationEmail = () => {
       //  });
     });
   console.log("sendVerificationEmail");
+};
+
+const confirmDelete = () => {
+  deleteAccountDialog.value =  true
+};
+
+const confirmAccountDeletion = async () => {
+  loadingOverlay.value = true
+  const response = await usersService.deleteAccount();
+  console.log("response", response);
+  if (response.status === 200) {
+    Cookies.remove("user_jwt");
+    Cookies.remove("user_name");
+    window.location.href = "/login";
+  }
+  loadingOverlay.value = false
 };
 </script>
