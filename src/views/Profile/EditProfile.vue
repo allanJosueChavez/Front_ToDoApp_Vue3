@@ -32,8 +32,12 @@
             </div>
           </div>
           <button
-            v-bind:disabled="userInfoButton"
-            :class="userInfoButton ? 'bg-gray-400 text-white px-4 py-2 rounded-md h-full my-3' : 'bg-sky-500 text-white px-4 py-2 rounded-md h-full my-3'"
+            v-bind:disabled="updateUserInfoBtn"
+            :class="
+              updateUserInfoBtn
+                ? 'bg-gray-400 text-white px-4 py-2 rounded-md h-full my-3'
+                : 'bg-sky-500 text-white px-4 py-2 rounded-md h-full my-3'
+            "
           >
             Update profile
           </button>
@@ -42,10 +46,14 @@
           Change the registered email
         </h4>
         <!-- <span>
-            If you want to change your email you must enter a new one and click on the button 'Send verification email.'
+            If you want to change your email you must enter a new one and click on the button 'Send verification mail.'
             Check your inbox and click on the link to confirm the email. Then the email will be updated.
         </span> -->
-        <v-form ref="changeEmailForm" fast-fail @submit.prevent="sendVerificationEmail()">
+        <v-form
+          ref="changeEmailForm"
+          fast-fail
+          @submit.prevent="sendVerificationEmail()"
+        >
           <div class="w-2/5">
             <div>
               <v-text-field
@@ -58,11 +66,15 @@
             </div>
             <button
               v-bind:disabled="confirmationEmailBtn"
-              :class="confirmationEmailBtn ? 'bg-gray-400 text-white px-4 py-2 rounded-md' : 'bg-lime-500 text-white px-4 py-2 rounded-md'"
+              :class="
+                confirmationEmailBtn
+                  ? 'bg-gray-400 text-white px-4 py-2 rounded-md'
+                  : 'bg-lime-500 text-white px-4 py-2 rounded-md'
+              "
             >
-              Send verification email
+              Send verification mail
             </button>
-            <!-- If you want to update the email you must enter it and click on the button send verification email.
+            <!-- If you want to update the email you must enter it and click on the button send verification mail.
               Then if he confirms the email, the email will be updated. -->
           </div>
         </v-form>
@@ -71,9 +83,9 @@
         </h4>
 
         <v-form
-          ref="updatePassword"
+          ref="changePassForm"
           fast-fail
-          @submit.prevent="updatePassword()"
+          @submit.prevent="updateUserPassword()"
         >
           <div class="w-2/5">
             <div>
@@ -89,6 +101,7 @@
                 type="password"
                 :rules="passwordRules"
                 v-model="passwords.password"
+                @input="verifyPasswordForm()"
               ></v-text-field>
               <v-text-field
                 class="text-purple-900 mb-4"
@@ -96,14 +109,20 @@
                 type="password"
                 :rules="confirmationPasswordRules"
                 v-model="passwords.passwordConfirmation"
+                @input="verifyPasswordForm()"
               ></v-text-field>
             </div>
-            <button class="text-white px-4 py-2 rounded-md bg-purple-900"
-          
+            <button
+              :class="
+                !passwordUpdateBtn
+                  ? 'text-white px-4 py-2 rounded-md bg-purple-900'
+                  : 'text-white px-4 py-2 rounded-md bg-gray-400'
+              "
+              :disabled="passwordUpdateBtn"
             >
               Update password
             </button>
-            <!-- If you want to update the email you must enter it and click on the button send verification email.
+            <!-- If you want to update the email you must enter it and click on the button send verification mail
               Then if he confirms the email, the email will be updated. -->
           </div>
         </v-form>
@@ -190,13 +209,13 @@
         </v-row>
       </div>
       <v-card-text class="m-2">
-         <span class="text-gray-600">
-             {{ dialogTexts.text }}
-         </span>
+        <span class="text-gray-600">
+          {{ dialogTexts.text }}
+        </span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green-darken-1" variant="text" @click="responseDialog = false">
+        <v-btn color="green-darken-1" variant="text" @click="acceptMessage()">
           Accept
         </v-btn>
       </v-card-actions>
@@ -209,24 +228,52 @@ import Navbar from "../../components/app/navbar/horizontalNavbar.vue";
 import usersService from "@/services/usersService.js";
 import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
-
-
-const {  updateUserInfo,  getUserInfo ,sendNewEmailConfirmation } = usersService;
-
 import { onMounted, ref, watch } from "vue";
 
 const loadingOverlay = ref(true);
+const {
+  updateUserInfo,
+  getUserInfo,
+  sendNewEmailConfirmation,
+  updatePassword,
+} = usersService;
+
 const userEmail = ref("");
-const userInfoButton = ref(true);
+const updateUserInfoBtn = ref(true);
+const passwordUpdateBtn = ref(true);
 const user = ref(null);
 const userInfo = ref({
-  name:  null
+  name: null,
 });
 
 const dialogTexts = ref({
   title: "",
   text: "",
 });
+
+const dialogResponseCase = ref(null);
+const dialogResponseCases = ref([
+  {
+    title: "Email sent!",
+    text: "Check your inbox and click on the button that will redirect you to a page to confirm the email.",
+    code: "email_sent",
+  },
+  {
+    title: "Password updated!",
+    text: "Your password was updated successfully! Please log in again.",
+    code: "password_updated",
+  },
+  {
+    title: "User updated!",
+    text: "Your user was updated successfully!",
+    code: "user_updated",
+  },
+  {
+    title: "Error!",
+    text: "Something went wrong!",
+    code: "error",
+  },
+]);
 
 const passwords = ref({
   currentPassword: "",
@@ -237,12 +284,11 @@ const passwords = ref({
 onMounted(async () => {
   const response = await getUserInfo();
   if (response.status === 200) {
-   user.value = response.data.user;
-   userInfo.value.name = response.data.user.name;
-   userEmail.value =response.data.user.email;
+    user.value = response.data.user;
+    userInfo.value.name = response.data.user.name;
+    userEmail.value = response.data.user.email;
   }
 });
-
 
 const responseDialog = ref(false);
 const fullNameRules = [
@@ -266,74 +312,128 @@ const confirmationPasswordRules = [
   (v) => v === passwords.value.password || "Passwords must match",
 ];
 
-const updateUser = async () => {
-   const isFormValid =  await validateUserInfoForm();
-   if(!isFormValid){
-     toast.warning("Please fill correctly the form!", {
-       position: "top-right",
-       autoClose: 1500,
-     });
-     return
-   }
-   const response = await updateUserInfo(userInfo.value);
-   if(response.status === 200){
-     toast.success("User updated successfully!", {
-       position: "top-right",
-       autoClose: 1500,
-     });
-     await Cookies.set("user_name", userInfo.value.name);
-   }
+const changePassForm = ref(null);
+const verifyPasswordForm = async () => {
+  const isValid = await changePassForm.value.validate();
+  passwordUpdateBtn.value = !isValid.valid || !passwords.value.currentPassword;
 };
 
+const acceptMessage = () => {
+  responseDialog.value = false;
+  const code = dialogResponseCase.value.code;
+  switch (code) {
+    case "email_sent":
+      break;
+    case "password_updated":
+      Cookies.remove("user_jwt");
+      Cookies.remove("user_name");
+      window.location.href = "/login";
+      break;
+    case "user_updated":
+      //window.location.href = "/profile";
+      break;
+    case "error":
+      break;
+    default:
+      break;
+  }
+};
+
+const updateUserPassword = () => {
+  try {
+    const body = {
+      currentPassword: passwords.value.currentPassword,
+      newPassword: passwords.value.password,
+    };
+    updatePassword(body).then((response) => {
+      if (response.status === 200) {
+        const caseCode = "password_updated";
+        dialogResponseCase.value = dialogResponseCases.value.find(
+          (dialog) => dialog.code === caseCode
+        );
+
+        dialogTexts.value.title = dialogResponseCase.value.title;
+        dialogTexts.value.text = dialogResponseCase.value.text;
+        responseDialog.value = true;
+        passwords.value.currentPassword = "";
+        passwords.value.password = "";
+        passwords.value.passwordConfirmation = "";
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateUser = async () => {
+  const isFormValid = await validateUserInfoForm();
+  if (!isFormValid) {
+    toast.warning("Please fill correctly the form!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
+    return;
+  }
+  const response = await updateUserInfo(userInfo.value);
+  if (response.status === 200) {
+    toast.success("User updated successfully!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
+    await Cookies.set("user_name", userInfo.value.name);
+  }
+};
 
 const userInfoForm = ref(null);
 const validateUserInfoForm = async () => {
   const isValid = await userInfoForm.value.validate();
   const differentName = userInfo.value.name !== user.value.name;
-  userInfoButton.value =  !isValid.valid || !differentName;
+  updateUserInfoBtn.value = !isValid.valid || !differentName;
   return isValid.valid && differentName;
 };
 
 const confirmationEmailBtn = ref(true);
 const changeEmailForm = ref(null);
 const validateChangeEmailForm = async () => {
-   if(!userEmail.value){
-     return false
-   }
+  if (!userEmail.value) {
+    return false;
+  }
 
   const isValid = await changeEmailForm.value.validate();
   const differentEmail = userEmail.value !== user.value.email;
-  confirmationEmailBtn.value =  !isValid.valid || !differentEmail;
+  confirmationEmailBtn.value = !isValid.valid || !differentEmail;
   return isValid.valid && differentEmail;
-  // confirmationEmailBtn.value =  false 
+  // confirmationEmailBtn.value =  false
   // return  true
 };
 
-
 const sendVerificationEmail = () => {
-  sendNewEmailConfirmation({email: userEmail.value}).then((response) => {
-    if (response.status === 200) {
-      dialogTexts.value.title = "Email sent!";
-      dialogTexts.value.text =
-        "Check your inbox and click on the button that will redirect you to a page to confirm the email.";
-      responseDialog.value = true;
-    }
-  }).catch((err) => {
-   if(err.response && err.response.data && err.response.data.error){
-       dialogTexts.value.title = "Error!";
-       dialogTexts.value.text = err.response.data.error;
-       responseDialog.value = true;
-   }
+  sendNewEmailConfirmation({ email: userEmail.value })
+    .then((response) => {
+      if (response.status === 200) {
+        const caseCode = "email_sent";
+        dialogResponseCase.value = dialogResponseCases.value.find(
+          (dialog) => dialog.code === caseCode
+        );
+        dialogTexts.value.title = dialogResponseCase.value.title;
+        dialogTexts.value.text = dialogResponseCase.value.text;
+        responseDialog.value = true;
+      }
+    })
+    .catch((err) => {
+      if (err.response && err.response.data && err.response.data.error) {
+        dialogTexts.value.title = "Error!";
+        dialogTexts.value.text = err.response.data.error;
+        responseDialog.value = true;
+      }
 
-   // console.log(err)
-   //  toast.info(err.response.data.error ? err.response.data.error : "Something went wrong!"
-   //  , {
-   //      position: "top-right",
-   //      autoClose: 1500,
-   //  });
-  })
+      // console.log(err)
+      //  toast.info(err.response.data.error ? err.response.data.error : "Something went wrong!"
+      //  , {
+      //      position: "top-right",
+      //      autoClose: 1500,
+      //  });
+    });
   console.log("sendVerificationEmail");
 };
-
-
 </script>
