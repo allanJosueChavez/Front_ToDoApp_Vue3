@@ -230,7 +230,7 @@ import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 import { onMounted, ref, watch } from "vue";
 
-const loadingOverlay = ref(true);
+const loadingOverlay = ref(false);
 const {
   updateUserInfo,
   getUserInfo,
@@ -282,12 +282,15 @@ const passwords = ref({
 });
 
 onMounted(async () => {
+  loadingOverlay.value = true
   const response = await getUserInfo();
   if (response.status === 200) {
     user.value = response.data.user;
     userInfo.value.name = response.data.user.name;
     userEmail.value = response.data.user.email;
   }
+  loadingOverlay.value = false
+
 });
 
 const responseDialog = ref(false);
