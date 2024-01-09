@@ -234,6 +234,7 @@
     :v-title="'Delete account'"
     :v-text="'Are you sure you want to delete your account? This action cannot be undone.'"
     @closeDialog="deleteAccountDialog = false" @confirmAction="confirmAccountDeletion"
+    :confirmAction="true"
   ></ConfirmationDialog>
 
 </template>
@@ -465,13 +466,13 @@ const confirmDelete = () => {
 
 const confirmAccountDeletion = async () => {
   loadingOverlay.value = true
-  const response = await usersService.deleteAccount();
-  console.log("response", response);
-  if (response.status === 200) {
-    Cookies.remove("user_jwt");
-    Cookies.remove("user_name");
-    window.location.href = "/login";
-  }
-  loadingOverlay.value = false
+  // const response = await usersService.deleteAccount();
+  // console.log("response", response);
+  // if (response.status === 200) {
+  //   Cookies.remove("user_jwt");
+  //   Cookies.remove("user_name");
+  //   window.location.href = "/login";
+  // }
+  // loadingOverlay.value = false
 };
 </script>
