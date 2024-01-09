@@ -8,7 +8,7 @@
       <div class="text-white">
         <span
           class="material-icons absolute top-2 left-2 text-3xl p-2 cursor-pointer"
-          @click="$router.back()"
+          @click="goBack()"
         >
           arrow_back
         </span>
@@ -239,7 +239,8 @@
 
 </template>
 <script setup>
-// import Navbar from "../../components/app/navbar/verticalNavbar.vue";
+// import Navbar from "../../components/app/navbar/verticalNavbar.vue";]
+import{ useRouter} from "vue-router";
 import Navbar from "../../components/app/navbar/horizontalNavbar.vue";
 import usersService from "@/services/usersService.js";
 import { toast } from "vue3-toastify";
@@ -475,4 +476,10 @@ const confirmAccountDeletion = async () => {
   // }
   // loadingOverlay.value = false
 };
+const router = useRouter();
+const goBack = () => {
+  // router.back()
+  router.push("/profile");
+};
+
 </script>
