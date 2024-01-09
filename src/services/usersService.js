@@ -73,6 +73,12 @@ async function updatePassword(body) {
   return response;
 }
 
+async function deleteAccount() {
+  const response = await axiosInstance.delete(`${userPrefix}`);
+  return response;
+}
+
+
 export default {    
   create,
   login,
@@ -85,4 +91,5 @@ export default {
   getUserInfo,
   updateMainEmail,
   updatePassword,
+  deleteAccount,
 };
