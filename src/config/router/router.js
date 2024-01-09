@@ -6,6 +6,8 @@ import verifyToken from "../../views/AccountConfirmation/VerifyToken.vue";
 import AppLayoutExample from "../../components/AppLayoutExample.vue";
 import editProfile from "../../views/Profile/EditProfile.vue";  
 import ResendEmailConfirmation from "../../views/AccountConfirmation/ResendEmailConfirmation.vue";
+import ResetPassword from "../../views/Login/ResetPassword.vue";
+
 import { createRouter, createWebHistory } from "vue-router";
 import authGuard from "../guards/authGuard.js";
 
@@ -65,6 +67,15 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/reset-password",
+    component: ResetPassword,
+    meta: {
+      requiresAuth: false,
+      verifyLogin: true,
+    },
+  },
+ 
 
 ];
 
