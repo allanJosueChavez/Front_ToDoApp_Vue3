@@ -78,6 +78,11 @@ async function deleteAccount() {
   return response;
 }
 
+async function sendPasswordResetMail(body) {
+  const response = await axiosInstance.post(`${authPrefix}/reset-password-mail`, body);
+  return response;
+}
+
 
 export default {    
   create,
@@ -92,4 +97,5 @@ export default {
   updateMainEmail,
   updatePassword,
   deleteAccount,
+  sendPasswordResetMail,
 };

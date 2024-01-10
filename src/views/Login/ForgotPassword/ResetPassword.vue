@@ -1,20 +1,15 @@
 <script setup>
-import smallLogo from "../../components/app/smallLogo.vue";
-import { ref, onMounted } from 'vue'
+import smallLogo from "@/components/app/smallLogo.vue";
+import usersService from "../../../services/usersService";
 import { toast } from "vue3-toastify";
-import "vue3-toastify/dist/index.css";
-import { useRouter } from "vue-router";
-import usersService from "@/services/usersService.js";
+import { ref, onMounted } from 'vue'
 
-
-const router = useRouter();
-const { resendEmailConfirmation } = usersService;
+const { sendPasswordResetMail } = usersService;
 const email = ref("");
 const emailRules = ref([
     (v) => !!v || "E-mail is required",
     (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ]);
-
 
 const resendEmailForm = ref(null);
 const sendEmail = async () => {
@@ -27,10 +22,10 @@ const sendEmail = async () => {
         });
         return
     }
-    const body = {
+
+    sendPasswordResetMail({
         email: email.value
-    }
-    resendEmailConfirmation(body).then((response) => {
+    }).then((response) => {
         if (response.status === 200) {
             toast.success("Email sent! Please check out your inbox!", {
                 position: "top-right",
@@ -38,18 +33,13 @@ const sendEmail = async () => {
             });
         }
     }).catch((err) => {
-        toast.info(err.respons && err.response.data.message ? err.response.data.message : "Something went wrong!"
-            , {
-                position: "top-right",
-                autoClose: 1500,
-            });
+        console.log("Something went wrong!")
     })
-    console.log("send email");
+    console.log("Email sent correctly!");
 };
 
-const redirectToLogin = () => {
-    router.push("/login");
-};
+
+
 </script>
 
 <template>
@@ -60,7 +50,7 @@ const redirectToLogin = () => {
         <div class="flex flex-col justify-center items-center space-y-4" style="height: 90%">
             <div class="flex flex-col justify-center items-center space-y-4">
                 <span class="text-xl font-semibold text-center text-gray-600">
-                    Please enter your email address to resend the confirmation email.
+                    Please enter your email address to send you a link to reset your password.
                 </span>
                 <v-form ref="resendEmailForm" fast-fail @submit.prevent="sendEmail"
                     class="flex flex-col justify-center items-center">
@@ -80,12 +70,9 @@ const redirectToLogin = () => {
                 <button class=" text-gray-600 px-4 py-2 font-semibold underline hover:text-gray-900" type="submit"
                     @click="redirectToLogin">
                     <span class="text-md"> Go back to login
-
-
                     </span>
                 </button>
             </div>
-            <!-- Right here a button to redirect to the login page "Go back to login". The same thing should be in the view of account confirmation. that gotta be fixed at the bottom no matter if the token's valid or not. whatever  -->
         </div>
     </div>
 </template>
