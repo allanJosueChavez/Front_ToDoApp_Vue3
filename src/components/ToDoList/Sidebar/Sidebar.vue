@@ -102,13 +102,19 @@ const searchInLists = () => {
 const sidebarCollapsed = ref(false);
 
 const expandSidebar = () => {
+  console.log("expandSidebar")
   sidebarCollapsed.value = !sidebarCollapsed.value;
-  listsStore.setSidebarCollapsed(sidebarCollapsed.value);
+  console.log(listsStore.sidebarCollapsed)
+  setSidebarCollapsed(sidebarCollapsed.value);
+  console.log(listsStore.sidebarCollapsed)
 };
 
 const collapseSidebar = () => {
+  console.log("collapseSidebar")
   sidebarCollapsed.value = !sidebarCollapsed.value;
-  listsStore.setSidebarCollapsed(sidebarCollapsed.value);
+  console.log(listsStore.sidebarCollapsed)
+  setSidebarCollapsed(sidebarCollapsed.value);
+  console.log(listsStore.sidebarCollapsed)
 };
 
 

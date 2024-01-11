@@ -8,7 +8,7 @@
       <div class="text-white">
         <span
           class="material-icons absolute top-2 left-2 text-3xl p-2 cursor-pointer"
-          @click="$router.back()"
+          @click="goBack()"
         >
           arrow_back
         </span>
@@ -234,11 +234,13 @@
     :v-title="'Delete account'"
     :v-text="'Are you sure you want to delete your account? This action cannot be undone.'"
     @closeDialog="deleteAccountDialog = false" @confirmAction="confirmAccountDeletion"
+    :confirmAction="true"
   ></ConfirmationDialog>
 
 </template>
 <script setup>
-// import Navbar from "../../components/app/navbar/verticalNavbar.vue";
+// import Navbar from "../../components/app/navbar/verticalNavbar.vue";]
+import{ useRouter} from "vue-router";
 import Navbar from "../../components/app/navbar/horizontalNavbar.vue";
 import usersService from "@/services/usersService.js";
 import { toast } from "vue3-toastify";
@@ -465,13 +467,19 @@ const confirmDelete = () => {
 
 const confirmAccountDeletion = async () => {
   loadingOverlay.value = true
-  const response = await usersService.deleteAccount();
-  console.log("response", response);
-  if (response.status === 200) {
-    Cookies.remove("user_jwt");
-    Cookies.remove("user_name");
-    window.location.href = "/login";
-  }
-  loadingOverlay.value = false
+  // const response = await usersService.deleteAccount();
+  // console.log("response", response);
+  // if (response.status === 200) {
+  //   Cookies.remove("user_jwt");
+  //   Cookies.remove("user_name");
+  //   window.location.href = "/login";
+  // }
+  // loadingOverlay.value = false
 };
+const router = useRouter();
+const goBack = () => {
+  // router.back()
+  router.push("/profile");
+};
+
 </script>
