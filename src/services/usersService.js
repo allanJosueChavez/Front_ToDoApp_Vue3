@@ -79,7 +79,7 @@ async function deleteAccount() {
 }
 
 async function sendPasswordResetMail(body) {
-  const response = await axiosInstance.post(`${authPrefix}/reset-password-mail`, body);
+  const response = await axiosInstance.post(`${userPrefix}/reset-password-mail`, body);
   return response;
 }
 
