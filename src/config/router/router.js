@@ -21,7 +21,7 @@ const routes = [
     },
   },
   {
-    path: "/to-do-list",
+    path: "/lists",
     component: ToDoList,
     meta: {
       requiresAuth: true,
@@ -30,10 +30,10 @@ const routes = [
   { path: "/signup", component: Signup },
   { path: "/hola", component: AppLayoutExample },
 
-  { path: "/", redirect: "/to-do-list" },
+  { path: "/", redirect: "/lists" },
   {
     path: "/:pathMatch(.*)*",
-    redirect: "/to-do-list",
+    redirect: "/lists",
   },
   {
     path: "/email-confirmation",

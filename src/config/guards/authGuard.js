@@ -7,7 +7,7 @@ const authGuard = (to, from, next) => {
     next('/login');
   } else if (!to.meta.requiresAuth && userToken && to.meta.verifyLogin) { // User is already logged in.
     console.log('Already logged in. Going to the to-do-list.');
-    next('/to-do-list');
+    next('/lists');
   } else { // User getting to the desired page
     console.log('User getting to the desired page');
     next();

@@ -15,11 +15,11 @@ const token = ref(null);
 const mailConfirmed = ref(false);
 const isEmailUpdate = ref(false);
 const loading = ref(false);
-
+const APP_NAME = import.meta.env.VITE_APP_NAME
 onMounted(() => {
-  token.value = usersStore.emailConfirmation.userConfirmationToken;
+  token.value = usersStore.tokenAction.token;
   console.log(token.value);
-  isEmailUpdate.value = usersStore.emailConfirmation.emailUpdate;
+  isEmailUpdate.value = usersStore.tokenAction.action === "newEmailConfirmation";
   console.log("isEmailUpdate.value");
   console.log(isEmailUpdate.value);
   if (!token.value) {
@@ -28,7 +28,7 @@ onMounted(() => {
 });
 
 async function setAccountConfirmed() {
-  const token = usersStore.emailConfirmation.userConfirmationToken;
+  const token = usersStore.tokenAction.token;
   if (token) {
     // confirmAccount
     const body = {
@@ -37,14 +37,14 @@ async function setAccountConfirmed() {
     const response = await confirmAccount(body);
     if (response && response.status === 200) {
       mailConfirmed.value = true;
-      usersStore.removeUserConfirmationToken();
+      usersStore.removeActionToken();
     }
   }
 }
 
 async function updateUserEmail() {
   const newEmail = usersStore.emailConfirmation.newEmail;
-  const token = usersStore.emailConfirmation.userConfirmationToken;
+  const token = usersStore.tokenAction.token;
   console.log("newEmail")
   console.log(newEmail)
   console.log("token")
@@ -59,7 +59,7 @@ async function updateUserEmail() {
     const response = await updateMainEmail(body);
     if (response && response.status === 200) {
       mailConfirmed.value = true;
-      usersStore.removeUserConfirmationToken();
+      usersStore.removeTokenAction();
     }
   }
 }
@@ -80,7 +80,7 @@ const authenticateVerifiedUser = async () => {
 
     await Cookies.set("user_jwt", loginResponse.data.token);
     await Cookies.set("user_name", loginResponse.data.username);
-    router.push("/to-do-list");
+    router.push("/lists");
     loading.value = false;
   } else {
     toast.error("Something went wrong!", {
@@ -125,7 +125,7 @@ const redirectToLogin = async () => {
         </div>
         <div>
           <span class="text-xl font-semibold text-center text-gray-600">
-            Do you wish to start using ToDoFlow? Start
+            Do you wish to start using {{ APP_NAME }}? Start
             <a
               class="cursor-pointer text-lime-500 font-bold"
               @click="authenticateVerifiedUser"
@@ -149,7 +149,7 @@ const redirectToLogin = async () => {
         >
           <div class="w-auto">
             <span class="text-xl font-semibold text-center text-gray-600">
-              Hi Allan, Thanks for signing up for ToDoFlow! Please confirm your
+              Hi Allan, Thanks for signing up for {{ APP_NAME }}! Please confirm your
               email address by clicking the button
             </span>
           </div>

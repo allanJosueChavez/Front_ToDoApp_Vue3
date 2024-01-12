@@ -13,7 +13,7 @@ async function login(credentials) {
   return response;
 }
 
-async function verifyEmailConfirmationToken(token) {
+async function evaluateToken(token) {
   const body = {
     token: token,
   };
@@ -87,7 +87,7 @@ async function sendPasswordResetMail(body) {
 export default {    
   create,
   login,
-  verifyEmailConfirmationToken,
+  evaluateToken,
   confirmAccount,
   resendEmailConfirmation,
   loginThroughToken,

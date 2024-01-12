@@ -7,7 +7,7 @@
   >
     <div class="h-screen flex flex-col w-full ml-6">
         <div id="to-do-list-icon" 
-        @click="$router.push('/to-do-list')"
+        @click="$router.push('/lists')"
         class="px-4 flex items-center bg-blue-950 rounded-lg cursor-pointer w-20 my-auto relative h-20 "> 
           <img
           class=""
