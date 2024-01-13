@@ -73,7 +73,7 @@ const handleLoginResponse = async (response) => {
     await Cookies.set("user_jwt", response.data.token);
     await Cookies.set("user_name", response.data.username);
 
-    router.push("/to-do-list");
+    router.push("/lists");
     loading.value = false;
     // toast.success("Log in successful!", {
     //   position: "top-right",

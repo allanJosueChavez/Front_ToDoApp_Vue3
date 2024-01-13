@@ -7,23 +7,48 @@ import usersService from "@/services/usersService.js";
  
 
 const usersStore = useUsersStore();
-const {  addUserConfirmationToken } =  usersStore;
-const { verifyEmailConfirmationToken } =  usersService;
+const {  storeEmailConfirmationToken, setTokenAction } =  usersStore;
+const { evaluateToken,  } =  usersService;
 const route = useRoute();
 const router = useRouter();
 const token = ref("");
 const isEmailUpdate = ref(false);
+const isEmailConfirmation = ref(false);
+const isPasswordReset = ref(false);
+const target = ref("");
 onMounted(() => {
   token.value = route.query.token;
-  isEmailUpdate.value = route.query.newEmail;
-  if(token) console.log("There is a token");
-    verifyEmailConfirmationToken(token.value).then((response) => {
-        if(response.status === 200){
-            const newEmail = response.data.newEmail
+  target.value = route.query.target;
+  switch(target.value){
+      case "newEmailConfirmation":
+        isEmailUpdate.value = true;
+        break;
+      case "passwordReset":
+        isPasswordReset.value = true;
+        break;
+      case "emailConfirmation":
+        isEmailConfirmation.value = true;
+        break;
+      default:
+        break;
+  }
+  if(token) {
+    console.log("There is a token");
+    console.log("Target is:", target.value)
 
-            addUserConfirmationToken(token.value, isEmailUpdate.value, newEmail)
-            console.log("The token was successfully validated")
-            router.push("/email-confirmation")
+    evaluateToken(token.value).then((response) => {
+        if(response.status === 200){
+            setTokenAction(token.value, target.value)
+            if(target.value === "passwordReset"){
+                router.push("/accounts/password/change")
+            }else if(target.value === "emailConfirmation" || target.value === "newEmailConfirmation"){
+                const newEmail = response.data.newEmail
+                // save the token in the store
+                storeEmailConfirmationToken(token.value, isEmailUpdate.value, newEmail)
+                console.log("The token was successfully validated")
+                router.push("/email-confirmation")
+            }
+
         }
         else{
             console.log("Something went wrong validating the token")
@@ -34,6 +59,8 @@ onMounted(() => {
         console.log("holy shit! the token is expired")
         console.log(err)
     })
+
+  }
 
 });
 

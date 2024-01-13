@@ -9,7 +9,7 @@
       class="flex align-center sm:flex-col text-center shadow-2xl p-4 sm:pt-16 rounded-2xl"
     >
       <span class="text-4xl sm:text-6xl text-white text-center font-bold">
-        ToDoFLow
+        {{ APP_NAME }}
       </span>
       <div>
         <img
@@ -22,5 +22,5 @@
   </div>
 </template>
 <script setup>
-
+  const APP_NAME = import.meta.env.VITE_APP_NAME
 </script>

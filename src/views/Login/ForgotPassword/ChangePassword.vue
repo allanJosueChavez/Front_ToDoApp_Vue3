@@ -1,6 +1,6 @@
 <script setup>
     import smallLogo from "@/components/app/smallLogo.vue";
-
+    const APP_NAME = import.meta.env.VITE_APP_NAME
 </script>
 
 
@@ -34,7 +34,7 @@
         </div>
         <div>
           <span class="text-xl font-semibold text-center text-gray-600">
-            Do you wish to start using ToDoFlow? Start
+            Do you wish to start using {{ APP_NAME }}? Start
             <a
               class="cursor-pointer text-lime-500 font-bold"
               @click="authenticateVerifiedUser"
@@ -58,7 +58,7 @@
         >
           <div class="w-auto">
             <span class="text-xl font-semibold text-center text-gray-600">
-              Hi Allan, Thanks for signing up for ToDoFlow! Please confirm your
+              Hi Allan, Thanks for signing up for {{ APP_NAME }}! Please confirm your
               email address by clicking the button
             </span>
           </div>

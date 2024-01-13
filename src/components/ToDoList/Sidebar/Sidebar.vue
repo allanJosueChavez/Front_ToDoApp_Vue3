@@ -81,7 +81,7 @@ const openToDoList = (toDoList) => {
   // This is triggered by the event emitted by the Lists component
   emit("openToDoList", toDoList);
   setSelectedList(toDoList);
-  // Future implementation send the id as a route params:  router.push("/to-do-list/" + taskListId); benefits?
+  // Future implementation send the id as a route params:  router.push("/lists" + taskListId); benefits?
 };
 
 const searchInLists = () => {
