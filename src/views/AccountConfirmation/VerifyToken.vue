@@ -48,7 +48,6 @@ onMounted(() => {
                 console.log("The token was successfully validated")
                 router.push("/email-confirmation")
             }
-
         }
         else{
             console.log("Something went wrong validating the token")

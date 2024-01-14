@@ -1,6 +1,13 @@
 <script setup>
     import smallLogo from "@/components/app/smallLogo.vue";
     const APP_NAME = import.meta.env.VITE_APP_NAME
+    import { useUsersStore } from "@/stores/usersStore.js";
+import usersService from "@/services/usersService.js";
+import { computed } from "vue";
+  
+const usersStore = useUsersStore();
+
+const token = computed(() => usersStore.tokenAction.token);
 </script>
 
 
