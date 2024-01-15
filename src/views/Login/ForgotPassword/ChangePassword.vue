@@ -1,13 +1,19 @@
 <script setup>
+import { useRouter } from "vue-router";
     import smallLogo from "@/components/app/smallLogo.vue";
-    const APP_NAME = import.meta.env.VITE_APP_NAME
     import { useUsersStore } from "@/stores/usersStore.js";
 import usersService from "@/services/usersService.js";
 import { computed } from "vue";
   
+const APP_NAME = import.meta.env.VITE_APP_NAME
+const router = useRouter();
 const usersStore = useUsersStore();
 
 const token = computed(() => usersStore.tokenAction.token);
+
+const redirectToResetPassoword = () =>{
+    router.push("/accounts/password/reset")
+}
 </script>
 
 
@@ -22,34 +28,7 @@ const token = computed(() => usersStore.tokenAction.token);
       style="height: 90%"
       class="flex flex-col justify-center items-center"
     >
-      <div
-        v-if="mailConfirmed"
-        id="mail-confirmed"
-        class="flex flex-col justify-center items-center space-y-2 h-full"
-      >
-        <div>
-          <span
-            class="material-icons outlined text-lime-500"
-            :style="{ fontSize: '3em' }"
-            >check_circle</span
-          >
-        </div>
-        <div>
-          <span class="text-4xl font-bold text-center">
-            Thanks for confirming your email address!
-          </span>
-        </div>
-        <div>
-          <span class="text-xl font-semibold text-center text-gray-600">
-            Do you wish to start using {{ APP_NAME }}? Start
-            <a
-              class="cursor-pointer text-lime-500 font-bold"
-              @click="authenticateVerifiedUser"
-              >here</a
-            >
-          </span>
-        </div>
-      </div>
+ 
       <div
         v-if="!mailConfirmed && token"
         class="flex flex-col justify-center items-center space-y-2 h-auto"
@@ -113,27 +92,33 @@ const token = computed(() => usersStore.tokenAction.token);
         <div>
           <button
             class="bg-amber-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
-            @click="redirectResendEmailView()"
+            @click="redirectToResetPassoword()"
           >
-            Resend email confirmation
+             Resend reset password request
           </button>
         </div>
       </div>
 
-      <div class="w-full flex justify-center bottom-32 fixed">
-        <!-- <span class="text-xl font-semibold text-center text-gray-600 ">
-        If you need help, please contact us at
-        <a class="cursor-pointer text-lime-500 font-bold" href="mailto:achavez@mem.gob.gt"> 
-        </a>
+      <div class="w-full flex flex-col justify-center bottom-32 fixed">
 
-      </span> -->
+
         <button
           class="text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800"
           type="submit"
-          @click="redirectToLogin"
+          @click="$router.push('/login')"
         >
           <span class="text-md"> Go back to login </span>
         </button>
+        <div class="flex justify-center mt-4">
+
+          <span class="text-lg font-semibold text-center text-blue-950 ">
+            If you need help, please contact us at
+            <a class="cursor-pointer text-lime-500 font-bold" href="mailto:support@todohub.com"> 
+              support@todohub.com
+            </a>
+    
+          </span>
+        </div>
       </div>
     </section>
     </div>
