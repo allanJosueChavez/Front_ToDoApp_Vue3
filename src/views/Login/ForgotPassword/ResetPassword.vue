@@ -26,33 +26,35 @@ const sendEmail = async () => {
         return
     }
     sendingMail.value = true
-    sendPasswordResetMail({
-        email: email.value
-    }).then((response) => {
-        if (response.status === 200) {
-            let emailName = email.value.split("@")[0]
-            let stars = "*".repeat(emailName.length - 2)
-            hiddenEmail.value = emailName.charAt(0) + stars + emailName.charAt((emailName.length - 1)) + "@" + email.value.split("@")[1]
-            // hiddenEmail.value = email.value
-            mailRequestSent.value = true
-            toast.success("Email sent! Please check out your inbox!", {
-                position: "top-right",
-                autoClose: 1500,
-            });
-        }
-    }).catch((err) => {
-        if(err.response.status === 409){
-            toast.warning("You've reached the daily maximum amount of requests to reset your password!", {
-                position: "top-right",
-                autoClose: 1500,
-            });
-        }else{
-            console.log("Something went wrong!", err)
-        }
-    }).finally(() => {
+    // sendPasswordResetMail({
+    //     email: email.value
+    // }).then((response) => {
+    //     if (response.status === 200) {
+    //         let emailName = email.value.split("@")[0]
+    //         let stars = "*".repeat(emailName.length - 2)
+    //         hiddenEmail.value = emailName.charAt(0) + stars + emailName.charAt((emailName.length - 1)) + "@" + email.value.split("@")[1]
+    //         // hiddenEmail.value = email.value
+    //         mailRequestSent.value = true
+    //         toast.success("Email sent! Please check out your inbox!", {
+    //             position: "top-right",
+    //             autoClose: 1500,
+    //         });
+    //     }
+    // }).catch((err) => {
+    //     if(err.response.status === 409){
+    //         toast.warning("You've reached the daily maximum amount of requests to reset your password!", {
+    //             position: "top-right",
+    //             autoClose: 1500,
+    //         });
+    //     }else{
+    //         console.log("Something went wrong!", err)
+    //     }
+    // }).finally(() => {
+    //     sendingMail.value = false
+    // })
+    setTimeout(() => {
         sendingMail.value = false
-    })
-
+    }, 2000)
     console.log("Email sent correctly!");
 };
 
@@ -121,7 +123,7 @@ const cleanForm = () => {
         </div>
         <v-overlay v-model="sendingMail">
             <div class="flex flex-col items-center justify-center h-screen w-screen">
-                <v-progress-circular indeterminate size="64" color="blue" class=""></v-progress-circular>
+                <v-progress-circular indeterminate size="44" color="#162a6b" class=""></v-progress-circular>
             </div>
         </v-overlay>
     </div>
