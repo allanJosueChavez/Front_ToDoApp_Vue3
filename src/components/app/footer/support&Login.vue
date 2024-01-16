@@ -1,5 +1,9 @@
 <script setup>
+import {ref, computed} from 'vue'
 
+const supportEmailAddress = computed(() => {
+  return import.meta.env.VITE_SUPPORT_EMAIL_ADDRESS
+})
 </script>
 
 <template>
@@ -13,7 +17,7 @@
             <span class="text-md font-semibold text-center text-blue-950 ">
                 If you need help, please contact us at
                 <a class="cursor-pointer text-lime-500 font-bold" href="mailto:support@todohub.com">
-                    support@todohub.com
+                    {{ supportEmailAddress }}
                 </a>
             </span>
         </div>
