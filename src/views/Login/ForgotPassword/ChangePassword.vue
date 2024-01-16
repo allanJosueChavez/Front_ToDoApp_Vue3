@@ -1,125 +1,97 @@
 <script setup>
 import { useRouter } from "vue-router";
-    import smallLogo from "@/components/app/smallLogo.vue";
-    import { useUsersStore } from "@/stores/usersStore.js";
+import smallLogo from "@/components/app/smallLogo.vue";
+import { useUsersStore } from "@/stores/usersStore.js";
 import usersService from "@/services/usersService.js";
-import { computed } from "vue";
-  
-const APP_NAME = import.meta.env.VITE_APP_NAME
+import { computed, ref } from "vue";
+import supportLogin from "../../../components/app/footer/support&Login.vue";
+
+const passwordRules = ref([
+  (v) => !!v || "Password is required",
+  (v) => v.length >= 8 || "Password must be at least 8 characters",
+  (v) => v.length <= 30 || "Password must be less than 30 characters",
+  (v) => /[A-Z]/.test(v) || "Password must contain at least one uppercase letter",
+  (v) => /[a-z]/.test(v) || "Password must contain at least one lowercase letter",
+  (v) => /[0-9]/.test(v) || "Password must contain at least one number",
+  (v) => /[^A-Za-z0-9]/.test(v) || "Password must contain at least one special character",
+])
+
 const router = useRouter();
 const usersStore = useUsersStore();
-
 const token = computed(() => usersStore.tokenAction.token);
-
-const redirectToResetPassoword = () =>{
-    router.push("/accounts/password/reset")
+const redirectToResetPassoword = () => {
+  router.push("/accounts/password/reset")
 }
+const changePassword = () => {
+  console.log("Changing password")
+}
+
+const loading = ref(false)
+const BodyRequest = ref(
+  {
+    token: token.value,
+    password: null,
+    password_confirmation: null
+  })
+
+const changePassBtn = computed(() => {
+  return false
+})
 </script>
 
 
 <template>
-    <div class="h-screen bg-gradient-to-b from-purple-100 to-yellow-100">
-      <div style="height: 10%">
-        <smallLogo />
+  <div class="h-screen bg-gradient-to-b from-purple-100 to-yellow-100">
+    <div style="height: 10%">
+      <smallLogo />
+    </div>
+    <v-overlay v-model="loading" contained class="align-center justify-center">
+      <div class="flex flex-col items-center justify-center h-screen w-screen">
+        <v-progress-circular indeterminate size="36" color="white" class=""></v-progress-circular>
       </div>
-      <v-overlay v-model="loading" contained class="align-center justify-center">
     </v-overlay>
-    <section
-      style="height: 90%"
-      class="flex flex-col justify-center items-center"
-    >
- 
-      <div
-        v-if="!mailConfirmed && token"
-        class="flex flex-col justify-center items-center space-y-2 h-auto"
-      >
-        <div>
-          <span class="text-4xl font-bold text-center">
-            Please confirm your email address!
+    <section style="height: 90%" class="flex flex-col justify-center items-center">
+      <div v-if="token"
+        class=" bg-gray-50 rounded-lg p-8 flex flex-col justify-center items-center space-y-6 h-auto my-12">
+        <div class="my-2">
+          <span class="text-3xl font-bold text-center">
+            Change your password
           </span>
         </div>
-        <div
-          v-if="!isEmailUpdate"
-          class="flex flex-col justify-center items-center space-y-2 h-auto"
-        >
-          <div class="w-auto">
-            <span class="text-xl font-semibold text-center text-gray-600">
-              Hi Allan, Thanks for signing up for {{ APP_NAME }}! Please confirm your
-              email address by clicking the button
-            </span>
-          </div>
-          <div>
-            <button
-              class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
-              :loading="loading"
-              @click="setAccountConfirmed()"
-            >
-              Confirm email address
-            </button>
-          </div>
-        </div>
-        <div
-          v-if="isEmailUpdate"
-          class="flex flex-col justify-center items-center space-y-2 h-auto"
-        >
-          <div class="w-auto">
-            <span class="text-xl font-semibold text-center text-gray-600">
-              Hi Allan, to confirm your email address please click the button
-            </span>
-          </div>
-          <div>
-            <button
-              class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
-              :loading="loading"
-              @click="updateUserEmail()"
-            >
-              Confirm and update email address
-            </button>
-          </div>
+        <div class="flex flex-col justify-center items-center  h-auto">
+          <v-form ref="changePasswordForm" fast-fail @submit.prevent="changePassword">
+            <div class="flex flex-col justify-center items-center space-y-2">
+              <v-text-field prepend-inner-icon="mdi-lock" id="password" label="Enter new password"
+                v-model="BodyRequest.password" :rules="passwordRules" type="password" class="w-96"></v-text-field>
+              <v-text-field prepend-inner-icon="mdi-lock" id="password_confirmation" label="Confirm new password"
+                v-model="BodyRequest.password_confirmation" :rules="passwordRules" type="password"
+                class="w-96"></v-text-field>
+            </div>
+            <div class="flex justify-center mt-4">
+              <button class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
+                :class="(changePassBtn ? ' cursor-pointer ' : ' cursor-not-allowed')" type="submit">
+                Change password
+              </button>
+            </div>
+          </v-form>
         </div>
       </div>
 
-      <div
-        v-if="!token"
-        class="flex flex-col justify-center items-center space-y-2 h-full"
-      >
+      <div v-if="!token" class="flex flex-col justify-center items-center space-y-2 h-full">
         <div class="my-4">
           <span class="text-4xl font-bold text-center">
             Sorry! The token is invalid or it has expired.
           </span>
         </div>
-
         <div>
-          <button
-            class="bg-amber-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
-            @click="redirectToResetPassoword()"
-          >
-             Resend reset password request
+          <button class="bg-amber-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
+            @click="redirectToResetPassoword()">
+            Resend reset password request
           </button>
         </div>
       </div>
 
-      <div class="w-full flex flex-col justify-center bottom-32 fixed">
-
-
-        <button
-          class="text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800"
-          type="submit"
-          @click="$router.push('/login')"
-        >
-          <span class="text-md"> Go back to login </span>
-        </button>
-        <div class="flex justify-center mt-4">
-
-          <span class="text-lg font-semibold text-center text-blue-950 ">
-            If you need help, please contact us at
-            <a class="cursor-pointer text-lime-500 font-bold" href="mailto:support@todohub.com"> 
-              support@todohub.com
-            </a>
-    
-          </span>
-        </div>
-      </div>
+      <supportLogin />
     </section>
-    </div>
-  </template>
+  </div>
+</template>
