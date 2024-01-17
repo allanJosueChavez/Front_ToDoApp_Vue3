@@ -95,7 +95,7 @@ const passwordConfirmationRules = [
     (v && v.length >= 8) ||
     "Password Confirmation must be at least 8 characters",
   (v) =>
-    v === user.value.password || "Password Confirmation must match Password",
+    v === user.value.password || "The password confirmation must be the same!",
 ];
 
 </script>
