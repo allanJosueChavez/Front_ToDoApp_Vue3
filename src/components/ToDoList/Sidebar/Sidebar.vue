@@ -14,7 +14,7 @@ const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
 const listsStore = useTodoListsStore();
-const { addAllLists, setSelectedList, updateLists, setSidebarCollapsed } =
+const { addAllLists, setSelectedList, updateLists, setSidebarCollapsed ,  pushNewList} =
   listsStore;
 
 // States
@@ -68,7 +68,7 @@ async function createNewList() {
   if (response.status === 200) {
     const listCreated = response.data.list;
     lists.value.push(listCreated);
-    updateLists(lists.value);
+    pushNewList(listCreated);
     console.log(listCreated);
     setSelectedList(listCreated);
   }

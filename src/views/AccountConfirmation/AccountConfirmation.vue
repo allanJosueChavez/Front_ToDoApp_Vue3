@@ -12,6 +12,7 @@ const { confirmAccount, loginThroughToken, updateMainEmail } = usersService;
 const router = useRouter();
 const usersStore = useUsersStore();
 
+const pageLoading = ref(false);
 const token = ref(null);
 const mailConfirmed = ref(false);
 const isEmailUpdate = ref(false);
@@ -31,32 +32,25 @@ onMounted(() => {
 async function setAccountConfirmed() {
   const token = usersStore.tokenAction.token;
   if (token) {
-    // confirmAccount
-    const body = {
-      token: token,
-    };
-    const response = await confirmAccount(body);
+    loading.value = true;
+    const response = await confirmAccount({token: token});
     if (response && response.status === 200) {
       mailConfirmed.value = true;
-      usersStore.removeActionToken();
+      usersStore.removeTokenAction();
     }
+    loading.value = false;
   }
 }
 
 async function updateUserEmail() {
   const newEmail = usersStore.emailConfirmation.newEmail;
   const token = usersStore.tokenAction.token;
-  console.log("newEmail")
-  console.log(newEmail)
-  console.log("token")
-  console.log(token)
   if (newEmail && token) {
     const body = {
       token: token,
       newEmail: newEmail,
     };
     console.log("body", body)
-
     const response = await updateMainEmail(body);
     if (response && response.status === 200) {
       mailConfirmed.value = true;
@@ -74,11 +68,11 @@ const authenticateVerifiedUser = async () => {
     token: token.value,
   };
   console.log("Login through token", body);
+  loading.value = true;
   const loginResponse = await loginThroughToken(body);
   console.log("loginResponse", loginResponse);
   if (loginResponse && loginResponse.status === 200) {
     console.log("Debugging loginResponse", loginResponse.data);
-
     await Cookies.set("user_jwt", loginResponse.data.token);
     await Cookies.set("user_name", loginResponse.data.username);
     router.push("/lists");
@@ -102,6 +96,9 @@ const redirectToLogin = async () => {
       <smallLogo />
     </div>
     <v-overlay v-model="loading" contained class="align-center justify-center">
+      <div class="flex flex-col items-center justify-center h-screen w-screen">
+        <v-progress-circular indeterminate size="36" color="white" class=""></v-progress-circular>
+      </div>
     </v-overlay>
     <section
       style="height: 90%"
