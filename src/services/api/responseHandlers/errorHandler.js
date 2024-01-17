@@ -4,8 +4,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
 
 async function evaluateResponse(error) {
-  console.log("evaluateResponse");
-  console.log(error);
+  // console.log("evaluateResponse");
+  // console.log(error);
   if (!error.response) {
     if (error.code === "ERR_NETWORK") {
       toast.error("Network error. No response from the server", {
@@ -23,7 +23,9 @@ async function evaluateResponse(error) {
   } else if (error.response.status === 400 || error.response.status === 500) {
     console.log(error.response.data)
     if (error.response.data.error || error.response.data.message) {
-      toast.error(error.response.data.error, {
+      toast.error(error.response.data.error || error.response.data.message
+        
+        , {
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
