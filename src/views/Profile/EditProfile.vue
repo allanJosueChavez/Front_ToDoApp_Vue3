@@ -192,7 +192,7 @@
       <v-progress-circular
         indeterminate
         size="64"
-        color="#162a6b"
+        color="white"
         class=""
       ></v-progress-circular>
     </div>

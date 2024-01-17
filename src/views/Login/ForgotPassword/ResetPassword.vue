@@ -3,6 +3,7 @@ import smallLogo from "@/components/app/smallLogo.vue";
 import usersService from "../../../services/usersService";
 import { toast } from "vue3-toastify";
 import { ref, onMounted } from 'vue'
+import supportLogin from "../../../components/app/footer/support&Login.vue";
 
 const { sendPasswordResetMail } = usersService;
 const email = ref("");
@@ -91,12 +92,7 @@ const cleanForm = () => {
                             </button>
                         </div>
                     </v-form>
-                    <div class="  flex justify-center bottom-32 fixed  ">
-                    <button class="text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800" type="submit"
-                        @click="$router.push('/login')">
-                        <span class="text-md"> Go back to login </span>
-                    </button>
-                </div>
+ 
                 </div>
 
             </div>
@@ -121,9 +117,10 @@ const cleanForm = () => {
             </div>
 
         </div>
+        <supportLogin />
         <v-overlay v-model="sendingMail">
             <div class="flex flex-col items-center justify-center h-screen w-screen">
-                <v-progress-circular indeterminate size="44" color="#162a6b" class=""></v-progress-circular>
+                <v-progress-circular indeterminate size="36" color="white" class=""></v-progress-circular>
             </div>
         </v-overlay>
     </div>

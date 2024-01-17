@@ -6,6 +6,7 @@ import { useUsersStore } from "@/stores/usersStore.js";
 import usersService from "@/services/usersService.js";
 import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
+import supportLogin from "../../components/app/footer/support&Login.vue";
 
 const { confirmAccount, loginThroughToken, updateMainEmail } = usersService;
 const router = useRouter();
@@ -204,21 +205,7 @@ const redirectToLogin = async () => {
         </div>
       </div>
 
-      <div class="w-full flex justify-center bottom-32 fixed">
-        <!-- <span class="text-xl font-semibold text-center text-gray-600 ">
-        If you need help, please contact us at
-        <a class="cursor-pointer text-lime-500 font-bold" href="mailto:achavez@mem.gob.gt"> 
-        </a>
-
-      </span> -->
-        <button
-          class="text-blue-900 px-4 py-2 font-semibold underline hover:text-blue-800"
-          type="submit"
-          @click="redirectToLogin"
-        >
-          <span class="text-md"> Go back to login </span>
-        </button>
-      </div>
+      <supportLogin />
     </section>
   </div>
 </template>

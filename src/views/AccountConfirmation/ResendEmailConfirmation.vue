@@ -5,7 +5,7 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { useRouter } from "vue-router";
 import usersService from "@/services/usersService.js";
-
+import supportLogin from "../../components/app/footer/support&Login.vue";
 
 const router = useRouter();
 const { resendEmailConfirmation } = usersService;
@@ -75,17 +75,8 @@ const redirectToLogin = () => {
                     </div>
                 </v-form>
             </div>
-            <div class=" w-full flex justify-center  bottom-32 fixed">
-
-                <button class=" text-gray-600 px-4 py-2 font-semibold underline hover:text-gray-900" type="submit"
-                    @click="redirectToLogin">
-                    <span class="text-md"> Go back to login
-
-
-                    </span>
-                </button>
-            </div>
-            <!-- Right here a button to redirect to the login page "Go back to login". The same thing should be in the view of account confirmation. that gotta be fixed at the bottom no matter if the token's valid or not. whatever  -->
+                <supportLogin />
+           
         </div>
     </div>
 </template>
