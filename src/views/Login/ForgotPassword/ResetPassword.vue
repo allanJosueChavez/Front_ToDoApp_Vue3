@@ -27,35 +27,35 @@ const sendEmail = async () => {
         return
     }
     sendingMail.value = true
-    // sendPasswordResetMail({
-    //     email: email.value
-    // }).then((response) => {
-    //     if (response.status === 200) {
-    //         let emailName = email.value.split("@")[0]
-    //         let stars = "*".repeat(emailName.length - 2)
-    //         hiddenEmail.value = emailName.charAt(0) + stars + emailName.charAt((emailName.length - 1)) + "@" + email.value.split("@")[1]
-    //         // hiddenEmail.value = email.value
-    //         mailRequestSent.value = true
-    //         toast.success("Email sent! Please check out your inbox!", {
-    //             position: "top-right",
-    //             autoClose: 1500,
-    //         });
-    //     }
-    // }).catch((err) => {
-    //     if(err.response.status === 409){
-    //         toast.warning("You've reached the daily maximum amount of requests to reset your password!", {
-    //             position: "top-right",
-    //             autoClose: 1500,
-    //         });
-    //     }else{
-    //         console.log("Something went wrong!", err)
-    //     }
-    // }).finally(() => {
-    //     sendingMail.value = false
-    // })
-    setTimeout(() => {
+    sendPasswordResetMail({
+        email: email.value
+    }).then((response) => {
+        if (response.status === 200) {
+            let emailName = email.value.split("@")[0]
+            let stars = "*".repeat(emailName.length - 2)
+            hiddenEmail.value = emailName.charAt(0) + stars + emailName.charAt((emailName.length - 1)) + "@" + email.value.split("@")[1]
+            // hiddenEmail.value = email.value
+            mailRequestSent.value = true
+            toast.success("Email sent! Please check out your inbox!", {
+                position: "top-right",
+                autoClose: 1500,
+            });
+        }
+    }).catch((err) => {
+        if(err.response.status === 409){
+            toast.warning("You've reached the daily maximum amount of requests to reset your password!", {
+                position: "top-right",
+                autoClose: 1500,
+            });
+        }else{
+            console.log("Something went wrong!", err)
+        }
+    }).finally(() => {
         sendingMail.value = false
-    }, 2000)
+    })
+    // setTimeout(() => {
+    //     sendingMail.value = false
+    // }, 2000)
     console.log("Email sent correctly!");
 };
 

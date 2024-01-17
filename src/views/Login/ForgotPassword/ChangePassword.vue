@@ -3,8 +3,9 @@ import { useRouter } from "vue-router";
 import smallLogo from "@/components/app/smallLogo.vue";
 import { useUsersStore } from "@/stores/usersStore.js";
 import usersService from "@/services/usersService.js";
-import { computed, ref } from "vue";
+import { computed, ref , watch} from "vue";
 import supportLogin from "../../../components/app/footer/support&Login.vue";
+import { toast } from "vue3-toastify";
 
 const passwordRules = ref([
   (v) => !!v || "Password is required",
@@ -22,7 +23,19 @@ const token = computed(() => usersStore.tokenAction.token);
 const redirectToResetPassoword = () => {
   router.push("/accounts/password/reset")
 }
-const changePassword = () => {
+
+const changePasswordForm = ref(null)
+const changePassword = async () => {
+  const validateForm =  await changePasswordForm.value.validate();
+  const isFormValid = validateForm.valid;
+  console.log(validateForm.valid)
+  if (!isFormValid) {
+      toast.warning("Please fill correctly the email input!", {
+          position: "top-right",
+          autoClose: 1500,
+      });
+      return
+  }
   console.log("Changing password")
 }
 
@@ -34,9 +47,16 @@ const BodyRequest = ref(
     password_confirmation: null
   })
 
-const changePassBtn = computed(() => {
-  return false
-})
+const changePassBtn =  ref(true)
+
+const inputTextValidation = () => {
+  if(BodyRequest.value.password && BodyRequest.value.password_confirmation){
+    changePassBtn.value = false
+  }else{
+    changePassBtn.value = true
+  }
+}
+
 </script>
 
 
@@ -61,15 +81,23 @@ const changePassBtn = computed(() => {
         <div class="flex flex-col justify-center items-center  h-auto">
           <v-form ref="changePasswordForm" fast-fail @submit.prevent="changePassword">
             <div class="flex flex-col justify-center items-center space-y-2">
-              <v-text-field prepend-inner-icon="mdi-lock" id="password" label="Enter new password"
-                v-model="BodyRequest.password" :rules="passwordRules" type="password" class="w-96"></v-text-field>
-              <v-text-field prepend-inner-icon="mdi-lock" id="password_confirmation" label="Confirm new password"
-                v-model="BodyRequest.password_confirmation" :rules="passwordRules" type="password"
-                class="w-96"></v-text-field>
+              <v-text-field 
+              @input="inputTextValidation()"
+              prepend-inner-icon="mdi-lock" id="password" label="Enter new password"
+                v-model="BodyRequest.password" :rules="passwordRules"  hidden type="password" class="w-96"
+                autocomplete="new-password"
+                ></v-text-field>
+              <v-text-field   @input="inputTextValidation()" prepend-inner-icon="mdi-lock" id="password_confirmation" label="Confirm new password"
+                v-model="BodyRequest.password_confirmation" :rules="passwordRules" hidden type="password"
+                class="w-96"
+                autocomplete="new-password"
+                ></v-text-field>
             </div>
             <div class="flex justify-center mt-4">
               <button class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500"
-                :class="(changePassBtn ? ' cursor-pointer ' : ' cursor-not-allowed')" type="submit">
+                :disabled="changePassBtn" type="submit"
+                :class="(changePassBtn? 'initial' : 'cursor-pointer')"
+                >
                 Change password
               </button>
             </div>
