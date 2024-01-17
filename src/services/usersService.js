@@ -73,6 +73,11 @@ async function updatePassword(body) {
   return response;
 }
 
+async function changePasswordService(body) {
+  const response = await axiosInstance.patch(`${userPrefix}/change-password`, body);
+  return response;
+}
+
 async function deleteAccount() {
   const response = await axiosInstance.delete(`${userPrefix}`);
   return response;
@@ -82,6 +87,8 @@ async function sendPasswordResetMail(body) {
   const response = await axiosInstance.post(`${userPrefix}/reset-password-mail`, body);
   return response;
 }
+
+
 
 
 export default {    
@@ -95,6 +102,7 @@ export default {
   sendNewEmailConfirmation,
   getUserInfo,
   updateMainEmail,
+  changePasswordService,
   updatePassword,
   deleteAccount,
   sendPasswordResetMail,
