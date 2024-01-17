@@ -4,13 +4,11 @@ import usersService from "../../../services/usersService";
 import { toast } from "vue3-toastify";
 import { ref, onMounted } from 'vue'
 import supportLogin from "../../../components/app/footer/support&Login.vue";
+import inputRules from "@/validations/inputRules.js";
 
 const { sendPasswordResetMail } = usersService;
 const email = ref("");
-const emailRules = ref([
-    (v) => !!v || "E-mail is required",
-    (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-]);
+const { emailRules } = inputRules;
 const hiddenEmail = ref(null)
 
 const sendingMail = ref(false)

@@ -6,6 +6,7 @@ import CryptoJS from "crypto-js";
 import usersService from "../../services/usersService.js";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import inputRules from "@/validations/inputRules.js";
 import * as yup from 'yup';
 
 const router = useRouter();
@@ -73,29 +74,10 @@ const handleSignupResponse = async (response) => {
 
 
 // Login form validation rules
-const usernameRules = [
-  (v) => !!v || "Name is required",
-  (v) => (v && v.length <= 80) || "Name must be less than 80 characters",
-  (v) => (v && v.length >= 3) || "Name must be larger than 3 characters",
-];
 
-const emailRules = [
-  (v) => !!v || "E-mail is required",
-  (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-];
-
-const passwordRules = [
-  (v) => !!v || "Password is required",
-  (v) => (v && v.length >= 8) || "Password must be at least 8 characters",
-];
-
+const { newPasswordRules, fullnameRules, emailRules } = inputRules;
 const passwordConfirmationRules = [
-  (v) => !!v || "Password Confirmation is required",
-  (v) =>
-    (v && v.length >= 8) ||
-    "Password Confirmation must be at least 8 characters",
-  (v) =>
-    v === user.value.password || "The password confirmation must be the same!",
+  (v) =>  v === user.value.password || "The password confirmation must be the same!",
 ];
 
 </script>
@@ -128,7 +110,7 @@ const passwordConfirmationRules = [
                   label="Full name"
                   v-model="user.name"
                   clearable
-                  :rules="usernameRules"
+                  :rules="fullnameRules"
                 ></v-text-field>
               </div>
               <div>
@@ -148,7 +130,7 @@ const passwordConfirmationRules = [
                   clearable
                   autocomplete="off"
                   :type="showPassword ? 'text' : 'password'"
-                  :rules="passwordRules"
+                  :rules="newPasswordRules"
                 >
                 <span
                 class="material-icons-outlined absolute right-3 top-5 cursor-pointer text-purple-800"
@@ -168,7 +150,7 @@ const passwordConfirmationRules = [
                   v-model="user.passwordConfirmation"
                   clearable
                   type="password"
-                  :rules="passwordConfirmationRules"
+                  :rules="passwordConfirmationRules || newPasswordRules"
                 ></v-text-field>
               </div>
               <div class="w-100 flex items-center justify-center mb-6">

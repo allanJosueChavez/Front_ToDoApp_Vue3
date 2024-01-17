@@ -9,10 +9,12 @@ import Cookies from "js-cookie";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import errorHandler from "../../services/api/responseHandlers/errorHandler";
+import inputRules from "@/validations/inputRules.js";
+const {   emailRules } = inputRules;
+
 const { evaluateResponse } = errorHandler;
 const { login } = usersService;
 const router = useRouter();
-
 const unverifiedUser = ref(false);
 const loading = ref(false);
 const loginForm = ref(null);
@@ -82,15 +84,9 @@ const handleLoginResponse = async (response) => {
   }
 };
 
-// Login form validation rules
-const emailRules = [
-  (v) => !!v || "Email is required",
-  (v) => /.+@.+\..+/.test(v) || "Email must be valid",
-];
-
+ 
 const passwordRules = [
   (v) => !!v || "Password is required",
-  // (v) => (v && v.length >= 8) || "Password must be larger than 8 characters",
 ];
 
 // The mdi-close of the clearable option of the v-text-field is not working.

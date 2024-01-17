@@ -6,15 +6,13 @@ import "vue3-toastify/dist/index.css";
 import { useRouter } from "vue-router";
 import usersService from "@/services/usersService.js";
 import supportLogin from "../../components/app/footer/support&Login.vue";
+import inputRules from "@/validations/inputRules.js";
 
+const { emailRules } = inputRules;
 const router = useRouter();
 const { resendEmailConfirmation } = usersService;
 const email = ref("");
-const emailRules = ref([
-    (v) => !!v || "E-mail is required",
-    (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-]);
-
+ 
 
 const resendEmailForm = ref(null);
 const sendEmail = async () => {
