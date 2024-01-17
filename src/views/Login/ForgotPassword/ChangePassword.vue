@@ -6,6 +6,10 @@ import usersService from "@/services/usersService.js";
 import { computed, ref , watch} from "vue";
 import supportLogin from "../../../components/app/footer/support&Login.vue";
 import { toast } from "vue3-toastify";
+import inputRules from "@/validations/inputRules.js";
+
+const { newPasswordRules, passwordSchema } = inputRules;
+
 
 const APP_NAME = computed(() => import.meta.env.VITE_APP_NAME)
 const {changePasswordService } = usersService;
@@ -69,25 +73,9 @@ const inputTextValidation = () => {
   }
 }
 
-const passwordRules = ref([
-  (v) => !!v || "Password is required",
-  (v) => v.length >= 8 || "Password must be at least 8 characters",
-  (v) => v.length <= 30 || "Password must be less than 30 characters",
-  (v) => /[A-Z]/.test(v) || "Password must contain at least one uppercase letter",
-  (v) => /[a-z]/.test(v) || "Password must contain at least one lowercase letter",
-  (v) => /[0-9]/.test(v) || "Password must contain at least one number",
-  (v) => /[^A-Za-z0-9]/.test(v) || "Password must contain at least one special character",,
-  // (v) => v === BodyRequest.value.passwordConfirmation || "The passwords must be the same!",
-
-])
 
 const passwordConfirmationRules = [
-  (v) => !!v || "Password Confirmation is required",
-  (v) =>
-    (v && v.length >= 8) ||
-    "Password Confirmation must be at least 8 characters",
-  (v) =>
-    v === BodyRequest.value.newPassword || "The passwords must be the same!",
+  (v) => v === BodyRequest.value.newPassword || "Password confirmation must match",
 ];
 
 </script>
@@ -117,13 +105,11 @@ const passwordConfirmationRules = [
               <v-text-field 
               @input="inputTextValidation()"
               prepend-inner-icon="mdi-lock" id="password" label="Enter new password"
-                v-model="BodyRequest.newPassword" :rules="passwordRules && passwordConfirmationRules
-                
-                "  hidden type="password" class="w-96"
+                v-model="BodyRequest.newPassword" :rules="newPasswordRules"  hidden type="password" class="w-96"
                 autocomplete="new-password"
                 ></v-text-field>
               <v-text-field   @input="inputTextValidation()" prepend-inner-icon="mdi-lock" id="passwordConfirmation" label="Confirm new password"
-                v-model="BodyRequest.passwordConfirmation" :rules="passwordConfirmationRules" hidden type="password"
+                v-model="BodyRequest.passwordConfirmation" :rules="newPasswordRules || passwordConfirmationRules" hidden type="password"
                 class="w-96"
                 autocomplete="new-password"
                 ></v-text-field>

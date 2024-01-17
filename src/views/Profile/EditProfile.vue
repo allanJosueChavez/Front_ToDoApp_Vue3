@@ -25,7 +25,7 @@
                   @input="validateUserInfoForm()"
                   class="text-purple-900"
                   label="Full name"
-                  :rules="fullNameRules"
+                  :rules="fullnameRules"
                   v-model="userInfo.name"
                 ></v-text-field>
               </div>
@@ -100,7 +100,7 @@
                 class="text-purple-900 mb-4"
                 label="New password"
                 type="password"
-                :rules="passwordRules"
+                :rules="newPasswordRules"
                 autocomplete="false"
                 v-model="passwords.password"
                 @input="verifyPasswordForm()"
@@ -110,7 +110,7 @@
                 class="text-purple-900 mb-4"
                 label="Password confirmation"
                 type="password"
-                :rules="confirmationPasswordRules"
+                :rules="newPasswordRules || passwordConfirmationRules"
                 v-model="passwords.passwordConfirmation"
                 @input="verifyPasswordForm()"
               ></v-text-field>
@@ -247,7 +247,7 @@ import { toast } from "vue3-toastify";
 import Cookies from "js-cookie";
 import { onMounted, ref, watch } from "vue";
 import ConfirmationDialog from "../../components/dialogs/ConfirmationDialogs/ConfirmationDialog.vue";
-
+import inputRules from "@/validations/inputRules.js";
 
 const deleteAccountDialog = ref(false);
 const loadingOverlay = ref(false);
@@ -314,27 +314,15 @@ onMounted(async () => {
 
 });
 
+// Input Rules
+const { newPasswordRules, fullnameRules, emailRules } = inputRules;
+const passwordConfirmationRules = [
+  (v) =>  v === passwords.value.password || "Passwords must match",
+];
+
+
 const responseDialog = ref(false);
-const fullNameRules = [
-  (v) => !!v || "Full name is required",
-  (v) => (v && v.length >= 3) || "Full name must be at least 3 characters",
-];
-
-const emailRules = [
-  (v) => !!v || "E-mail is required",
-  (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-];
-
-const passwordRules = [
-  (v) => !!v || "Password is required",
-  (v) => (v && v.length >= 8) || "Password must be at least 8 characters",
-];
-
-const confirmationPasswordRules = [
-  (v) => !!v || "Password confirmation is required",
-  (v) => (v && v.length >= 8) || "Password must be at least 8 characters",
-  (v) => v === passwords.value.password || "Passwords must match",
-];
+ 
 
 const changePassForm = ref(null);
 const verifyPasswordForm = async () => {
