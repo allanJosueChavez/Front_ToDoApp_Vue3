@@ -7,14 +7,14 @@ import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import { toast } from "vue3-toastify";
 import { useTodoListsStore } from "../../../stores/listsStore.js";
 import smallLogo from "../../app/smallLogo.vue";
-// Constants
+ 
 
 const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
 const listsStore = useTodoListsStore();
-const { addAllLists, setSelectedList, updateLists, setSidebarCollapsed } =
+const { addAllLists, setSelectedList, updateLists, setSidebarCollapsed ,  pushNewList} =
   listsStore;
 
 // States
@@ -47,8 +47,6 @@ const getLists = async () => {
       addAllLists(listsResponse);
       lists.value = listsStore.todoLists;
       allLists.value = listsStore.todoLists;
-      console.log("All lists are: ");
-      console.log(listsStore.todoLists);
     })
     .catch((error) => {
       if (error.code === "ERR_NETWORK") return;
@@ -68,7 +66,7 @@ async function createNewList() {
   if (response.status === 200) {
     const listCreated = response.data.list;
     lists.value.push(listCreated);
-    updateLists(lists.value);
+    pushNewList(listCreated);
     console.log(listCreated);
     setSelectedList(listCreated);
   }
@@ -102,19 +100,13 @@ const searchInLists = () => {
 const sidebarCollapsed = ref(false);
 
 const expandSidebar = () => {
-  console.log("expandSidebar")
   sidebarCollapsed.value = !sidebarCollapsed.value;
-  console.log(listsStore.sidebarCollapsed)
   setSidebarCollapsed(sidebarCollapsed.value);
-  console.log(listsStore.sidebarCollapsed)
 };
 
 const collapseSidebar = () => {
-  console.log("collapseSidebar")
   sidebarCollapsed.value = !sidebarCollapsed.value;
-  console.log(listsStore.sidebarCollapsed)
   setSidebarCollapsed(sidebarCollapsed.value);
-  console.log(listsStore.sidebarCollapsed)
 };
 
 

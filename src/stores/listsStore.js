@@ -18,6 +18,7 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
       console.log("todoListsLength", this.todoLists.length)
       this.todoLists = this.todoLists.filter((list) => list.id !== todoList.id);
       console.log("todoListsLength", this.todoLists.length)
+      console.log("todoListsLength", this.todoLists)
     },
     addAllLists(lists) {
       this.todoLists = lists;
@@ -38,6 +39,10 @@ export const useTodoListsStore = defineStore('todoListsStore', { // '' is the na
     },
     setSidebarCollapsed(value) {
       this.sidebarCollapsed = value;
+    },
+    pushNewList(list) {
+      this.todoLists.push(list);
+ 
     }
 
   },

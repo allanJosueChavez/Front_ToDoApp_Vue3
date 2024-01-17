@@ -195,16 +195,16 @@ const updateTodo = async (todo) => {
 };
 
 const markAsDone = async (todo) => {
-  await updateTodo(todo);
-  notDoneTodos.value = notDoneTodos.value.filter((t) => t !== todo);
   doneTodos.value.push(todo);
+  notDoneTodos.value = notDoneTodos.value.filter((t) => t !== todo);
+  await updateTodo(todo);
   updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount - 1));
 };
 
 const markAsNotDone = async (todo) => {
-  await updateTodo(todo);
   doneTodos.value = doneTodos.value.filter((t) => t !== todo);
   notDoneTodos.value.push(todo);
+  await updateTodo(todo);
   updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount + 1));
 };
 
@@ -275,16 +275,23 @@ watch(sidebarCollapsed, (newValue) => {
         style="height: 60%;"
       >
         <div 
-        
-        v-for="(todo, index) in  notDoneTodos" :class="`todo-item ${todo.status && 'done'}`" :key="index">
-          <div class="mt-2 mr-3">
- 
-          <span class="material-icons-outlined  cursor-pointer text-blue-800 select-none" 
-          @click="todo.status = !todo.status; markAsDone(todo)"
-          
-          >
-            circle
-          </span>
+        class="relative"
+        v-for="(todo, index) in  notDoneTodos" :class="` todo-item ${todo.status && 'done'}`" :key="index">
+        <div class="absolute bottom-1 text-gray-400 text-sm flex justify-center  w-full">
+            Added on: {{ new Date(todo.createdAt).toLocaleDateString()}}
+          </div>
+          <div class="mt-2 mr-3 ">
+
+            <v-tooltip>
+            <template v-slot:activator="{ props }">
+              <span v-bind="props" class="material-icons-outlined  cursor-pointer text-blue-800 select-none" 
+            @click="todo.status = !todo.status; markAsDone(todo)">
+              circle
+            </span>
+            </template>
+            <span>  Mark as completed </span>
+          </v-tooltip>
+
           </div>
           <div class="todo-content">
             <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
@@ -295,6 +302,7 @@ watch(sidebarCollapsed, (newValue) => {
               <v-progress-circular   :size="25" v-show="todo.deleting" indeterminate color="white"></v-progress-circular>
             </button>
           </div>
+
         </div>
         <div class=" my-4
         "
@@ -308,10 +316,9 @@ watch(sidebarCollapsed, (newValue) => {
             </span>
         </div>
         <div 
-       
         v-for="(todo, index) in doneTodos" :class="`todo-item ${todo.status && 'done bg-blue-400'}`" :key="index">
           <div class="mt-2 mr-3">
-            <span class="material-icons-outlined cursor-pointer text-blue-800 select-none"
+            <span class="material-icons-outlined cursor-pointer text-gray-800 select-none"
           @click="todo.status = !todo.status; markAsNotDone(todo)"
           
           >
