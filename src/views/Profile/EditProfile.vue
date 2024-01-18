@@ -455,14 +455,14 @@ const confirmDelete = () => {
 
 const confirmAccountDeletion = async () => {
   loadingOverlay.value = true
-  // const response = await usersService.deleteAccount();
-  // console.log("response", response);
-  // if (response.status === 200) {
-  //   Cookies.remove("user_jwt");
-  //   Cookies.remove("user_name");
-  //   window.location.href = "/login";
-  // }
-  // loadingOverlay.value = false
+  const response = await usersService.deleteAccount();
+  console.log("response", response);
+  if (response.status === 200) {
+    Cookies.remove("user_jwt");
+    Cookies.remove("user_name");
+    window.location.href = "/login";
+  }
+  loadingOverlay.value = false
 };
 const router = useRouter();
 const goBack = () => {
