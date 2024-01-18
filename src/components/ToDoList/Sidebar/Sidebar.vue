@@ -65,8 +65,7 @@ async function createNewList() {
   const response = await createList(ToDolist);
   if (response.status === 200) {
     const listCreated = response.data.list;
-    lists.value.push(listCreated);
-    pushNewList(listCreated);
+    pushNewList(listCreated); // No need to push into the lists because it's already listeninig from the store
     console.log(listCreated);
     setSelectedList(listCreated);
   }
