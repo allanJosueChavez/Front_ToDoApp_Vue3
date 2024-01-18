@@ -6,73 +6,85 @@ import listsService from "../../services/listsService.js";
 import { useTodoListsStore } from "@/stores/listsStore.js";
 import ConfirmationDialog from "@/components/dialogs/ConfirmationDialogs/ConfirmationDialog.vue";
 
-
 const listsStore = useTodoListsStore();
-const { setSelectedList, removeList, updateUncompletedTodosCounter } = listsStore;
-const { createTask, getAllTasks, updateListName, deleteList, deleteTask , updateTask} = listsService;
-
-// const props = defineProps(["listSelected"]);
+const { setSelectedList, removeList, updateUncompletedTodosCounter } =
+  listsStore;
+const {
+  createTask,
+  getAllTasks,
+  updateListName,
+  deleteList,
+  deleteTask,
+  updateTask,
+} = listsService;
 
 const deleteConfirmationDialog = ref(false);
 const listSelected = computed(() => {
   return listsStore.selectedList;
 });
 
-
-const loading = ref(false)
+const loading = ref(false);
 const listAnimation = ref(false);
 
 const currentList = computed(() => {
-  // return props.listSelected;
   return listsStore.selectedList;
 });
 
-const notDoneTodos = ref([])
-const doneTodos = ref([])
+const notDoneTodos = ref([]);
+const doneTodos = ref([]);
 const listInEdition = ref(null);
 const originalListName = ref(null);
 
 onMounted(async () => {
-  console.log(currentList)
-
+  console.log(currentList);
 });
-
 
 watch(currentList, (newValue) => {
-  // loading.value = true
-  // console.log(loading.value)
-  listAnimation.value = true
-  console.log("Watching. Perceiving a new value...")
+  listAnimation.value = true;
   if (!currentList.value) {
-    console.log("No list selected")
-    return
+    return;
   }
-  originalListName.value = currentList.value.name
-  listInEdition.value = currentList.value
-
-  if ((currentList.value === currentList.value.id)) {
-    console.log("The list is the same") // This is no use because it will never get into this watch since the prop will actually never change
-    return
+  originalListName.value = currentList.value.name;
+  listInEdition.value = currentList.value;
+  if (currentList.value === currentList.value.id) {
+    return; // No change
   }
-  if(currentList.value){
-    loading.value = true // Changed it from up top to here because if it changes and there's no list selected it'll be spinning forever
-    getAllTasks(currentList.value.id).then((response) => {
-      console.log("all the tasks are: ");
-      console.log(response.data);
-      currentList.value.todos = response.data.tasks;
-      notDoneTodos.value = currentList.value.todos.filter((todo) => !todo.status);
-      doneTodos.value = currentList.value.todos.filter((todo) => todo.status);  
-      loading.value = false
-      setTimeout(() => {
-        listAnimation.value = false
-      }, 400); // Why 400? Because the animation lasts 0.4s
-  });
+  if (currentList.value) {
+    fetchTasks();
   }
 });
+
+const fetchTasks = async () => {
+  loading.value = true; // Changed it from up top to here because if it changes and there's no list selected it'll be spinning forever
+  getAllTasks(currentList.value.id).then((response) => {
+    let listTodos = formatTodosDate(response.data.tasks);
+    currentList.value.todos = listTodos;
+    notDoneTodos.value = listTodos.filter((todo) => !todo.status);
+    doneTodos.value = listTodos.filter((todo) => todo.status);
+    loading.value = false;
+    setTimeout(() => {
+      listAnimation.value = false;
+    }, 400); //400 Because the animation lasts 0.4s
+  });
+};
+
+const formatTodosDate = (todos) => {
+  return todos.map((todo) => {
+    const dateObject = new Date(todo.createdAt);
+    const hours = dateObject.getUTCHours();
+    const minutes = dateObject.getUTCMinutes();
+    // const seconds = dateObject.getUTCSeconds();
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}`;
+    const localDate = dateObject.toLocaleDateString();
+    todo.addedAt = `${localDate} ${formattedTime}`;
+    return todo;
+  });
+};
 
 const defaultPlaceholder = ref("Add a new item...");
 const input_content = ref("");
-
 const changePlaceholder = () => {
   defaultPlaceholder.value = "Type your to-do here...";
 };
@@ -84,40 +96,50 @@ const addTodo = async (id) => {
       position: "top-right",
       autoClose: 1000,
     });
-    return
+    return;
   }
-  console.log("Adding a new to-do to the list with id: " + id + " and the content is: " + input_content.value);
+  console.log(
+    "Adding a new to-do to the list with id: " +
+      id +
+      " and the content is: " +
+      input_content.value
+  );
   const newTodo = {
     name: input_content.value,
     status: false,
-    listId: id
+    listId: id,
   };
 
   const response = await createTask(newTodo);
-  console.log(response.data)
+  console.log(response.data);
 
   if (response.status === 200) {
-    const todoCreated = response.data.task
+    const todoCreated = response.data.task;
     // currentList.value.todos.push(todoCreated);
     notDoneTodos.value.push(todoCreated);
     input_content.value = "";
-    console.log(currentList.value.taskCount)
+    console.log(currentList.value.taskCount);
     // There was an error here because after creating a new task, the response did not have the taskcount.
-    updateUncompletedTodosCounter(currentList.value.id,   (currentList.value.taskCount + 1));
+    updateUncompletedTodosCounter(
+      currentList.value.id,
+      currentList.value.taskCount + 1
+    );
   }
 };
 
-
 const saveListName = async () => {
   try {
-    if (currentList.value.name.trim() === "" || currentList.value.name === originalListName.value) {
+    if (
+      currentList.value.name.trim() === "" ||
+      currentList.value.name === originalListName.value
+    ) {
       currentList.value.name = originalListName.value;
-      return
+      return;
     }
     const listId = currentList.value.id;
     const data = {
-      name: currentList.value.name
-    }
+      name: currentList.value.name,
+    };
     const response = await updateListName(listId, data);
     if (response.status === 200) {
       toast.success("List name updated!", {
@@ -130,15 +152,13 @@ const saveListName = async () => {
   }
 };
 
-
 const askConfirmation = (id) => {
   console.log("Asking confirmation to delete list with id: " + id);
   deleteConfirmationDialog.value = true;
-
 };
 
 async function deleteToDoList() {
-   const response = await deleteList(currentList.value.id);
+  const response = await deleteList(currentList.value.id);
   if (response.status === 200) {
     toast.success("List deleted!", {
       position: "top-right",
@@ -147,50 +167,47 @@ async function deleteToDoList() {
     removeList(currentList.value);
     setSelectedList(null);
     deleteConfirmationDialog.value = false;
-    return
+    return;
   }
   toast.error("Error deleting list!", {
     position: "top-right",
     autoClose: 1000,
   });
-
 }
 
 async function deleteTodo(list, todo) {
-  if(todo.status){
-      doneTodos.value = doneTodos.value.map((t) => {
-        if(t.id === todo.id){
-          t.deleting = true
-        }
-        return t});
-    }else{
-      notDoneTodos.value = notDoneTodos.value.map((t) => {
-        if(t.id === todo.id){
-          t.deleting = true
-        }
-        return t});
-    }
-    const response = await deleteTask(todo.id);
+  if (todo.status) {
+    doneTodos.value = doneTodos.value.map((t) => {
+      if (t.id === todo.id) {
+        t.deleting = true;
+      }
+      return t;
+    });
+  } else {
+    notDoneTodos.value = notDoneTodos.value.map((t) => {
+      if (t.id === todo.id) {
+        t.deleting = true;
+      }
+      return t;
+    });
+  }
+  const response = await deleteTask(todo.id);
   if (response.status === 200) {
     // currentList.value.todos = currentList.value.todos.filter((t) => t !== todo);
-    if(todo.status){
+    if (todo.status) {
       doneTodos.value = doneTodos.value.filter((t) => t !== todo);
-    }else{
+    } else {
       notDoneTodos.value = notDoneTodos.value.filter((t) => t !== todo);
-      updateUncompletedTodosCounter(list, (currentList.value.taskCount - 1));
-
+      updateUncompletedTodosCounter(list, currentList.value.taskCount - 1);
     }
-
- 
   }
-
 }
 
 const updateTodo = async (todo) => {
   const body = {
-    status:  todo.status,
-    name: todo.name
-  }
+    status: todo.status,
+    name: todo.name,
+  };
   await updateTask(todo.id, body);
 };
 
@@ -198,52 +215,74 @@ const markAsDone = async (todo) => {
   doneTodos.value.push(todo);
   notDoneTodos.value = notDoneTodos.value.filter((t) => t !== todo);
   await updateTodo(todo);
-  updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount - 1));
+  updateUncompletedTodosCounter(
+    currentList.value.id,
+    currentList.value.taskCount - 1
+  );
 };
 
 const markAsNotDone = async (todo) => {
   doneTodos.value = doneTodos.value.filter((t) => t !== todo);
   notDoneTodos.value.push(todo);
   await updateTodo(todo);
-  updateUncompletedTodosCounter(currentList.value.id, (currentList.value.taskCount + 1));
+  updateUncompletedTodosCounter(
+    currentList.value.id,
+    currentList.value.taskCount + 1
+  );
 };
 
 const removeListSelectedOnMobile = () => {
   setSelectedList(null);
 };
 
-
 const sidebarCollapsed = computed(() => {
-    return listsStore.sidebarCollapsed;
+  return listsStore.sidebarCollapsed;
 });
-
-watch(sidebarCollapsed, (newValue) => {
-  console.log("Sidebar collapsed changed to: " + newValue);
-});
-
+ 
 </script>
 
 <template>
-  <div id="to-do-list"  
-  :class="(listSelected ? ' block sm:block ' : ' hidden sm:block ') + (sidebarCollapsed ? 'w-full' : 'sm:w-4/5') "
-  class="sm:h-auto h-full   bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10  ">
-    <div :class="`h-full ${listAnimation && 'animate-right'}`" v-if="listSelected && !loading">
-      <span   class="material-icons fixed top-2 left-2 text-3xl p-2 cursor-pointer"
-                @click="removeListSelectedOnMobile">
-                arrow_back
-              </span>
-      <section id="greeting-section" class="my-8 sm:my-4 align-center flex h-18">
+  <div
+    id="to-do-list"
+    :class="
+      (listSelected ? ' block sm:block ' : ' hidden sm:block ') +
+      (sidebarCollapsed ? 'w-full' : 'sm:w-4/5')
+    "
+    class="sm:h-auto h-full bg-gradient-to-b from-purple-100 to-yellow-100 pb-8 pt-2 px-5 sm:px-10"
+  >
+    <div
+      :class="`h-full ${listAnimation && 'animate-right'}`"
+      v-if="listSelected && !loading"
+    >
+      <span
+        class="material-icons fixed top-2 left-2 text-3xl p-2 cursor-pointer"
+        @click="removeListSelectedOnMobile"
+      >
+        arrow_back
+      </span>
+      <section
+        id="greeting-section"
+        class="my-8 sm:my-4 align-center flex h-18"
+      >
         <div id="greeting" class="greeting w-4/5 font-extrabold p-2">
           <h2 class="title pl-2 text-3xl">
-            <input type="text" class="" placeholder="Type your list's name here..." v-model="currentList.name"
-              @blur="saveListName()" />
+            <input
+              type="text"
+              class=""
+              placeholder="Type your list's name here..."
+              v-model="currentList.name"
+              @blur="saveListName()"
+            />
           </h2>
         </div>
         <div id="delete-list-button" class="flex justify-end w-1/5 p-2">
           <v-tooltip>
             <template v-slot:activator="{ props }">
-              <span v-bind="props" class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer"
-                @click="askConfirmation(currentList.id)">
+              <span
+                v-bind="props"
+                class="material-icons bg-red-500 text-white rounded-md p-2 cursor-pointer"
+                @click="askConfirmation(currentList.id)"
+              >
                 delete
               </span>
             </template>
@@ -253,116 +292,157 @@ watch(sidebarCollapsed, (newValue) => {
       </section>
       <section id="create-todo-section" class="create-todo h-36">
         <form @submit.prevent="addTodo(currentList.id)">
-          <input type="text" :placeholder="defaultPlaceholder" v-model="input_content" id="AddTaskInput"
-            @click="changePlaceholder()" />
-            <!-- <p
+          <input
+            type="text"
+            :placeholder="defaultPlaceholder"
+            v-model="input_content"
+            id="AddTaskInput"
+            @click="changePlaceholder()"
+          />
+          <!-- <p
           class="text-red-500"
           >
               You must write something!
           </p> -->
-          <button class="bg-yellow-400 font-bold" type="submit" value="Add to-do">
+          <button
+            class="bg-yellow-400 font-bold"
+            type="submit"
+            value="Add to-do"
+          >
             <span class="text-purple-900 flex align-items justify-center">
               <span class="material-icons text-purple-900 cursor-pointer">
                 add
               </span>
               Add to-do
             </span>
-
           </button>
         </form>
       </section>
-      <section id="to-dos-list" class=" todo-list my-8  overflow-y-auto  "
-        style="height: 60%;"
+      <section
+        id="to-dos-list"
+        class="todo-list my-8 overflow-y-auto"
+        style="height: 60%"
       >
-        <div 
-        class="relative"
-        v-for="(todo, index) in  notDoneTodos" :class="` todo-item ${todo.status && 'done'}`" :key="index">
-        <div class="absolute bottom-1 text-gray-400 text-sm flex justify-center  w-full">
-            Added on: {{ new Date(todo.createdAt).toLocaleDateString()}}
+        <div
+          class="relative"
+          v-for="(todo, index) in notDoneTodos"
+          :class="`putas todo-item ${todo.status && 'done'}`"
+          :key="index"
+        >
+          <div
+            class="added-date-label"
+           
+          >
+            Added on: {{ todo.addedAt }}
           </div>
-          <div class="mt-2 mr-3 ">
-
+          <div class="mt-2 mr-3">
             <v-tooltip>
-            <template v-slot:activator="{ props }">
-              <span v-bind="props" class="material-icons-outlined  cursor-pointer text-blue-800 select-none" 
-            @click="todo.status = !todo.status; markAsDone(todo)">
-              circle
-            </span>
-            </template>
-            <span>  Mark as completed </span>
-          </v-tooltip>
-
+              <template v-slot:activator="{ props }">
+                <span
+                  v-bind="props"
+                  class="material-icons-outlined cursor-pointer text-blue-800 select-none"
+                  @click="
+                    todo.status = !todo.status;
+                    markAsDone(todo);
+                  "
+                >
+                  circle
+                </span>
+              </template>
+              <span> Mark as completed </span>
+            </v-tooltip>
           </div>
           <div class="todo-content">
             <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
           </div>
           <div class="actions">
-            <button class="delete w-20" @click="deleteTodo(currentList.id, todo)">
+            <button
+              class="delete w-20"
+              @click="deleteTodo(currentList.id, todo)"
+            >
               <span v-show="!todo.deleting">Delete</span>
-              <v-progress-circular   :size="25" v-show="todo.deleting" indeterminate color="white"></v-progress-circular>
+              <v-progress-circular
+                :size="25"
+                v-show="todo.deleting"
+                indeterminate
+                color="white"
+              ></v-progress-circular>
             </button>
           </div>
-
         </div>
-        <div class=" my-4
-        "
-        v-if="doneTodos.length > 0"
-        >
+        <div class="my-4" v-if="doneTodos.length > 0">
           <hr class="text-gray-800 my-4" />
-            <span 
-            class="text-gray-800 font-bold"
-            >
-                Completed:
-            </span>
+          <span class="text-gray-800 font-bold"> Completed: </span>
         </div>
-        <div 
-        v-for="(todo, index) in doneTodos" :class="`todo-item ${todo.status && 'done bg-blue-400'}`" :key="index">
-          <div class="mt-2 mr-3">
-            <span class="material-icons-outlined cursor-pointer text-gray-800 select-none"
-          @click="todo.status = !todo.status; markAsNotDone(todo)"
-          
+        <div
+          class="relative"
+          v-for="(todo, index) in doneTodos"
+          :class="`todo-item ${todo.status && 'done bg-blue-400'}`"
+          :key="index"
+        >
+          <div
+            class="added-date-label"
           >
-            check_circle
-          </span>
- 
+            Added on: {{ todo.addedAt }}
+          </div>
+          <div class="mt-2 mr-3">
+            <span
+              class="material-icons-outlined cursor-pointer text-gray-800 select-none"
+              @click="
+                todo.status = !todo.status;
+                markAsNotDone(todo);
+              "
+            >
+              check_circle
+            </span>
           </div>
           <div class="todo-content">
             <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
           </div>
           <div class="actions">
             <button class="delete" @click="deleteTodo(currentList.id, todo)">
-             <span v-show="!todo.deleting">Delete</span>
-              <v-progress-circular  v-show="todo.deleting" indeterminate color="white"></v-progress-circular>
+              <span v-show="!todo.deleting">Delete</span>
+              <v-progress-circular
+                v-show="todo.deleting"
+                indeterminate
+                color="white"
+              ></v-progress-circular>
             </button>
           </div>
         </div>
       </section>
     </div>
-    <div  v-if="loading" class="h-full w-full flex justify-center items-center">
-      <v-progress-circular class="mx-auto my-auto"   :size="40"  indeterminate color="white"></v-progress-circular>
-
+    <div v-if="loading" class="h-full w-full flex justify-center items-center">
+      <v-progress-circular
+        class="mx-auto my-auto"
+        :size="40"
+        indeterminate
+        color="white"
+      ></v-progress-circular>
     </div>
-
   </div>
   <div v-if="currentList">
-    <ConfirmationDialog :showDialog="deleteConfirmationDialog"
+    <ConfirmationDialog
+      :showDialog="deleteConfirmationDialog"
       :v-text="`Are you sure you want to delete the list '${currentList.name}'? This will delete all the to-dos inside it.`"
-      :v-title="`Confirm delete`" @closeDialog="deleteConfirmationDialog = false" @confirmAction="deleteToDoList" />
+      :v-title="`Confirm delete`"
+      @closeDialog="deleteConfirmationDialog = false"
+      @confirmAction="deleteToDoList"
+    />
   </div>
 </template>
-
 
 <style scoped>
 .animate-right {
   position: relative;
   animation: animateright 0.4s;
-
 }
 
-
-
-
-
+.added-date-label{
+	@apply  absolute bottom-1 text-gray-400 text-sm flex justify-center;
+  width: 95%;
+}
+ 
 @keyframes animateright {
   from {
     right: -300px;
