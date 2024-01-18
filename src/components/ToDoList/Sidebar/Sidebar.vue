@@ -7,15 +7,19 @@ import { ref, computed, onMounted, onBeforeMount, watch } from "vue";
 import { toast } from "vue3-toastify";
 import { useTodoListsStore } from "../../../stores/listsStore.js";
 import smallLogo from "../../app/smallLogo.vue";
- 
 
 const searching = ref(false);
 const listsLoading = ref(false);
 const search = ref("");
 const { getAllLists, createList } = listsService;
 const listsStore = useTodoListsStore();
-const { addAllLists, setSelectedList, updateLists, setSidebarCollapsed ,  pushNewList} =
-  listsStore;
+const {
+  addAllLists,
+  setSelectedList,
+  updateLists,
+  setSidebarCollapsed,
+  pushNewList,
+} = listsStore;
 
 // States
 // Question: Why ref instead of computed? Because computed is a function that returns a value, and ref is a value that can be changed.
@@ -56,12 +60,12 @@ const getLists = async () => {
   listsLoading.value = false;
 };
 
-const loading = ref(false)
+const loading = ref(false);
 async function createNewList() {
   const ToDolist = {
     name: "Untitled",
   };
-  loading.value = true
+  loading.value = true;
   const response = await createList(ToDolist);
   if (response.status === 200) {
     const listCreated = response.data.list;
@@ -69,8 +73,8 @@ async function createNewList() {
     console.log(listCreated);
     setSelectedList(listCreated);
   }
-  loading.value = false
-  
+  loading.value = false;
+
   // here I gotta say to the ToDoList component which is the list I just created
 }
 
@@ -108,8 +112,8 @@ const collapseSidebar = () => {
   setSidebarCollapsed(sidebarCollapsed.value);
 };
 
-
- 
+import Cookies from "js-cookie";
+const username = Cookies.get("user_name");
 </script>
 
 <template>
@@ -129,34 +133,40 @@ const collapseSidebar = () => {
       <div class="h-20 relative" v-if="!sidebarCollapsed">
         <smallLogo />
         <div
+          class="text-white absolute top-7 left-4 cursor-pointer"
+          @click="$router.push('/edit-profile')"
+        >
+          <span class="material-icons text-white scale-125">
+            account_circle
+          </span>
+          <span>
+            <!-- {{ username  }} -->
+          </span>
+        </div>
+        <div
           id="collapse-button"
           class="invisible sm:visible absolute right-0 text-white top-3 cursor-pointer text-3xl bg-blue-950 h-12 flex justify-center items-center rounded-l-lg"
- 
           @click="collapseSidebar()"
         >
-          <span class="material-icons transform scale-125  ">
+          <span class="material-icons transform scale-125">
             keyboard_arrow_left
           </span>
         </div>
-
       </div>
-      
+
       <div
         v-if="sidebarCollapsed"
-        class=" cursor-pointer w-12 my-auto relative h-16 m-2 pt-1" 
-       
+        class="cursor-pointer w-12 my-auto relative h-16 m-2 pt-1"
       >
         <img src="https://i.ibb.co/QrjrV7B/image.webp" alt="" class=" " />
-
       </div>
       <div
         v-if="sidebarCollapsed"
         id="collapse-button"
-        class="absolute text-white right-0 top-1 cursor-pointer text-3xl bg-blue-950 h-12 flex justify-center items-center rounded-l-lg "
+        class="absolute text-white right-0 top-1 cursor-pointer text-3xl bg-blue-950 h-12 flex justify-center items-center rounded-l-lg"
         @click="expandSidebar()"
-        
       >
-        <span class="material-icons transform scale-125  ">
+        <span class="material-icons transform scale-125">
           keyboard_arrow_right
         </span>
       </div>
@@ -180,37 +190,29 @@ const collapseSidebar = () => {
           </span>
         </v-text-field>
       </div>
- 
-      <div
-        class="px-3 my-2 h-14 w-full"
-        id="add-new-list-button"
-        
-      >
 
-
-      <v-tooltip >
-            <template v-slot:activator="{ props }">
-              <button
+      <div class="px-3 my-2 h-14 w-full" id="add-new-list-button">
+        <v-tooltip>
+          <template v-slot:activator="{ props }">
+            <button
               v-bind="props"
-          class="rounded-lg button-add bg-pink-600 w-full h-full"
-          @click="createNewList()"
-        >
-          <span class="text-white font-semibold" v-if="!loading"> 
-          {{ sidebarCollapsed ? "+" : "Add new list +"  }}  
-          </span>
-          <v-progress-circular
-              :width="4"
-              :size="25"
-              v-if="loading"
-              indeterminate
-              color="white"
-            ></v-progress-circular>
-        </button>
-            </template>
-              <span>Create new list </span>
-          </v-tooltip>
-
-
+              class="rounded-lg button-add bg-pink-600 w-full h-full"
+              @click="createNewList()"
+            >
+              <span class="text-white font-semibold" v-if="!loading">
+                {{ sidebarCollapsed ? "+" : "Add new list +" }}
+              </span>
+              <v-progress-circular
+                :width="4"
+                :size="25"
+                v-if="loading"
+                indeterminate
+                color="white"
+              ></v-progress-circular>
+            </button>
+          </template>
+          <span>Create new list </span>
+        </v-tooltip>
       </div>
       <Lists
         style="height: 65%"
