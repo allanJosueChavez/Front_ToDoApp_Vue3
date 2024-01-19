@@ -82,7 +82,7 @@ const passwordConfirmationRules = [
 
 
 <template>
-  <div class="h-screen bg-gradient-to-b from-purple-100 to-yellow-100">
+  <div class="w-100 h-screen bg-gradient-to-b from-purple-100 to-yellow-100 ">
     <div style="height: 10%">
       <smallLogo />
     </div>
@@ -91,26 +91,27 @@ const passwordConfirmationRules = [
         <v-progress-circular indeterminate size="36" color="white" class=""></v-progress-circular>
       </div>
     </v-overlay>
-    <section style="height: 90%" class="flex flex-col justify-center items-center">
+    <div class="flex justify-center items-center ">
+      <section   class=" my-28 flex-1 flex flex-col justify-center items-center ">
       <div v-if="token && !requestCompleted"
-        class=" bg-gray-50 rounded-lg p-8 flex flex-col justify-center items-center space-y-6 h-auto my-12">
-        <div class="my-2">
-          <span class="text-3xl font-bold text-center">
+        class="sm:w-full w-64  bg-gray-50 rounded-lg p-8 flex flex-col justify-center items-center space-y-6 h-auto my-12">
+        <div class="my-2 text-2xl sm:text-3xl font-bold text-center">
+          <span >
             Change your password
           </span>
         </div>
         <div class="flex flex-col justify-center items-center  h-auto">
-          <v-form ref="changePasswordForm" fast-fail @submit.prevent="changePassword">
+          <v-form ref="changePasswordForm" fast-fail @submit.prevent="changePassword" class="  ">
             <div class="flex flex-col justify-center items-center space-y-2">
               <v-text-field 
               @input="inputTextValidation()"
               prepend-inner-icon="mdi-lock" id="password" label="Enter new password"
-                v-model="BodyRequest.newPassword" :rules="newPasswordRules"  hidden type="password" class="w-96"
+                v-model="BodyRequest.newPassword" :rules="newPasswordRules"  hidden type="password" class="w-52 sm:w-96"
                 autocomplete="new-password"
                 ></v-text-field>
               <v-text-field   @input="inputTextValidation()" prepend-inner-icon="mdi-lock" id="passwordConfirmation" label="Confirm new password"
                 v-model="BodyRequest.passwordConfirmation" :rules="newPasswordRules || passwordConfirmationRules" hidden type="password"
-                class="w-96"
+                class="w-52  sm:w-96"
                 autocomplete="new-password"
                 ></v-text-field>
             </div>
@@ -127,8 +128,8 @@ const passwordConfirmationRules = [
       </div>
 
       <div v-if="!token" class="flex flex-col justify-center items-center space-y-2 h-full">
-        <div class="my-4">
-          <span class="text-4xl font-bold text-center">
+        <div class="my-4 title-message">
+          <span class="">
             Sorry! The token is invalid or it has expired.
           </span>
         </div>
@@ -151,13 +152,13 @@ const passwordConfirmationRules = [
             >check_circle</span
           >
         </div>
-        <div>
-          <span class="text-4xl font-bold text-center">
+        <div class="title-message">
+          <span >
             Your password has been changed successfully!
           </span>
         </div>
-        <div>
-          <span class="text-xl font-semibold text-center text-gray-600">
+        <div class="subtitle-message">
+          <span >
         Please log in into your {{ APP_NAME }} account using your new password.
             <a
               class="cursor-pointer text-lime-500 font-bold"
@@ -172,5 +173,7 @@ const passwordConfirmationRules = [
 
       <supportLogin />
     </section>
+    </div>
+
   </div>
 </template>
