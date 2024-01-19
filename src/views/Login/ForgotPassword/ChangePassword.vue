@@ -94,7 +94,7 @@ const passwordConfirmationRules = [
     <div class="flex justify-center items-center ">
       <section   class=" my-28 flex-1 flex flex-col justify-center items-center ">
       <div v-if="token && !requestCompleted"
-        class="sm:w-full w-64  bg-gray-50 rounded-lg p-8 flex flex-col justify-center items-center space-y-6 h-auto my-12">
+        class="sm:w-auto w-64  bg-gray-50 rounded-lg p-8 flex flex-col justify-center items-center space-y-6 h-auto my-12">
         <div class="my-2 text-2xl sm:text-3xl font-bold text-center">
           <span >
             Change your password
