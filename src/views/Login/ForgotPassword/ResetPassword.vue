@@ -75,14 +75,18 @@ const cleanForm = () => {
         <div class="flex justify-center items-center space-y-4" style="height: 90%">
             <div id="sentMailForm" v-if="!mailRequestSent">
                 <div class="flex flex-col justify-center items-center space-y-4">
-                    <span class="text-xl font-semibold text-center text-gray-600">
+                    <div class="subtitle-message">
+                        <span >
                         Please enter your email address to send you a link to reset your password.
                     </span>
+                    </div>
+
                     <v-form ref="resendEmailForm" fast-fail @submit.prevent="sendEmail"
-                        class="flex flex-col justify-center items-center">
-                        <div class="flex flex-col justify-center items-center">
+                    class=""
+                     >
+                        <div class="flex flex-col justify-center items-center ">
                             <v-text-field prepend-inner-icon="mdi-email" id="email" label="Email" v-model="email"
-                                :rules="emailRules" class="w-96">
+                                :rules="emailRules" class="sm:w-96 w-72">
                             </v-text-field>
                             <button
                                 class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500 mt-2">
@@ -96,7 +100,7 @@ const cleanForm = () => {
             </div>
 
             <div v-if="mailRequestSent"
-                class="border border-gray-600 bg-slate-50 bg-opacity-50 h-64 w-2/6 rounded-lg flex justify-center items-center text-white text-4xl mt-12 ">
+                class="border border-gray-600 bg-slate-50 bg-opacity-50 h-64   sm:w-2/6 rounded-lg flex justify-center items-center text-white text-4xl sm:mt-12 ">
                 <div class=" flex-col flex">
                     <p class="text-center text-lg text-blue-900 px-12 ">
                         <!-- The email has been sent! Go ahead and check out your inbox! -->
@@ -123,3 +127,8 @@ const cleanForm = () => {
         </v-overlay>
     </div>
 </template>
+
+
+<style scoped>
+
+</style>

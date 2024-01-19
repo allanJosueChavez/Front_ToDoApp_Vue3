@@ -1,35 +1,33 @@
 <template>
-  <div>
-    <Navbar></Navbar>
-    <div
-      id="profile-edit "
-      class="px-28 py-24 h-full w-full min-h-screen bg-gradient-to-b from-purple-100 to-yellow-100"
-    >
-      <div class="text-white">
-        <span
-          class="material-icons absolute top-2 left-2 text-3xl p-2 cursor-pointer"
-          @click="goBack()"
-        >
-          arrow_back
-        </span>
-      </div>
-      <div id="personal-info-form" class="space-y-6">
-        <h1 class="mb-8 text-4xl text-left font-bold text-blue-900">
-          Update your personal information
-        </h1>
-        <v-form ref="userInfoForm" fast-fail @submit.prevent="updateUser()">
-          <div class="grid gap-y-6">
-            <div class="grid grid-cols-2 gap-x-6">
-              <div>
-                <v-text-field
-                  @input="validateUserInfoForm()"
-                  class="text-purple-900"
-                  label="Full name"
-                  :rules="fullnameRules"
-                  v-model="userInfo.name"
-                ></v-text-field>
-              </div>
+  <Navbar></Navbar>
+  <div id="profile-edit">
+    <div class="text-white">
+      <span
+        class="material-icons absolute top-2 left-2 text-3xl p-2 cursor-pointer"
+        @click="goBack()"
+      >
+        arrow_back
+      </span>
+    </div>
+    <div id="personal-info-form" class="space-y-6">
+      <h1 class="mb-8 text-2xl sm:text-4xl text-left font-bold text-blue-900">
+        Update your personal information
+      </h1>
+      <v-form ref="userInfoForm" fast-fail @submit.prevent="updateUser()">
+        <!-- <div class="grid gap-y-6">
+            <div class="grid grid-cols-3 gap-x-6">
+             
             </div>
+          </div> -->
+        <div class="sm:w-2/5">
+          <div>
+            <v-text-field
+              @input="validateUserInfoForm()"
+              class="text-purple-900"
+              label="Full name"
+              :rules="fullnameRules"
+              v-model="userInfo.name"
+            ></v-text-field>
           </div>
           <button
             v-bind:disabled="updateUserInfoBtn"
@@ -41,109 +39,110 @@
           >
             Update profile
           </button>
-        </v-form>
-        <h4 class="text-2xl text-left font-bold text-blue-900">
-          Change the registered email
-        </h4>
-        <!-- <span>
+        </div>
+      </v-form>
+      <h4 class="text-2xl text-left font-bold text-blue-900">
+        Change the registered email
+      </h4>
+      <!-- <span>
             If you want to change your email you must enter a new one and click on the button 'Send verification mail.'
             Check your inbox and click on the link to confirm the email. Then the email will be updated.
         </span> -->
-        <v-form
-          ref="changeEmailForm"
-          fast-fail
-          @submit.prevent="sendVerificationEmail()"
-        >
-          <div class="w-2/5">
-            <div>
-              <v-text-field
-                class="text-purple-900 mb-4"
-                label="Email"
-                @input="validateChangeEmailForm()"
-                :rules="emailRules"
-                v-model="userEmail"
-              ></v-text-field>
-            </div>
-            <button
-              v-bind:disabled="confirmationEmailBtn"
-              :class="
-                confirmationEmailBtn
-                  ? 'bg-gray-400 text-white px-4 py-2 rounded-md'
-                  : 'bg-lime-500 text-white px-4 py-2 rounded-md'
-              "
-            >
-              Send verification mail
-            </button>
-            <!-- If you want to update the email you must enter it and click on the button send verification mail.
-              Then if he confirms the email, the email will be updated. -->
+      <v-form
+        ref="changeEmailForm"
+        fast-fail
+        @submit.prevent="sendVerificationEmail()"
+      >
+        <div class="sm:w-2/5">
+          <div>
+            <v-text-field
+              class="text-purple-900 mb-4"
+              label="Email"
+              @input="validateChangeEmailForm()"
+              :rules="emailRules"
+              v-model="userEmail"
+            ></v-text-field>
           </div>
-        </v-form>
-        <h4 class="text-2xl text-left font-bold text-blue-900">
-          Change password
-        </h4>
+          <button
+            v-bind:disabled="confirmationEmailBtn"
+            :class="
+              confirmationEmailBtn
+                ? 'bg-gray-400 text-white px-4 py-2 rounded-md'
+                : 'bg-lime-500 text-white px-4 py-2 rounded-md'
+            "
+          >
+            Send verification mail
+          </button>
+          <!-- If you want to update the email you must enter it and click on the button send verification mail.
+              Then if he confirms the email, the email will be updated. -->
+        </div>
+      </v-form>
+      <h4 class="text-2xl text-left font-bold text-blue-900">
+        Change password
+      </h4>
 
-        <v-form
-          ref="changePassForm"
-          fast-fail
-          @submit.prevent="updateUserPassword()"
-        >
-          <div class="w-2/5">
-            <div>
-              <v-text-field
-                class="text-purple-900 mb-4"
-                label="Current password"
-                type="password"
-                v-model="passwords.currentPassword"
-                autocomplete="false"
-              ></v-text-field>
-              <v-text-field
-                class="text-purple-900 mb-4"
-                label="New password"
-                type="password"
-                :rules="newPasswordRules"
-                autocomplete="false"
-                v-model="passwords.password"
-                @input="verifyPasswordForm()"
-              ></v-text-field>
-              <v-text-field
+      <v-form
+        ref="changePassForm"
+        fast-fail
+        @submit.prevent="updateUserPassword()"
+      >
+        <div class="sm:w-2/5">
+          <div>
+            <v-text-field
+              class="text-purple-900 mb-4"
+              label="Current password"
+              type="password"
+              v-model="passwords.currentPassword"
               autocomplete="false"
-                class="text-purple-900 mb-4"
-                label="Password confirmation"
-                type="password"
-                :rules="newPasswordRules || passwordConfirmationRules"
-                v-model="passwords.passwordConfirmation"
-                @input="verifyPasswordForm()"
-              ></v-text-field>
-            </div>
-            <button
-              :class="
-                !passwordUpdateBtn
-                  ? 'text-white px-4 py-2 rounded-md bg-purple-900'
-                  : 'text-white px-4 py-2 rounded-md bg-gray-400'
-              "
-              :disabled="passwordUpdateBtn"
-            >
-              Update password
-            </button>
-            <!-- If you want to update the email you must enter it and click on the button send verification mail
-              Then if he confirms the email, the email will be updated. -->
+            ></v-text-field>
+            <v-text-field
+              class="text-purple-900 mb-4"
+              label="New password"
+              type="password"
+              :rules="newPasswordRules"
+              autocomplete="false"
+              v-model="passwords.password"
+              @input="verifyPasswordForm()"
+            ></v-text-field>
+            <v-text-field
+              autocomplete="false"
+              class="text-purple-900 mb-4"
+              label="Password confirmation"
+              type="password"
+              :rules="newPasswordRules || passwordConfirmationRules"
+              v-model="passwords.passwordConfirmation"
+              @input="verifyPasswordForm()"
+            ></v-text-field>
           </div>
-        </v-form>
-        <v-form
-          ref="deleteAccountForm"
-          fast-fail
-          @submit.prevent="confirmDelete()"
-        >        
+          <button
+            :class="
+              !passwordUpdateBtn
+                ? 'text-white px-4 py-2 rounded-md bg-purple-900'
+                : 'text-white px-4 py-2 rounded-md bg-gray-400'
+            "
+            :disabled="passwordUpdateBtn"
+          >
+            Update password
+          </button>
+          <!-- If you want to update the email you must enter it and click on the button send verification mail
+              Then if he confirms the email, the email will be updated. -->
+        </div>
+      </v-form>
+      <v-form
+        ref="deleteAccountForm"
+        fast-fail
+        @submit.prevent="confirmDelete()"
+      >
         <div
           id="danger-zone"
-          class="border-2 border-red-600 rounded-md p-8 flex flex-col justify-start w-2/5 h-full mt-8"
+          class="border-2 border-red-600 rounded-md p-4 sm:p-8 flex flex-col justify-start sm:w-2/5 h-full mt-8"
         >
           <h4 class="text-3xl text-left font-bold text-red-600">Danger zone</h4>
           <span class="text-red-600 my-2">
             If you delete your account, you will lose all your data.
           </span>
           <button
-            class="bg-red-600 text-white px-4 py-2 rounded-md flex items-center cursor-pointer w-60 my-2"
+            class="bg-red-600 text-white px-4 py-2 rounded-md flex items-center cursor-pointer  h-18  w-60 my-2"
             id="delete-account-button"
           >
             <span
@@ -155,39 +154,32 @@
           </button>
         </div>
       </v-form>
-      </div>
-      <div id="profile-edit-description" class="h-full hidden">
-        This is the profile edit page. It'll have: - a form to edit the user's
-        profile. Vuetify components like v-text-field, v-select, v-checkbox,
-        v-file-input, etc. will be used. - a button to save the changes - it'll
-        have use of yup to validate the form - i guess i'm going to have to have
-        something kind of a navbar to navigate between the profile, edit
-        profile, and change password pages - Profile picture because why not? -
-        a button to delete the account - a button to change the password - a
-        button to log out - a button to go back to the profile page - a button
-        to go back to the home page - a button to go to the about page - a
-        button to go to the contact page - a button to go to the terms and
-        conditions page - a button to go to the privacy policy page - a button
-        to go to the cookie policy page - a button to go to the accessibility
-        statement page - a button to go to the faq page - a button to go to the
-        help page - a button to go to the sitemap page - a button to go to the
-        report a problem page - a button to go to the report abuse page - a
-        button to go to the report a bug page - a button to go to the report a
-        typo page - I gotta sync it or connect it with authentication of google,
-        github, or fb. for that I can use the package vue-social-auth or
-        vue-social-login
-      </div>
     </div>
-    <v-overlay v-model="loadingOverlay">
-      <div
-      class="flex flex-col items-center justify-center h-screen w-screen"
-      >
-
-      
-      <div>
-      </div>
+    <div id="profile-edit-description" class="h-full hidden">
+      This is the profile edit page. It'll have: - a form to edit the user's
+      profile. Vuetify components like v-text-field, v-select, v-checkbox,
+      v-file-input, etc. will be used. - a button to save the changes - it'll
+      have use of yup to validate the form - i guess i'm going to have to have
+      something kind of a navbar to navigate between the profile, edit profile,
+      and change password pages - Profile picture because why not? - a button to
+      delete the account - a button to change the password - a button to log out
+      - a button to go back to the profile page - a button to go back to the
+      home page - a button to go to the about page - a button to go to the
+      contact page - a button to go to the terms and conditions page - a button
+      to go to the privacy policy page - a button to go to the cookie policy
+      page - a button to go to the accessibility statement page - a button to go
+      to the faq page - a button to go to the help page - a button to go to the
+      sitemap page - a button to go to the report a problem page - a button to
+      go to the report abuse page - a button to go to the report a bug page - a
+      button to go to the report a typo page - I gotta sync it or connect it
+      with authentication of google, github, or fb. for that I can use the
+      package vue-social-auth or vue-social-login
+    </div>
+  </div>
+  <v-overlay v-model="loadingOverlay">
+    <div class="flex flex-col items-center justify-center h-screen w-screen">
+      <div></div>
       <div class="text-2xl text-blue-900 mb-4">Loading...</div>
- 
 
       <v-progress-circular
         indeterminate
@@ -196,8 +188,7 @@
         class=""
       ></v-progress-circular>
     </div>
-    </v-overlay>
-  </div>
+  </v-overlay>
 
   <v-dialog v-model="responseDialog" persistent max-width="600px">
     <v-card class="p-8">
@@ -233,14 +224,14 @@
     :showDialog="deleteAccountDialog"
     :v-title="'Delete account'"
     :v-text="'Are you sure you want to delete your account? This action cannot be undone.'"
-    @closeDialog="deleteAccountDialog = false" @confirmAction="confirmAccountDeletion"
+    @closeDialog="deleteAccountDialog = false"
+    @confirmAction="confirmAccountDeletion"
     :confirmAction="true"
   ></ConfirmationDialog>
-
 </template>
 <script setup>
 // import Navbar from "../../components/app/navbar/verticalNavbar.vue";]
-import{ useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 import Navbar from "../../components/app/navbar/horizontalNavbar.vue";
 import usersService from "@/services/usersService.js";
 import { toast } from "vue3-toastify";
@@ -303,26 +294,23 @@ const passwords = ref({
 });
 
 onMounted(async () => {
-  loadingOverlay.value = true
+  loadingOverlay.value = true;
   const response = await getUserInfo();
   if (response.status === 200) {
     user.value = response.data.user;
     userInfo.value.name = response.data.user.name;
     userEmail.value = response.data.user.email;
   }
-  loadingOverlay.value = false
-
+  loadingOverlay.value = false;
 });
 
 // Input Rules
 const { newPasswordRules, fullnameRules, emailRules } = inputRules;
 const passwordConfirmationRules = [
-  (v) =>  v === passwords.value.password || "Passwords must match",
+  (v) => v === passwords.value.password || "Passwords must match",
 ];
 
-
 const responseDialog = ref(false);
- 
 
 const changePassForm = ref(null);
 const verifyPasswordForm = async () => {
@@ -440,21 +428,25 @@ const sendVerificationEmail = () => {
       }
 
       // console.log(err)
-      //  toast.info(err.response.data.error ? err.response.data.error : "Something went wrong!"
-      //  , {
-      //      position: "top-right",
-      //      autoClose: 1500,
-      //  });
+      toast.info(
+        err.response.data.error
+          ? err.response.data.error
+          : "Something went wrong!",
+        {
+          position: "top-right",
+          autoClose: 1500,
+        }
+      );
     });
   console.log("sendVerificationEmail");
 };
 
 const confirmDelete = () => {
-  deleteAccountDialog.value =  true
+  deleteAccountDialog.value = true;
 };
 
 const confirmAccountDeletion = async () => {
-  loadingOverlay.value = true
+  loadingOverlay.value = true;
   const response = await usersService.deleteAccount();
   console.log("response", response);
   if (response.status === 200) {
@@ -462,7 +454,7 @@ const confirmAccountDeletion = async () => {
     Cookies.remove("user_name");
     window.location.href = "/login";
   }
-  loadingOverlay.value = false
+  loadingOverlay.value = false;
 };
 const router = useRouter();
 const goBack = () => {
@@ -470,4 +462,11 @@ const goBack = () => {
   router.push("/profile");
 };
 
+ 
 </script>
+
+<style scoped>
+#profile-edit {
+  @apply px-8 py-10 sm:py-24 sm:px-28 h-full w-full min-h-screen bg-gradient-to-b from-purple-100 to-yellow-100;
+}
+</style>

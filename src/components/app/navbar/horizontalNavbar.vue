@@ -1,7 +1,7 @@
 <template>
   <div
     id="profile"
-    class="bg-blue-950 sm:visible invisible h-16 w-full flex justify-end p-0"
+    class="bg-blue-950  h-16 w-full flex justify-end p-0"
   >
     <div id="profile-button" class="h-100 w-44">
 

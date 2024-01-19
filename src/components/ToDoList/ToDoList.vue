@@ -326,7 +326,7 @@ const sidebarCollapsed = computed(() => {
         <div
           class="relative"
           v-for="(todo, index) in notDoneTodos"
-          :class="`putas todo-item ${todo.status && 'done'}`"
+          :class="` todo-item ${todo.status && 'done'}`"
           :key="index"
         >
           <div

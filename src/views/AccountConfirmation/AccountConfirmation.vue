@@ -116,13 +116,13 @@ const redirectToLogin = async () => {
             >check_circle</span
           >
         </div>
-        <div>
-          <span class="text-4xl font-bold text-center">
+        <div class="title-message">
+          <span >
             Thanks for confirming your email address!
           </span>
         </div>
-        <div>
-          <span class="text-xl font-semibold text-center text-gray-600">
+        <div  class="subtitle-message">
+          <span>
             Do you wish to start using {{ APP_NAME }}? Start
             <a
               class="cursor-pointer text-lime-500 font-bold"
@@ -136,8 +136,8 @@ const redirectToLogin = async () => {
         v-if="!mailConfirmed && token"
         class="flex flex-col justify-center items-center space-y-2 h-auto"
       >
-        <div>
-          <span class="text-4xl font-bold text-center">
+        <div class="title-message">
+          <span >
             Please confirm your email address!
           </span>
         </div>
@@ -145,8 +145,8 @@ const redirectToLogin = async () => {
           v-if="!isEmailUpdate"
           class="flex flex-col justify-center items-center space-y-2 h-auto"
         >
-          <div class="w-auto">
-            <span class="text-xl font-semibold text-center text-gray-600">
+          <div class="w-auto subtitle-message">
+            <span class="">
               Hi Allan, Thanks for signing up for {{ APP_NAME }}! Please confirm your
               email address by clicking the button
             </span>
@@ -166,7 +166,7 @@ const redirectToLogin = async () => {
           class="flex flex-col justify-center items-center space-y-2 h-auto"
         >
           <div class="w-auto">
-            <span class="text-xl font-semibold text-center text-gray-600">
+            <span class="subtitle-message">
               Hi Allan, to confirm your email address please click the button
             </span>
           </div>
@@ -186,8 +186,8 @@ const redirectToLogin = async () => {
         v-if="!token"
         class="flex flex-col justify-center items-center space-y-2 h-full"
       >
-        <div class="my-4">
-          <span class="text-4xl font-bold text-center">
+        <div class="title-message">
+          <span  >
             Sorry! The token is invalid or it has expired.
           </span>
         </div>

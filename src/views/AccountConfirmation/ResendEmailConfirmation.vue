@@ -57,14 +57,17 @@ const redirectToLogin = () => {
         </div>
         <div class="flex flex-col justify-center items-center space-y-4" style="height: 90%">
             <div class="flex flex-col justify-center items-center space-y-4">
-                <span class="text-xl font-semibold text-center text-gray-600">
+                <div class="subtitle-message">
+                    <span >
                     Please enter your email address to resend the confirmation email.
-                </span>
+                    </span>
+                </div>
+
                 <v-form ref="resendEmailForm" fast-fail @submit.prevent="sendEmail"
-                    class="flex flex-col justify-center items-center">
-                    <div class="flex flex-col justify-center items-center">
+                    class="flex flex-col justify-center items-center ">
+                    <div class="flex flex-col justify-center items-center ">
                         <v-text-field prepend-inner-icon="mdi-email" id="email" label="Email" v-model="email"
-                            :rules="emailRules" class="w-96">
+                            :rules="emailRules" class="sm:w-96 w-72">
                         </v-text-field>
                         <button
                             class="bg-yellow-400 rounded-lg px-4 py-2 text-white font-semibold hover:bg-yellow-500 mt-2">
