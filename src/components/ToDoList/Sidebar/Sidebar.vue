@@ -133,15 +133,14 @@ const username = Cookies.get("user_name");
       <div class="h-20 relative" v-if="!sidebarCollapsed">
         <smallLogo />
         <div
-          class="text-white absolute top-7 left-4 cursor-pointer"
+          class="text-white absolute top-7 left-4 cursor-pointer sm:invisible visible"
+          
           @click="$router.push('/edit-profile')"
         >
           <span class="material-icons text-white scale-125">
             account_circle
           </span>
-          <span>
-            <!-- {{ username  }} -->
-          </span>
+ 
         </div>
         <div
           id="collapse-button"

@@ -112,7 +112,7 @@ const passwordConfirmationRules = [
               <v-text-field   @input="inputTextValidation()" prepend-inner-icon="mdi-lock" id="passwordConfirmation" label="Confirm new password"
                 v-model="BodyRequest.passwordConfirmation" :rules="newPasswordRules || passwordConfirmationRules" hidden type="password"
                 class="w-52  sm:w-96"
-                autocomplete="new-password"
+                autocomplete="new-password-confirmation"
                 ></v-text-field>
             </div>
             <div class="flex justify-center mt-4">

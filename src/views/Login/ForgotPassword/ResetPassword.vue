@@ -32,14 +32,15 @@ const sendEmail = async () => {
             let emailName = email.value.split("@")[0]
             let stars = "*".repeat(emailName.length - 2)
             hiddenEmail.value = emailName.charAt(0) + stars + emailName.charAt((emailName.length - 1)) + "@" + email.value.split("@")[1]
-            // hiddenEmail.value = email.value
             mailRequestSent.value = true
             toast.success("Email sent! Please check out your inbox!", {
                 position: "top-right",
                 autoClose: 1500,
             });
+            console.log("Email sent correctly!");
         }
     }).catch((err) => {
+        console.log(err)
         if(err.response.status === 409){
             toast.warning("You've reached the daily maximum amount of requests to reset your password!", {
                 position: "top-right",
@@ -54,7 +55,6 @@ const sendEmail = async () => {
     // setTimeout(() => {
     //     sendingMail.value = false
     // }, 2000)
-    console.log("Email sent correctly!");
 };
 
 
