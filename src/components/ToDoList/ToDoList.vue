@@ -357,10 +357,21 @@ const sidebarCollapsed = computed(() => {
           </div>
           <div class="actions">
             <button
-              class="delete w-20"
+              class="delete sm:w-20"
               @click="deleteTodo(currentList.id, todo)"
             >
-              <span v-show="!todo.deleting">Delete</span>
+            <div class="sm:invisible sm:hidden">
+              <span class="material-icons-outlined text-white select-none "
+              >
+                delete
+            </span>
+            </div>
+
+
+
+              <span 
+               class="invisible hidden sm:visible sm:block"
+              v-show="!todo.deleting">Delete</span>
               <v-progress-circular
                 :size="25"
                 v-show="todo.deleting"
