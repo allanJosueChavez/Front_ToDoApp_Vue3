@@ -330,7 +330,7 @@ const sidebarCollapsed = computed(() => {
           :key="index"
         >
           <div
-            class="added-date-label"
+            class="added-date-label invisible hidden sm:visible sm:block"
            
           >
             Added on: {{ todo.addedAt }}
@@ -352,7 +352,7 @@ const sidebarCollapsed = computed(() => {
               <span> Mark as completed </span>
             </v-tooltip>
           </div>
-          <div class="todo-content">
+          <div class="todo-content truncate mr-4 sm:mr-0">
             <input type="text" v-model="todo.name" @change="updateTodo(todo)" />
           </div>
           <div class="actions">
