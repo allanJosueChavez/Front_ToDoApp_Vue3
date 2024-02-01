@@ -116,11 +116,10 @@ const addTodo = async (id) => {
   if (response.status === 200) {
     let todoCreated = response.data.task;
     todoCreated.addedAt = new Date(todoCreated.createdAt).toLocaleString();
-    
     // currentList.value.todos.push(todoCreated);
     notDoneTodos.value.push(todoCreated);
     input_content.value = "";
-    console.log(currentList.value.taskCount);
+ 
     // There was an error here because after creating a new task, the response did not have the taskcount.
     updateUncompletedTodosCounter(
       currentList.value.id,
