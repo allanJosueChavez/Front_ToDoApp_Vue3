@@ -114,7 +114,9 @@ const addTodo = async (id) => {
   console.log(response.data);
 
   if (response.status === 200) {
-    const todoCreated = response.data.task;
+    let todoCreated = response.data.task;
+    todoCreated.addedAt = new Date(todoCreated.createdAt).toLocaleString();
+    
     // currentList.value.todos.push(todoCreated);
     notDoneTodos.value.push(todoCreated);
     input_content.value = "";
